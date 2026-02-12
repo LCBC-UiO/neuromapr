@@ -1,0 +1,185 @@
+---
+title: "Getting Started with neuromapr"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Getting Started with neuromapr}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 6,
+  fig.height = 4
+)
+```
+
+Two brain maps look correlated. But the brain is spatially autocorrelated---nearby
+regions tend to have similar values, just by virtue of being neighbors. A standard
+correlation test ignores this structure entirely, which inflates p-values and leads
+to false positives.
+
+neuromapr exists to answer a single question honestly: **is the similarity between
+two brain maps more than what spatial structure alone would predict?**
+
+It does this by generating surrogate maps that preserve the spatial
+autocorrelation of the original data, then measuring where the real correlation
+falls in that null distribution. The approach follows the framework described in
+Markello et al. (2022).
+
+```{r setup}
+library(neuromapr)
+```
+
+## Comparing two brain maps
+
+The core workflow has three steps: load data, compare, interpret. We will
+simulate two brain maps to keep things self-contained, but in practice you would
+read real data from GIFTI or NIfTI files.
+
+```{r simulate-data}
+set.seed(42)
+n <- 100
+coords <- matrix(rnorm(n * 3), ncol = 3)
+distmat <- as.matrix(dist(coords))
+
+map_a <- rnorm(n)
+map_b <- 0.4 * map_a + rnorm(n, sd = 0.8)
+```
+
+We have two maps with a planted correlation of roughly 0.4, and a distance matrix
+describing the spatial layout. The simplest comparison is a standard correlation:
+
+```{r simple-compare}
+result <- compare_maps(map_a, map_b, verbose = FALSE)
+result
+```
+
+The `r` and parametric `p` tell the familiar story. But that `p` assumes
+independence between observations---an assumption the brain violates everywhere.
+
+## Adding a spatial null model
+
+To get an honest p-value, we generate surrogate versions of `map_a` that
+preserve its spatial autocorrelation structure, then check whether the observed
+correlation is unusual relative to correlations with those surrogates.
+
+neuromapr offers eight null model methods. For parcellated data with a distance
+matrix, the variogram-matching model (`burt2020`) is a good default:
+
+```{r null-comparison}
+result_null <- compare_maps(
+  map_a, map_b,
+  null_method = "burt2020",
+  distmat = distmat,
+  n_perm = 500L,
+  seed = 1,
+  verbose = FALSE
+)
+result_null
+```
+
+The `p_null` value now accounts for spatial autocorrelation. If it is still
+small, the relationship between the two maps is unlikely to be an artifact of
+shared spatial structure.
+
+## Visualising the null distribution
+
+The comparison object stores the null correlations, which makes it
+straightforward to see where the observed value falls:
+
+```{r null-distribution-plot, fig.cap = "Distribution of null correlations from 500 variogram-matching surrogates. The dashed red line marks the observed correlation between the two maps."}
+null_df <- data.frame(r = result_null$null_r)
+obs_r <- result_null$r
+
+ggplot2::ggplot(null_df, ggplot2::aes(x = r)) +
+  ggplot2::geom_histogram(bins = 30, fill = "steelblue", alpha = 0.7) +
+  ggplot2::geom_vline(
+    xintercept = obs_r,
+    linetype = "dashed", color = "red", linewidth = 1
+  ) +
+  ggplot2::labs(
+    x = "Null correlation (r)",
+    y = "Count"
+  ) +
+  ggplot2::theme_minimal()
+```
+
+When the observed correlation sits well outside the null distribution, you can
+be more confident the relationship is genuine. When it sits inside, spatial
+autocorrelation alone can explain the similarity.
+
+## Working with file paths
+
+In real analyses, brain maps live on disk as GIFTI (`.func.gii`) or NIfTI
+(`.nii.gz`) files. `compare_maps()` accepts file paths directly:
+```r
+result <- compare_maps(
+  "path/to/map_a.func.gii",
+  "path/to/map_b.func.gii",
+  null_method = "moran",
+  distmat = distmat
+)
+```
+
+No separate reading step needed. The function detects the file format and
+loads values automatically.
+
+## Pre-computing nulls
+
+Generating null distributions is the expensive part. If you want to compare the
+same map against several targets, generate the nulls once and reuse them:
+
+```{r precompute}
+nulls <- generate_nulls(
+  map_a,
+  method = "moran",
+  distmat = distmat,
+  n_perm = 200L,
+  seed = 42
+)
+nulls
+```
+
+Then pass the pre-computed object to `compare_maps()`:
+
+```{r reuse-nulls}
+compare_maps(map_a, map_b, nulls = nulls, verbose = FALSE)
+```
+
+This avoids redundant computation when the same source map appears in multiple
+comparisons.
+
+## Choosing a null model
+
+The right null model depends on your data. Here is a quick guide:
+
+| Situation | Recommended method |
+|-----------|-------------------|
+| Parcellated data with distance matrix | `"burt2020"` or `"moran"` |
+| Vertex-level data with sphere coordinates | `"spin_hungarian"` or `"alexander_bloch"` |
+| Parcellated data with sphere coordinates | `"baum"` or `"cornblath"` |
+| Spatial autoregressive structure | `"burt2018"` |
+
+The `vignette("null-models")` walks through each method in detail, with
+guidance on when to prefer one over another.
+
+## What comes next
+
+This vignette covered the essential workflow: compare two maps, generate
+spatially-constrained null distributions, and interpret the results. From here:
+
+- `vignette("null-models")` dives deeper into all eight null model
+  methods and their assumptions.
+- `vignette("parcellation")` covers aggregating vertex-level data into
+  parcels and working with parcellated null models.
+- `vignette("surface-geometry")` explains geodesic distances, surface
+  graphs, and vertex area calculations.
+
+## References
+
+Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural and
+functional interpretation of brain maps. *Nature Methods*, 19, 1472--1480.
+doi:10.1038/s41592-022-01625-w

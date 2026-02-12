@@ -1,0 +1,14 @@
+^.*\.Rproj$
+^\.Rproj\.user$
+^LICENSE\.md$
+^\.github$
+^\.lintr$
+^_pkgdown\.yml$
+^docs$
+^pkgdown$
+^README\.Rmd$
+^man-roxygen$
+^doc$
+^Meta$
+^tools$
+tests/testthat/fixtures/python$

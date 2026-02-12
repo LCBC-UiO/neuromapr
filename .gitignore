@@ -1,0 +1,11 @@
+.Rproj.user
+.Rhistory
+.RData
+.Ruserdata
+inst/doc
+/doc/
+/Meta/
+tests/testthat/fixtures/python/
+.httr-oauth
+.DS_Store
+.quarto

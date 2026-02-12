@@ -1,0 +1,403 @@
+---
+title: "Choosing and Using Null Models"
+output: rmarkdown::html_vignette
+vignette: >
+  %\VignetteIndexEntry{Choosing and Using Null Models}
+  %\VignetteEngine{knitr::rmarkdown}
+  %\VignetteEncoding{UTF-8}
+---
+
+```{r, include = FALSE}
+knitr::opts_chunk$set(
+  collapse = TRUE,
+  comment = "#>",
+  fig.width = 7,
+  fig.height = 4.5
+)
+```
+
+Correlating two brain maps is easy. Knowing whether that correlation means
+anything is the hard part.
+
+The brain's spatial autocorrelation means that even unrelated maps can appear
+correlated simply because nearby regions share similar values. Spatial null
+models address this by generating surrogate maps that preserve the spatial
+structure of the original data while destroying the specific pattern of interest.
+If the observed correlation still stands out against these surrogates, you have
+evidence for a genuine relationship.
+
+neuromapr implements eight null model methods. They differ in their assumptions,
+computational cost, and the kind of data they handle. This vignette walks through
+each one, explains when to reach for it, and highlights the tradeoffs.
+
+```{r setup}
+library(neuromapr)
+```
+
+## The landscape
+
+The eight methods split into three families:
+
+**Distance-based methods** work with any distance matrix---Euclidean,
+geodesic, or custom. They require no coordinate system and apply equally to
+parcellated and vertex-level data.
+
+- `burt2020` --- variogram matching
+- `burt2018` --- spatial autoregressive model
+- `moran` --- Moran spectral randomization
+
+**Spin-based methods** require spherical coordinates (one set per hemisphere)
+and operate on vertex-level data. They rotate the coordinates on the sphere, then
+reassign values based on proximity.
+
+- `alexander_bloch` --- nearest-neighbor reassignment
+- `spin_vasa` --- greedy sequential assignment
+- `spin_hungarian` --- optimal (Hungarian) assignment
+
+**Parcel spin methods** combine spin rotations with parcellation-level
+reassignment. They need both spherical coordinates and a parcellation scheme.
+
+- `baum` --- maximum-overlap parcel assignment
+- `cornblath` --- majority-vote parcel assignment
+
+```{r shared-data}
+set.seed(42)
+n <- 80
+coords_3d <- matrix(rnorm(n * 3), ncol = 3)
+distmat <- as.matrix(dist(coords_3d))
+
+map_x <- rnorm(n)
+```
+
+## Distance-based methods
+
+### Variogram matching (`burt2020`)
+
+This method (Burt et al., 2020) generates surrogates by randomly permuting the
+original values, then smoothing them at different spatial scales and selecting
+the surrogate whose variogram best matches the original. The result is a map with
+the same rank-order distribution and approximately the same distance-dependent
+spatial structure.
+
+```{r burt2020}
+nulls_vario <- generate_nulls(
+  map_x,
+  method = "burt2020",
+  distmat = distmat,
+  n_perm = 100L,
+  seed = 1
+)
+nulls_vario
+```
+
+Variogram matching is the most general-purpose method. It makes no assumptions
+about the coordinate system, works on any distance matrix, and handles both
+parcellated and vertex-level data. The cost scales with the number of smoothing
+parameters tried per permutation, but for typical parcellation sizes
+(50--400 regions) it is fast.
+
+**When to use it:** This is the default recommendation when you have a distance
+matrix and want minimal assumptions about the spatial generating process.
+
+### Spatial autoregressive model (`burt2018`)
+
+Burt et al. (2018) proposed a generative approach: fit a spatial autoregressive
+(SAR) model to the data, then draw new samples from that model. The SAR model
+captures spatial autocorrelation through a weight matrix derived from distances
+and an estimated autocorrelation parameter.
+
+```{r burt2018}
+nulls_sar <- generate_nulls(
+  map_x,
+  method = "burt2018",
+  distmat = distmat,
+  n_perm = 100L,
+  seed = 1
+)
+nulls_sar
+```
+
+The SAR model estimates two parameters: `rho` (spatial autocorrelation strength)
+and `d0` (distance decay scale). These are stored in the result:
+
+```{r sar-params}
+nulls_sar$params$rho
+nulls_sar$params$d0
+```
+
+**When to use it:** When you believe the data follows an autoregressive spatial
+process and want surrogates drawn from that parametric model. It is more
+assumption-heavy than variogram matching, but computationally cheaper per
+surrogate once the parameters are estimated.
+
+### Moran spectral randomization (`moran`)
+
+Wagner and Dray (2015) introduced Moran spectral randomization, which
+decomposes the data onto Moran's eigenvector maps (spatial eigenvectors of a
+weighted connectivity matrix) and then randomly perturbs the coefficients. The
+`"singleton"` procedure flips the sign of each coefficient at random; the
+`"pair"` procedure applies random 2D rotations to pairs of coefficients with
+similar eigenvalues.
+
+```{r moran}
+nulls_moran <- generate_nulls(
+  map_x,
+  method = "moran",
+  distmat = distmat,
+  n_perm = 100L,
+  seed = 1,
+  procedure = "singleton"
+)
+nulls_moran
+```
+
+**When to use it:** When you want to preserve the spectral properties of the
+spatial autocorrelation rather than the variogram. The `"pair"` procedure is
+more conservative, preserving the eigenvalue spectrum more faithfully.
+
+## Spin-based methods
+
+Spin tests work on a fundamentally different principle. Instead of generating
+synthetic data from a statistical model, they take the real data and rotate it on
+the cortical sphere. Values are then reassigned to the original positions based
+on proximity to the rotated positions.
+
+All spin methods require coordinates organized as a list with `$lh` and `$rh`
+components---one matrix per hemisphere. This structure reflects the fact that
+each hemisphere rotates independently.
+
+```{r spin-coords}
+n_lh <- 40
+n_rh <- 40
+sphere_coords <- list(
+  lh = matrix(rnorm(n_lh * 3), ncol = 3),
+  rh = matrix(rnorm(n_rh * 3), ncol = 3)
+)
+
+vertex_data <- rnorm(n_lh + n_rh)
+```
+
+### Original spin test (`alexander_bloch`)
+
+The method that started it all (Alexander-Bloch et al., 2018). After rotating
+coordinates, each rotated vertex maps to the nearest original vertex. Multiple
+rotated vertices can map to the same original vertex, so some values may be
+duplicated while others are dropped.
+
+```{r alexander-bloch}
+nulls_ab <- null_alexander_bloch(
+  vertex_data, sphere_coords,
+  n_perm = 100L, seed = 1
+)
+nulls_ab
+```
+
+This is the simplest spin test and the fastest. The tradeoff: the many-to-one
+mapping distorts the value distribution. If preserving the distribution matters,
+the Hungarian variant is more appropriate.
+
+### Greedy assignment (`spin_vasa`)
+
+Vasa et al. (2018) proposed a one-to-one greedy assignment: iterate through
+vertices in order, assigning each to the nearest available (unassigned) rotated
+vertex. This ensures every value appears exactly once, but assignment quality
+depends on vertex ordering.
+
+```{r spin-vasa}
+nulls_vasa <- null_spin_vasa(
+  vertex_data, sphere_coords,
+  n_perm = 100L, seed = 1
+)
+nulls_vasa
+```
+
+### Optimal assignment (`spin_hungarian`)
+
+Markello and Misic (2021) showed that optimal (Hungarian) assignment removes the
+ordering bias of the greedy approach. It minimizes total reassignment distance
+globally, producing the best possible one-to-one mapping between original and
+rotated positions.
+
+```{r spin-hungarian, eval = rlang::is_installed("clue")}
+nulls_hung <- null_spin_hungarian(
+  vertex_data, sphere_coords,
+  n_perm = 100L, seed = 1
+)
+nulls_hung
+```
+
+The Hungarian algorithm requires the **clue** package. It is slower than the
+greedy approach (cubic in the number of vertices), but produces strictly better
+assignments.
+
+**When to use it:** This is the recommended spin method for vertex-level data
+when you want one-to-one assignment and can afford the extra computation.
+
+## Parcel spin methods
+
+When your data is parcellated---one value per brain region rather than per
+vertex---the spin rotation happens at the vertex level, but the reassignment
+happens at the parcel level. This requires both sphere coordinates (for the
+rotation) and a parcellation vector (to know which vertices belong to which
+parcel).
+
+```{r parcel-setup}
+parcellation <- rep(1:8, each = 10)
+parcel_data <- rnorm(8)
+```
+
+### Maximum overlap (`baum`)
+
+Baum et al. (2020) proposed that after rotating and reassigning vertices to
+their nearest neighbours, each original parcel takes the value of whichever
+rotated parcel has the most vertex overlap with it. If most vertices in
+parcel 3 now carry the label of parcel 7 after rotation, parcel 3 gets
+parcel 7's value.
+
+```{r baum}
+nulls_baum <- null_baum(
+  parcel_data, sphere_coords, parcellation,
+  n_perm = 100L, seed = 1
+)
+nulls_baum
+```
+
+### Majority vote (`cornblath`)
+
+Cornblath et al. (2020) introduced a refinement: each rotated vertex first
+receives the label of its nearest *non-medial-wall* original vertex. Parcels
+are then reassigned by majority vote among the resulting vertex labels. This
+handles the medial wall more gracefully than Baum's method, since rotated
+vertices that land on the medial wall get interpolated to the nearest valid
+region instead of being lost.
+
+```{r cornblath}
+nulls_corn <- null_cornblath(
+  parcel_data, sphere_coords, parcellation,
+  n_perm = 100L, seed = 1
+)
+nulls_corn
+```
+
+**When to use it:** Prefer Cornblath over Baum when your parcellation includes
+medial wall vertices (labeled 0 or `NA`), which is the common case for
+standard atlases.
+
+## Comparing null distributions visually
+
+A practical way to understand what each method does is to look at the
+surrogate values it produces. Here we compare the first 50 surrogates from
+two methods on the same data:
+
+```{r comparison-plot, fig.cap = "Surrogate distributions from variogram-matching (left) and Moran spectral randomization (right) for the same source data. Both preserve spatial structure but through different mechanisms.", fig.width = 7, fig.height = 3.5}
+df <- data.frame(
+  value = c(
+    as.vector(nulls_vario$nulls[, 1:50]),
+    as.vector(nulls_moran$nulls[, 1:50])
+  ),
+  method = rep(
+    c("burt2020 (variogram)", "moran (spectral)"),
+    each = n * 50
+  )
+)
+
+ggplot2::ggplot(df, ggplot2::aes(x = value)) +
+  ggplot2::geom_density(fill = "steelblue", alpha = 0.5) +
+  ggplot2::facet_wrap(~method) +
+  ggplot2::geom_density(
+    data = data.frame(value = map_x),
+    color = "red", linetype = "dashed", linewidth = 0.8
+  ) +
+  ggplot2::labs(x = "Value", y = "Density") +
+  ggplot2::theme_minimal()
+```
+
+The red dashed line shows the original data distribution. Good surrogates
+should have a similar overall distribution (they draw from the same value pool)
+but different spatial arrangements.
+
+## Using `permtest_metric()` for custom metrics
+
+`compare_maps()` is built around correlation. If you need a different metric---mean
+absolute error, cosine similarity, whatever---`permtest_metric()` gives you the
+same null model machinery with any function:
+
+```{r permtest}
+mae <- function(a, b) mean(abs(a - b))
+
+result <- permtest_metric(
+  map_x, rnorm(n),
+  metric_func = mae,
+  n_perm = 200L,
+  seed = 1
+)
+result$observed
+result$p_value
+```
+
+You can also pass `null_method` to use spatially-constrained surrogates instead
+of random permutation:
+
+```{r permtest-spatial}
+result_spatial <- permtest_metric(
+  map_x, rnorm(n),
+  metric_func = mae,
+  n_perm = 200L,
+  seed = 1,
+  null_method = "burt2020",
+  distmat = distmat
+)
+result_spatial$p_value
+```
+
+## Decision guide
+
+When faced with a choice, these questions narrow it down:
+
+1. **Do you have spherical coordinates?** If not, use a distance-based method
+   (`burt2020`, `burt2018`, or `moran`).
+
+2. **Is your data parcellated or vertex-level?** Parcellated + sphere coords
+   points to `baum` or `cornblath`. Vertex-level + sphere coords points to
+   `spin_hungarian` or `alexander_bloch`.
+
+3. **Does the medial wall matter?** If your parcellation has medial wall
+   vertices, `cornblath` handles them more carefully than `baum`.
+
+4. **Do you want a parametric model?** `burt2018` fits an explicit SAR model.
+   `moran` preserves spectral properties. `burt2020` is distribution-free.
+
+5. **Computational budget?** `alexander_bloch` and `burt2018` are the fastest.
+   `spin_hungarian` and `burt2020` are the slowest (but often the most
+   principled for their respective data types).
+
+## References
+
+Alexander-Bloch AF, Shou H, Liu S, et al. (2018). On testing for spatial
+correspondence between maps of human brain structure and function.
+*NeuroImage*, 175, 111--120.
+
+Baum GL, Cui Z, Roalf DR, et al. (2020). Development of structure--function
+coupling in human brain networks during youth. *PNAS*, 117, 21854--21861.
+
+Burt JB, Demirtas M, Eckner WJ, et al. (2018). Hierarchy of transcriptomic
+specialization across human cortex captured by structural connectivity.
+*Nature Neuroscience*, 21, 1251--1259.
+
+Burt JB, Helmer M, Shinn M, et al. (2020). Generative modeling of brain maps
+with spatial autocorrelation. *NeuroImage*, 220, 117038.
+
+Cornblath EJ, Ashourvan A, Kim JZ, et al. (2020). Temporal sequences of brain
+activity at rest are constrained by white matter structure and modulated by
+cognitive demands. *Communications Biology*, 3, 590.
+
+Markello RD, Misic B (2021). Comparing spatial null models for brain maps.
+*NeuroImage*, 236, 118052.
+
+Vasa F, Seidlitz J, Romero-Garcia R, et al. (2018). Adolescent tuning of
+association cortex in human structural brain networks. *Cerebral Cortex*,
+28, 3293--3303.
+
+Wagner HH, Dray S (2015). Generating spatially constrained null models for
+irregularly spaced data using Moran spectral randomization methods.
+*Methods in Ecology and Evolution*, 6, 1169--1178.
