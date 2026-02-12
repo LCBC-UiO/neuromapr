@@ -7,7 +7,8 @@
 parcels_to_vertices(parcel_data, labels, fill = NA_real_)
 }
 \arguments{
-\item{parcel_data}{Named numeric vector of parcel values (names match labels).}
+\item{parcel_data}{Named numeric vector of parcel values
+(names match labels).}
 
 \item{labels}{Integer vector of parcel labels. \code{0} and \code{NA} are medial wall.}
 

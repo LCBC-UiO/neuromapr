@@ -34,13 +34,17 @@ null_baum <- function(data, coords, parcellation, n_perm = 1000L, seed = NULL,
   ulabels <- sort(unique(parcellation[valid]))
   n_parcels <- length(ulabels)
   if (length(data) != n_parcels) {
-    cli::cli_abort(
-      "Length of {.arg data} ({length(data)}) must match number of parcels ({n_parcels})."
-    )
+    cli::cli_abort(paste(
+      "Length of {.arg data} ({length(data)})",
+      "must match number of parcels ({n_parcels})."
+    ))
   }
   names(data) <- ulabels
 
-  rotated <- rotate_coords(coords$lh, coords$rh, n_perm, seed, rotation = rotation)
+  rotated <- rotate_coords(
+    coords$lh, coords$rh, n_perm, seed,
+    rotation = rotation
+  )
   nulls <- matrix(0, nrow = n_parcels, ncol = n_perm)
 
   for (i in seq_len(n_perm)) {

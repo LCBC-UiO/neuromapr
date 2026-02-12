@@ -64,7 +64,10 @@ describe("null_moran", {
     n <- 20
     data <- rnorm(n)
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
-    result <- null_moran(data, distmat, n_perm = 5L, seed = 1, procedure = "singleton")
+    result <- null_moran(
+      data, distmat,
+      n_perm = 5L, seed = 1, procedure = "singleton"
+    )
 
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "moran")
@@ -78,7 +81,10 @@ describe("null_moran", {
     n <- 20
     data <- rnorm(n)
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
-    result <- null_moran(data, distmat, n_perm = 5L, seed = 1, procedure = "pair")
+    result <- null_moran(
+      data, distmat,
+      n_perm = 5L, seed = 1, procedure = "pair"
+    )
 
     expect_s3_class(result, "null_distribution")
     expect_equal(result$params$procedure, "pair")

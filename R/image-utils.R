@@ -59,7 +59,10 @@ vertex_areas <- function(vertices, faces) {
 #'
 #' @export
 annot_to_gifti <- function(annot_path, output_path = NULL) {
-  rlang::check_installed("freesurferformats", reason = "to read FreeSurfer annotation files")
+  rlang::check_installed(
+    "freesurferformats",
+    reason = "to read FreeSurfer annotation files"
+  )
 
   if (!file.exists(annot_path)) {
     cli::cli_abort("File not found: {.file {annot_path}}")
@@ -107,7 +110,10 @@ annot_to_gifti <- function(annot_path, output_path = NULL) {
 #'
 #' @export
 fsmorph_to_gifti <- function(morph_path, output_path = NULL) {
-  rlang::check_installed("freesurferformats", reason = "to read FreeSurfer morphometry files")
+  rlang::check_installed(
+    "freesurferformats",
+    reason = "to read FreeSurfer morphometry files"
+  )
 
   if (!file.exists(morph_path)) {
     cli::cli_abort("File not found: {.file {morph_path}}")

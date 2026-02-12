@@ -16,9 +16,10 @@
 #' @export
 vertices_to_parcels <- function(data, labels, summary_func = mean) {
   if (length(data) != length(labels)) {
-    cli::cli_abort(
-      "{.arg data} ({length(data)}) and {.arg labels} ({length(labels)}) must have the same length."
-    )
+    cli::cli_abort(paste(
+      "{.arg data} ({length(data)}) and {.arg labels}",
+      "({length(labels)}) must have the same length."
+    ))
   }
   valid <- !is.na(labels) & labels != 0
   result <- tapply(data[valid], labels[valid], summary_func)
@@ -30,7 +31,8 @@ vertices_to_parcels <- function(data, labels, summary_func = mean) {
 #' Expands parcel-level values to a vertex-level vector using parcellation
 #' labels.
 #'
-#' @param parcel_data Named numeric vector of parcel values (names match labels).
+#' @param parcel_data Named numeric vector of parcel values
+#'   (names match labels).
 #' @param labels Integer vector of parcel labels. `0` and `NA` are medial wall.
 #' @param fill Value for medial wall vertices (default: `NA_real_`).
 #'
@@ -161,6 +163,8 @@ get_parcel_centroids <- function(vertices,
   centroids
 }
 
+#' @noRd
+#' @keywords internal
 read_parcellation_labels <- function(path) {
   gii <- gifti::read_gifti(path)
   as.integer(gii$data[[1]])

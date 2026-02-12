@@ -1,7 +1,8 @@
 #' Build an igraph from a triangular surface mesh
 #'
 #' Extracts unique edges from triangular faces, computes Euclidean edge weights,
-#' and returns an igraph graph object suitable for geodesic distance computation.
+#' and returns an igraph graph object suitable for geodesic distance
+#' computation.
 #'
 #' @param vertices Numeric matrix (n x 3) of vertex coordinates.
 #' @param faces Integer matrix (m x 3) of face indices (1-indexed).

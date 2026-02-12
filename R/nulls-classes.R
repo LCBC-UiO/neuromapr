@@ -23,6 +23,8 @@ new_null_distribution <- function(nulls, method, observed, params = list()) {
   )
 }
 
+#' @noRd
+#' @keywords internal
 validate_null_distribution <- function(x) {
   if (!inherits(x, "null_distribution")) {
     cli::cli_abort("{.arg x} must be a {.cls null_distribution} object.")
@@ -31,9 +33,10 @@ validate_null_distribution <- function(x) {
     cli::cli_abort("{.field nulls} must be a matrix.")
   }
   if (length(x$observed) != nrow(x$nulls)) {
-    cli::cli_abort(
-      "{.field observed} length ({length(x$observed)}) must match rows in {.field nulls} ({nrow(x$nulls)})."
-    )
+    cli::cli_abort(paste(
+      "{.field observed} length ({length(x$observed)})",
+      "must match rows in {.field nulls} ({nrow(x$nulls)})."
+    ))
   }
   invisible(x)
 }
@@ -72,7 +75,7 @@ as.matrix.null_distribution <- function(x, ...) {
 plot.null_distribution <- function(x, parcel = 1L, ...) {
   df <- data.frame(value = x$nulls[parcel, ])
   obs <- x$observed[parcel]
-  ggplot2::ggplot(df, ggplot2::aes(x = value)) +
+  ggplot2::ggplot(df, ggplot2::aes(x = .data$value)) +
     ggplot2::geom_histogram(bins = 30) +
     ggplot2::geom_vline(
       xintercept = obs,

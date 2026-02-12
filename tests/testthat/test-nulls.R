@@ -53,7 +53,10 @@ describe("generate_nulls", {
     n <- 20
     data <- rnorm(n)
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
-    result <- generate_nulls(data, method = "moran", n_perm = 5L, distmat = distmat, seed = 1)
+    result <- generate_nulls(
+      data, method = "moran",
+      n_perm = 5L, distmat = distmat, seed = 1
+    )
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "moran")
     expect_equal(result$n_perm, 5)
@@ -68,7 +71,10 @@ describe("generate_nulls", {
       rh = matrix(rnorm(n_rh * 3), ncol = 3)
     )
     data <- rnorm(n_lh + n_rh)
-    result <- generate_nulls(data, method = "spin_vasa", n_perm = 5L, coords = coords, seed = 1)
+    result <- generate_nulls(
+      data, method = "spin_vasa",
+      n_perm = 5L, coords = coords, seed = 1
+    )
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "spin_vasa")
   })
@@ -132,7 +138,10 @@ describe("generate_nulls", {
       rh = matrix(rnorm(n_rh * 3), ncol = 3)
     )
     data <- rnorm(n_lh + n_rh)
-    result <- generate_nulls(data, method = "alexander_bloch", n_perm = 5L, coords = coords, seed = 1)
+    result <- generate_nulls(
+      data, method = "alexander_bloch",
+      n_perm = 5L, coords = coords, seed = 1
+    )
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "alexander_bloch")
   })
@@ -142,7 +151,10 @@ describe("generate_nulls", {
     n <- 20
     data <- rnorm(n)
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
-    result <- generate_nulls(data, method = "burt2018", n_perm = 5L, distmat = distmat, seed = 1)
+    result <- generate_nulls(
+      data, method = "burt2018",
+      n_perm = 5L, distmat = distmat, seed = 1
+    )
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "burt2018")
   })

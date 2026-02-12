@@ -52,9 +52,10 @@ compare_maps <- function(x,
   }
 
   if (length(x) != length(y)) {
-    cli::cli_abort(
-      "{.arg x} and {.arg y} must have the same length ({length(x)} vs {length(y)})."
-    )
+    cli::cli_abort(paste(
+      "{.arg x} and {.arg y} must have the same length",
+      "({length(x)} vs {length(y)})."
+    ))
   }
 
   if (na.rm) {
@@ -75,13 +76,18 @@ compare_maps <- function(x,
   if (!is.null(nulls)) {
     validate_null_distribution(nulls)
     if (nrow(nulls$nulls) != n) {
-      cli::cli_abort(
-        "Pre-computed nulls have {nrow(nulls$nulls)} rows but data has {n} observations."
-      )
+      cli::cli_abort(paste(
+        "Pre-computed nulls have {nrow(nulls$nulls)} rows",
+        "but data has {n} observations."
+      ))
     }
     null_method_used <- nulls$method
     n_perm <- nulls$n_perm
-    if (verbose) cli::cli_alert_info("Using pre-computed {.val {null_method_used}} null distribution")
+    if (verbose) {
+      cli::cli_alert_info(
+        "Using pre-computed {.val {null_method_used}} null distribution"
+      )
+    }
     null_r <- compute_null_correlations(nulls$nulls, y, method)
     p_null <- (sum(abs(null_r) >= abs(r)) + 1) / (n_perm + 1)
   } else if (!is.null(null_method)) {
@@ -90,7 +96,11 @@ compare_maps <- function(x,
       c("burt2020", "moran", "spin_vasa", "spin_hungarian",
         "alexander_bloch", "baum", "cornblath", "burt2018")
     )
-    if (verbose) cli::cli_alert_info("Generating {.val {null_method}} nulls ({n_perm} permutations)")
+    if (verbose) {
+      cli::cli_alert_info(
+        "Generating {.val {null_method}} nulls ({n_perm} permutations)"
+      )
+    }
     null_dist <- generate_nulls(
       x,
       method = null_method,
@@ -119,6 +129,8 @@ compare_maps <- function(x,
   )
 }
 
+#' @noRd
+#' @keywords internal
 compute_null_correlations <- function(null_matrix, y, method) {
   apply(null_matrix, 2, function(null_x) {
     stats::cor(null_x, y, method = method, use = "complete.obs")
@@ -136,7 +148,9 @@ print.neuromaps_enhanced_comparison <- function(x, ...) {
 
   if (!is.null(x$p_null)) {
     cli::cli_rule()
-    cli::cli_text("{.field Null model}: {x$null_method} ({x$n_perm} permutations)")
+    cli::cli_text(
+      "{.field Null model}: {x$null_method} ({x$n_perm} permutations)"
+    )
     cli::cli_text("{.field p_null} = {format.pval(x$p_null, digits = 3)}")
   }
 

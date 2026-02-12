@@ -30,7 +30,10 @@ describe("smooth_surrogate", {
     distmat <- as.matrix(dist(coords))
     nn <- compute_knn(distmat, 5)
     permuted <- rnorm(n)
-    smoothed <- smooth_surrogate(permuted, nn$indices, nn$distances, k = 5, kernel = "uniform")
+    smoothed <- smooth_surrogate(
+      permuted, nn$indices, nn$distances,
+      k = 5, kernel = "uniform"
+    )
 
     expect_length(smoothed, n)
     expect_true(stats::sd(smoothed) < stats::sd(permuted))
@@ -41,7 +44,10 @@ describe("smooth_surrogate", {
     n <- 20
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
     nn <- compute_knn(distmat, 5)
-    smoothed <- smooth_surrogate(rnorm(n), nn$indices, nn$distances, k = 3, kernel = "exponential")
+    smoothed <- smooth_surrogate(
+      rnorm(n), nn$indices, nn$distances,
+      k = 3, kernel = "exponential"
+    )
     expect_length(smoothed, n)
   })
 
@@ -50,7 +56,10 @@ describe("smooth_surrogate", {
     n <- 20
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
     nn <- compute_knn(distmat, 5)
-    smoothed <- smooth_surrogate(rnorm(n), nn$indices, nn$distances, k = 3, kernel = "gaussian")
+    smoothed <- smooth_surrogate(
+      rnorm(n), nn$indices, nn$distances,
+      k = 3, kernel = "gaussian"
+    )
     expect_length(smoothed, n)
   })
 })
@@ -105,8 +114,16 @@ describe("null_burt2020", {
     n <- 20
     data <- rnorm(n)
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
-    r1 <- null_burt2020(data, distmat, n_perm = 2L, seed = 99, ns = 20, nh = 5, knn = 10, deltas = c(0.5))
-    r2 <- null_burt2020(data, distmat, n_perm = 2L, seed = 99, ns = 20, nh = 5, knn = 10, deltas = c(0.5))
+    r1 <- null_burt2020(
+      data, distmat,
+      n_perm = 2L, seed = 99,
+      ns = 20, nh = 5, knn = 10, deltas = c(0.5)
+    )
+    r2 <- null_burt2020(
+      data, distmat,
+      n_perm = 2L, seed = 99,
+      ns = 20, nh = 5, knn = 10, deltas = c(0.5)
+    )
     expect_identical(r1$nulls, r2$nulls)
   })
 

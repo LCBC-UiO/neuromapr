@@ -23,7 +23,8 @@
 #' doi:10.1016/j.neuroimage.2021.118052
 #'
 #' @export
-null_spin_vasa <- function(data, coords, n_perm = 1000L, seed = NULL,
+null_spin_vasa <- function(data, coords, n_perm = 1000L,
+                           seed = NULL,
                            rotation = c("euler", "rodrigues")) {
   validate_data(data)
   validate_coords(coords)
@@ -37,7 +38,10 @@ null_spin_vasa <- function(data, coords, n_perm = 1000L, seed = NULL,
     )
   }
 
-  rotated <- rotate_coords(coords$lh, coords$rh, n_perm, seed, rotation = rotation)
+  rotated <- rotate_coords(
+    coords$lh, coords$rh, n_perm, seed,
+    rotation = rotation
+  )
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
   for (i in seq_len(n_perm)) {
@@ -49,14 +53,20 @@ null_spin_vasa <- function(data, coords, n_perm = 1000L, seed = NULL,
     nulls[n_lh + seq_len(n_rh), i] <- data[n_lh + assign_rh]
   }
 
-  new_null_distribution(nulls, "spin_vasa", data, list(n_perm = n_perm))
+  new_null_distribution(
+    nulls, "spin_vasa", data, list(n_perm = n_perm)
+  )
 }
 
 #' @rdname null_spin_vasa
 #' @export
-null_spin_hungarian <- function(data, coords, n_perm = 1000L, seed = NULL,
-                                rotation = c("euler", "rodrigues")) {
-  rlang::check_installed("clue", reason = "for Hungarian assignment in spin tests")
+null_spin_hungarian <- function(
+    data, coords, n_perm = 1000L, seed = NULL,
+    rotation = c("euler", "rodrigues")) {
+  rlang::check_installed(
+    "clue",
+    reason = "for Hungarian assignment in spin tests"
+  )
   validate_data(data)
   validate_coords(coords)
   rotation <- match.arg(rotation)
@@ -69,7 +79,10 @@ null_spin_hungarian <- function(data, coords, n_perm = 1000L, seed = NULL,
     )
   }
 
-  rotated <- rotate_coords(coords$lh, coords$rh, n_perm, seed, rotation = rotation)
+  rotated <- rotate_coords(
+    coords$lh, coords$rh, n_perm, seed,
+    rotation = rotation
+  )
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
   for (i in seq_len(n_perm)) {
@@ -81,10 +94,15 @@ null_spin_hungarian <- function(data, coords, n_perm = 1000L, seed = NULL,
     nulls[n_lh + seq_len(n_rh), i] <- data[n_lh + assign_rh]
   }
 
-  new_null_distribution(nulls, "spin_hungarian", data, list(n_perm = n_perm))
+  new_null_distribution(
+    nulls, "spin_hungarian", data, list(n_perm = n_perm)
+  )
 }
 
-random_rotation_matrix <- function(method = c("euler", "rodrigues")) {
+#' @noRd
+#' @keywords internal
+random_rotation_matrix <- function(
+    method = c("euler", "rodrigues")) {
   method <- match.arg(method)
   switch(method,
     euler = random_rotation_euler(),
@@ -93,25 +111,32 @@ random_rotation_matrix <- function(method = c("euler", "rodrigues")) {
 }
 
 #' @noRd
-#' ZYZ Euler angle rotation (neuromaps Python default).
-#' Uniform on SO(3) with cos(beta) ~ Uniform(-1, 1).
+#' @keywords internal
 random_rotation_euler <- function() {
   alpha <- stats::runif(1, 0, 2 * pi)
   beta <- acos(stats::runif(1, -1, 1))
   gamma <- stats::runif(1, 0, 2 * pi)
-  ca <- cos(alpha); sa <- sin(alpha)
-  cb <- cos(beta);  sb <- sin(beta)
-  cg <- cos(gamma); sg <- sin(gamma)
+  ca <- cos(alpha)
+  sa <- sin(alpha)
+  cb <- cos(beta)
+  sb <- sin(beta)
+  cg <- cos(gamma)
+  sg <- sin(gamma)
   matrix(c(
-    ca * cb * cg - sa * sg, sa * cb * cg + ca * sg, -sb * cg,
-    -ca * cb * sg - sa * cg, -sa * cb * sg + ca * cg, sb * sg,
-    ca * sb,                 sa * sb,                 cb
+    cg * cb * ca - sg * sa,
+    sg * cb * ca + cg * sa,
+    -sb * ca,
+    -cg * cb * sa - sg * ca,
+    -sg * cb * sa + cg * ca,
+    sb * sa,
+    cg * sb,
+    sg * sb,
+    cb
   ), nrow = 3, ncol = 3)
 }
 
 #' @noRd
-#' Rodrigues axis-angle rotation (alternative).
-#' Samples axis uniformly on S^2 and angle uniformly on [0, 2*pi].
+#' @keywords internal
 random_rotation_rodrigues <- function() {
   u <- stats::rnorm(3)
   u <- u / sqrt(sum(u^2))
@@ -122,27 +147,37 @@ random_rotation_rodrigues <- function() {
   uy <- u[2]
   uz <- u[3]
   matrix(c(
-    ct + ux^2 * (1 - ct),       ux * uy * (1 - ct) - uz * st, ux * uz * (1 - ct) + uy * st,
-    uy * ux * (1 - ct) + uz * st, ct + uy^2 * (1 - ct),       uy * uz * (1 - ct) - ux * st,
-    uz * ux * (1 - ct) - uy * st, uz * uy * (1 - ct) + ux * st, ct + uz^2 * (1 - ct)
+    ct + ux^2 * (1 - ct),
+    uy * ux * (1 - ct) + uz * st,
+    uz * ux * (1 - ct) - uy * st,
+    ux * uy * (1 - ct) - uz * st,
+    ct + uy^2 * (1 - ct),
+    uz * uy * (1 - ct) + ux * st,
+    ux * uz * (1 - ct) + uy * st,
+    uy * uz * (1 - ct) - ux * st,
+    ct + uz^2 * (1 - ct)
   ), nrow = 3, ncol = 3)
 }
 
-rotate_coords <- function(coords_lh, coords_rh, n_perm, seed = NULL,
-                           rotation = "euler") {
+#' @noRd
+#' @keywords internal
+rotate_coords <- function(coords_lh, coords_rh, n_perm,
+                          seed = NULL, rotation = "euler") {
   if (!is.null(seed)) set.seed(seed)
   lh_rotated <- array(0, dim = c(nrow(coords_lh), 3, n_perm))
   rh_rotated <- array(0, dim = c(nrow(coords_rh), 3, n_perm))
 
   for (i in seq_len(n_perm)) {
-    R1 <- random_rotation_matrix(rotation)
-    R2 <- random_rotation_matrix(rotation)
-    lh_rotated[, , i] <- coords_lh %*% R1
-    rh_rotated[, , i] <- coords_rh %*% R2
+    rot1 <- random_rotation_matrix(rotation)
+    rot2 <- random_rotation_matrix(rotation)
+    lh_rotated[, , i] <- coords_lh %*% rot1
+    rh_rotated[, , i] <- coords_rh %*% rot2
   }
   list(lh = lh_rotated, rh = rh_rotated)
 }
 
+#' @noRd
+#' @keywords internal
 compute_cost_matrix <- function(original, rotated) {
   n <- nrow(original)
   cost <- matrix(0, nrow = n, ncol = n)
@@ -153,6 +188,8 @@ compute_cost_matrix <- function(original, rotated) {
   cost
 }
 
+#' @noRd
+#' @keywords internal
 assign_parcels_vasa <- function(cost_matrix) {
   n <- nrow(cost_matrix)
   assignment <- integer(n)
@@ -171,6 +208,8 @@ assign_parcels_vasa <- function(cost_matrix) {
   assignment
 }
 
+#' @noRd
+#' @keywords internal
 assign_parcels_hungarian <- function(cost_matrix) {
   sol <- clue::solve_LSAP(cost_matrix)
   as.integer(sol)

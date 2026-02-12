@@ -43,11 +43,17 @@ describe("vertex_areas", {
   })
 
   it("errors for invalid vertices", {
-    expect_error(vertex_areas(matrix(1:4, ncol = 2), matrix(1:3, ncol = 3)), "3 columns")
+    expect_error(
+      vertex_areas(matrix(1:4, ncol = 2), matrix(1:3, ncol = 3)),
+      "3 columns"
+    )
   })
 
   it("errors for invalid faces", {
-    expect_error(vertex_areas(matrix(1:6, ncol = 3), matrix(1:4, ncol = 2)), "3 columns")
+    expect_error(
+      vertex_areas(matrix(1:6, ncol = 3), matrix(1:4, ncol = 2)),
+      "3 columns"
+    )
   })
 })
 

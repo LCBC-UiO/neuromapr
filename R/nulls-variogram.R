@@ -47,7 +47,10 @@ null_burt2020 <- function(data,
     fixed_idx <- sample.int(n, ns)
   }
 
-  target_variogram <- compute_variogram(data, distmat, nh = nh, pv = pv, ns = ns, idx = fixed_idx)
+  target_variogram <- compute_variogram(
+    data, distmat, nh = nh, pv = pv, ns = ns,
+    idx = fixed_idx
+  )
   nn <- compute_knn(distmat, knn)
 
   nulls <- matrix(0, nrow = n, ncol = n_perm)
@@ -59,9 +62,14 @@ null_burt2020 <- function(data,
 
     for (delta in deltas) {
       k <- max(1L, round(delta * knn))
-      smoothed <- smooth_surrogate(permuted, nn$indices, nn$distances, k, kernel)
+      smoothed <- smooth_surrogate(
+        permuted, nn$indices, nn$distances, k, kernel
+      )
       smoothed <- rank_match(smoothed, data)
-      vg <- compute_variogram(smoothed, distmat, nh = nh, pv = pv, ns = ns, idx = fixed_idx)
+      vg <- compute_variogram(
+        smoothed, distmat, nh = nh, pv = pv, ns = ns,
+        idx = fixed_idx
+      )
       sse <- sum((vg$gamma - target_variogram$gamma)^2)
 
       if (sse < best_sse) {
@@ -78,7 +86,11 @@ null_burt2020 <- function(data,
   ))
 }
 
-compute_variogram <- function(data, distmat, nh = 25L, pv = 25, ns = 500L, idx = NULL) {
+#' @noRd
+#' @keywords internal
+compute_variogram <- function(data, distmat, nh = 25L,
+                              pv = 25, ns = 500L,
+                              idx = NULL) {
   n <- length(data)
   if (is.null(idx) && ns < n) {
     idx <- sample.int(n, ns)
@@ -113,6 +125,8 @@ compute_variogram <- function(data, distmat, nh = 25L, pv = 25, ns = 500L, idx =
   )
 }
 
+#' @noRd
+#' @keywords internal
 smooth_surrogate <- function(permuted, nn_indices, nn_distances, k, kernel) {
   n <- length(permuted)
   k <- min(k, ncol(nn_indices))
@@ -131,6 +145,8 @@ smooth_surrogate <- function(permuted, nn_indices, nn_distances, k, kernel) {
   smoothed
 }
 
+#' @noRd
+#' @keywords internal
 rank_match <- function(surrogate, target) {
   target_sorted <- sort(target)
   target_sorted[rank(surrogate, ties.method = "first")]

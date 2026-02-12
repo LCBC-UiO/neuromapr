@@ -1,3 +1,5 @@
+#' @noRd
+#' @keywords internal
 read_surface_coordinates <- function(path) {
   ext <- tools::file_ext(path)
   if (ext == "gii" || grepl("\\.surf\\.gii$", path)) {
@@ -8,6 +10,8 @@ read_surface_coordinates <- function(path) {
   }
 }
 
+#' @noRd
+#' @keywords internal
 compute_distance_matrix <- function(coords,
                                     method = c("euclidean", "geodesic"),
                                     faces = NULL) {
@@ -28,6 +32,8 @@ compute_distance_matrix <- function(coords,
   }
 }
 
+#' @noRd
+#' @keywords internal
 compute_knn <- function(distmat, k) {
   n <- nrow(distmat)
   k <- min(k, n - 1L)
@@ -42,6 +48,8 @@ compute_knn <- function(distmat, k) {
   list(indices = indices, distances = distances)
 }
 
+#' @noRd
+#' @keywords internal
 validate_data <- function(data, arg = "data") {
   if (!is.numeric(data)) {
     cli::cli_abort("{.arg {arg}} must be numeric.")
@@ -52,6 +60,8 @@ validate_data <- function(data, arg = "data") {
   invisible(data)
 }
 
+#' @noRd
+#' @keywords internal
 validate_distmat <- function(distmat, n, arg = "distmat") {
   if (!is.matrix(distmat)) {
     cli::cli_abort("{.arg {arg}} must be a matrix.")
@@ -88,11 +98,14 @@ read_brain_map_values <- function(path) {
   }
 }
 
+#' @noRd
+#' @keywords internal
 validate_coords <- function(coords) {
   if (!is.list(coords) || is.null(coords$lh) || is.null(coords$rh)) {
-    cli::cli_abort(
-      "{.arg coords} must be a list with {.field $lh} and {.field $rh} matrices."
-    )
+    cli::cli_abort(paste(
+      "{.arg coords} must be a list with",
+      "{.field $lh} and {.field $rh} matrices."
+    ))
   }
   if (!is.matrix(coords$lh) || ncol(coords$lh) != 3) {
     cli::cli_abort("{.field coords$lh} must be a matrix with 3 columns.")
@@ -103,14 +116,54 @@ validate_coords <- function(coords) {
   invisible(coords)
 }
 
+#' @noRd
+#' @keywords internal
 validate_parcellation <- function(labels, n) {
   if (!is.numeric(labels) && !is.integer(labels)) {
     cli::cli_abort("{.arg parcellation} must be an integer or numeric vector.")
   }
   if (length(labels) != n) {
-    cli::cli_abort(
-      "{.arg parcellation} length ({length(labels)}) must match data length ({n})."
-    )
+    cli::cli_abort(paste(
+      "{.arg parcellation} length ({length(labels)})",
+      "must match data length ({n})."
+    ))
   }
   invisible(labels)
+}
+
+#' @noRd
+#' @keywords internal
+neuromaps_cache_dir <- function() {
+  dir <- getOption(
+    "neuromapr.data_dir",
+    Sys.getenv("NEUROMAPR_DATA_DIR", unset = "")
+  )
+  if (nzchar(dir)) return(dir)
+  tools::R_user_dir("neuromapr", "cache")
+}
+
+#' @noRd
+#' @keywords internal
+validate_checksum <- function(file, expected) {
+  if (is.null(expected) || !nzchar(expected)) return(TRUE)
+  actual <- unname(tools::md5sum(file))
+  identical(actual, expected)
+}
+
+#' @noRd
+#' @keywords internal
+parse_neuromaps_filename <- function(fname) {
+  base <- sub("_feature\\..*$", "", fname)
+  ext <- sub("^.*_feature", "", fname)
+
+  pairs <- strsplit(base, "_")[[1]]
+  result <- list()
+  for (pair in pairs) {
+    parts <- strsplit(pair, "-", fixed = TRUE)[[1]]
+    if (length(parts) == 2) {
+      result[[parts[1]]] <- parts[2]
+    }
+  }
+  result$ext <- ext
+  result
 }

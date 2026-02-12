@@ -16,7 +16,8 @@ An \code{igraph} graph object with weighted edges.
 }
 \description{
 Extracts unique edges from triangular faces, computes Euclidean edge weights,
-and returns an igraph graph object suitable for geodesic distance computation.
+and returns an igraph graph object suitable for geodesic distance
+computation.
 }
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.

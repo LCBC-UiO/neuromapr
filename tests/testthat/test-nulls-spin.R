@@ -1,13 +1,13 @@
 describe("random_rotation_matrix", {
   it("returns a 3x3 orthogonal matrix", {
-    R <- random_rotation_matrix()
-    expect_equal(dim(R), c(3, 3))
-    expect_equal(R %*% t(R), diag(3), tolerance = 1e-10)
+    rot <- random_rotation_matrix()
+    expect_equal(dim(rot), c(3, 3))
+    expect_equal(rot %*% t(rot), diag(3), tolerance = 1e-10)
   })
 
   it("has determinant of 1", {
-    R <- random_rotation_matrix()
-    expect_equal(det(R), 1, tolerance = 1e-10)
+    rot <- random_rotation_matrix()
+    expect_equal(det(rot), 1, tolerance = 1e-10)
   })
 })
 

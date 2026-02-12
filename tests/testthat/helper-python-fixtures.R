@@ -5,7 +5,10 @@ fixture_dir <- function() {
 skip_if_no_python_fixtures <- function() {
   dir <- fixture_dir()
   if (!dir.exists(dir) || length(list.files(dir, pattern = "\\.json$")) == 0) {
-    testthat::skip("Python reference fixtures not found (run tools/generate-reference-data.py)")
+    testthat::skip(paste(
+      "Python reference fixtures not found",
+      "(run tools/generate-reference-data.py)"
+    ))
   }
 }
 

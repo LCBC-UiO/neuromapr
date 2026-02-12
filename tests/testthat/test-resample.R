@@ -17,8 +17,11 @@ describe("density_to_n", {
 describe("resample_images", {
   it("errors for missing source file", {
     expect_error(
-      resample_images("nonexistent.gii", "also_missing.gii",
-        src_space = "fsaverage", trg_space = "fsaverage"),
+      resample_images(
+        "nonexistent.gii", "also_missing.gii",
+        src_space = "fsaverage",
+        trg_space = "fsaverage"
+      ),
       "not found"
     )
   })
@@ -29,9 +32,12 @@ describe("resample_images", {
     file.create(src)
     file.create(trg)
     expect_error(
-      resample_images(src, trg,
-        src_space = "fsaverage", trg_space = "fsLR",
-        strategy = "transform_to_alt"),
+      resample_images(
+        src, trg,
+        src_space = "fsaverage",
+        trg_space = "fsLR",
+        strategy = "transform_to_alt"
+      ),
       "alt_space"
     )
   })

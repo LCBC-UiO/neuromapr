@@ -20,8 +20,10 @@
 #' doi:10.1038/s42003-020-01296-5
 #'
 #' @export
-null_cornblath <- function(data, coords, parcellation, n_perm = 1000L, seed = NULL,
-                           rotation = c("euler", "rodrigues")) {
+null_cornblath <- function(
+    data, coords, parcellation,
+    n_perm = 1000L, seed = NULL,
+    rotation = c("euler", "rodrigues")) {
   validate_data(data)
   validate_coords(coords)
   rotation <- match.arg(rotation)
@@ -34,16 +36,20 @@ null_cornblath <- function(data, coords, parcellation, n_perm = 1000L, seed = NU
   ulabels <- sort(unique(parcellation[valid]))
   n_parcels <- length(ulabels)
   if (length(data) != n_parcels) {
-    cli::cli_abort(
-      "Length of {.arg data} ({length(data)}) must match number of parcels ({n_parcels})."
-    )
+    cli::cli_abort(paste(
+      "Length of {.arg data} ({length(data)})",
+      "must match number of parcels ({n_parcels})."
+    ))
   }
   names(data) <- ulabels
 
   valid_lh <- which(valid[seq_len(n_lh)])
   valid_rh <- which(valid[n_lh + seq_len(n_rh)])
 
-  rotated <- rotate_coords(coords$lh, coords$rh, n_perm, seed, rotation = rotation)
+  rotated <- rotate_coords(
+    coords$lh, coords$rh, n_perm, seed,
+    rotation = rotation
+  )
   nulls <- matrix(0, nrow = n_parcels, ncol = n_perm)
 
   for (i in seq_len(n_perm)) {
@@ -76,7 +82,11 @@ null_cornblath <- function(data, coords, parcellation, n_perm = 1000L, seed = NU
   new_null_distribution(nulls, "cornblath", data, list(n_perm = n_perm))
 }
 
-nearest_valid_label <- function(rotated_coords, original_coords, labels, valid_idx) {
+#' @noRd
+#' @keywords internal
+nearest_valid_label <- function(
+    rotated_coords, original_coords,
+    labels, valid_idx) {
   n <- nrow(rotated_coords)
   new_labels <- integer(n)
   valid_coords <- original_coords[valid_idx, , drop = FALSE]

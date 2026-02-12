@@ -79,9 +79,12 @@ null_moran <- function(data,
   ))
 }
 
-compute_weight_matrix <- function(distmat, kernel = c("inverse_distance",
-                                                       "exponential",
-                                                       "gaussian", "bisquare")) {
+#' @noRd
+#' @keywords internal
+compute_weight_matrix <- function(
+    distmat,
+    kernel = c("inverse_distance", "exponential",
+               "gaussian", "bisquare")) {
   kernel <- match.arg(kernel)
 
   w <- switch(kernel,
@@ -110,16 +113,18 @@ compute_weight_matrix <- function(distmat, kernel = c("inverse_distance",
   w / rs
 }
 
+#' @noRd
+#' @keywords internal
 compute_mem <- function(weight_mat, n) {
   centering <- diag(n) - matrix(1 / n, n, n)
   sym_w <- (weight_mat + t(weight_mat)) / 2
-  B <- centering %*% sym_w %*% centering
+  dbl_centered <- centering %*% sym_w %*% centering
 
   if (n > 5000 && rlang::is_installed("RSpectra")) {
     k <- min(n - 1, 500)
-    eig <- RSpectra::eigs_sym(B, k = k)
+    eig <- RSpectra::eigs_sym(dbl_centered, k = k)
   } else {
-    eig <- eigen(B, symmetric = TRUE)
+    eig <- eigen(dbl_centered, symmetric = TRUE)
   }
 
   keep <- abs(eig$values) > 1e-10
@@ -129,6 +134,8 @@ compute_mem <- function(weight_mat, n) {
   )
 }
 
+#' @noRd
+#' @keywords internal
 make_pairs <- function(eigvals, tol = 1e-6) {
   n <- length(eigvals)
   used <- logical(n)

@@ -37,9 +37,13 @@ null_burt2018 <- function(data, distmat, n_perm = 1000L, seed = NULL) {
   ))
 }
 
+#' @noRd
+#' @keywords internal
 estimate_sar_params <- function(data, distmat) {
   d_vals <- distmat[upper.tri(distmat)]
-  d_candidates <- stats::quantile(d_vals[d_vals > 0], probs = seq(0.1, 0.9, by = 0.1))
+  d_candidates <- stats::quantile(
+    d_vals[d_vals > 0], probs = seq(0.1, 0.9, by = 0.1)
+  )
 
   best_sse <- Inf
   best_rho <- 0
@@ -61,6 +65,8 @@ estimate_sar_params <- function(data, distmat) {
   list(rho = best_rho, d0 = best_d0)
 }
 
+#' @noRd
+#' @keywords internal
 build_sar_weights <- function(distmat, d0) {
   w <- exp(-distmat / d0)
   diag(w) <- 0
@@ -69,10 +75,12 @@ build_sar_weights <- function(distmat, d0) {
   w / rs
 }
 
+#' @noRd
+#' @keywords internal
 sar_surrogate <- function(weight_mat, rho, data) {
   n <- length(data)
   z <- stats::rnorm(n)
-  A <- diag(n) - rho * weight_mat
-  surrogate <- solve(A, z)
+  sar_mat <- diag(n) - rho * weight_mat
+  surrogate <- solve(sar_mat, z)
   rank_match(surrogate, data)
 }

@@ -51,15 +51,18 @@ resample_images <- function(src,
   if (!file.exists(src)) cli::cli_abort("Source file not found: {.file {src}}")
   if (!file.exists(trg)) cli::cli_abort("Target file not found: {.file {trg}}")
 
-  if (strategy == "transform_to_alt" && (is.null(alt_space) || is.null(alt_density))) {
-    cli::cli_abort(
-      "{.arg alt_space} and {.arg alt_density} are required for {.val transform_to_alt}."
-    )
+  alt_missing <- is.null(alt_space) || is.null(alt_density)
+  if (strategy == "transform_to_alt" && alt_missing) {
+    cli::cli_abort(paste(
+      "{.arg alt_space} and {.arg alt_density} are required",
+      "for {.val transform_to_alt}."
+    ))
   }
   if (strategy == "downsample_only" && src_space != trg_space) {
-    cli::cli_abort(
-      "{.val downsample_only} requires maps in the same space ({src_space} vs {trg_space})."
-    )
+    cli::cli_abort(paste(
+      "{.val downsample_only} requires maps in the same space",
+      "({src_space} vs {trg_space})."
+    ))
   }
 
   src_density <- get_gifti_density(src)
@@ -119,6 +122,8 @@ resample_images <- function(src,
   )
 }
 
+#' @noRd
+#' @keywords internal
 get_gifti_density <- function(path) {
   gii <- gifti::read_gifti(path)
   n_vert <- length(gii$data[[1]])
@@ -136,6 +141,8 @@ get_gifti_density <- function(path) {
   }
 }
 
+#' @noRd
+#' @keywords internal
 density_to_n <- function(density) {
   n_map <- c("164k" = 163842L, "41k" = 40962L, "32k" = 32492L, "10k" = 10242L)
   n_map[[density]]

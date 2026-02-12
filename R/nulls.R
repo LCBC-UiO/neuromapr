@@ -60,33 +60,51 @@ generate_nulls <- function(data,
     },
     spin_hungarian = {
       if (is.null(coords)) {
-        cli::cli_abort("{.arg coords} is required for method {.val spin_hungarian}.")
+        cli::cli_abort(
+          "{.arg coords} is required for method {.val spin_hungarian}."
+        )
       }
-      null_spin_hungarian(data, coords, n_perm = n_perm, seed = seed, ...)
+      null_spin_hungarian(
+        data, coords, n_perm = n_perm, seed = seed, ...
+      )
     },
     alexander_bloch = {
       if (is.null(coords)) {
-        cli::cli_abort("{.arg coords} is required for method {.val alexander_bloch}.")
+        cli::cli_abort(
+          "{.arg coords} is required for method {.val alexander_bloch}."
+        )
       }
-      null_alexander_bloch(data, coords, n_perm = n_perm, seed = seed, ...)
+      null_alexander_bloch(
+        data, coords, n_perm = n_perm, seed = seed, ...
+      )
     },
     baum = {
       if (is.null(coords)) {
         cli::cli_abort("{.arg coords} is required for method {.val baum}.")
       }
       if (is.null(parcellation)) {
-        cli::cli_abort("{.arg parcellation} is required for method {.val baum}.")
+        cli::cli_abort(
+          "{.arg parcellation} is required for method {.val baum}."
+        )
       }
-      null_baum(data, coords, parcellation, n_perm = n_perm, seed = seed, ...)
+      null_baum(
+        data, coords, parcellation,
+        n_perm = n_perm, seed = seed, ...
+      )
     },
     cornblath = {
       if (is.null(coords)) {
         cli::cli_abort("{.arg coords} is required for method {.val cornblath}.")
       }
       if (is.null(parcellation)) {
-        cli::cli_abort("{.arg parcellation} is required for method {.val cornblath}.")
+        cli::cli_abort(
+          "{.arg parcellation} is required for method {.val cornblath}."
+        )
       }
-      null_cornblath(data, coords, parcellation, n_perm = n_perm, seed = seed, ...)
+      null_cornblath(
+        data, coords, parcellation,
+        n_perm = n_perm, seed = seed, ...
+      )
     },
     burt2018 = {
       if (is.null(distmat)) {

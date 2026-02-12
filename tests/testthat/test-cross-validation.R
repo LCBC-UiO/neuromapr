@@ -1,6 +1,5 @@
 describe("cross-validation with Python reference", {
   skip_if_no_python_fixtures()
-  skip_if_not_installed("jsonlite")
 
   inputs <- load_python_fixture("shared_inputs")
   n <- inputs$n
@@ -34,7 +33,11 @@ describe("cross-validation with Python reference", {
       r_vals <- sort(mem$values, decreasing = TRUE)
       py_vals <- sort(ref$eigenvalues, decreasing = TRUE)
       min_len <- min(length(r_vals), length(py_vals))
-      expect_equal(r_vals[seq_len(min_len)], py_vals[seq_len(min_len)], tolerance = 1e-8)
+      expect_equal(
+        r_vals[seq_len(min_len)],
+        py_vals[seq_len(min_len)],
+        tolerance = 1e-8
+      )
     })
 
     it("eigenvectors match up to sign", {
@@ -77,17 +80,20 @@ describe("cross-validation with Python reference", {
       alpha <- ref$alpha
       beta <- ref$beta
       gamma <- ref$gamma
-      ca <- cos(alpha); sa <- sin(alpha)
-      cb <- cos(beta);  sb <- sin(beta)
-      cg <- cos(gamma); sg <- sin(gamma)
+      ca <- cos(alpha)
+      sa <- sin(alpha)
+      cb <- cos(beta)
+      sb <- sin(beta)
+      cg <- cos(gamma)
+      sg <- sin(gamma)
 
-      R <- matrix(c(
-        ca * cb * cg - sa * sg, sa * cb * cg + ca * sg, -sb * cg,
-        -ca * cb * sg - sa * cg, -sa * cb * sg + ca * cg, sb * sg,
-        ca * sb,                 sa * sb,                 cb
+      rot <- matrix(c( # nolint: object_name
+        cg * cb * ca - sg * sa, sg * cb * ca + cg * sa, -sb * ca,
+        -cg * cb * sa - sg * ca, -sg * cb * sa + cg * ca, sb * sa,
+        cg * sb,                  sg * sb,                 cb
       ), nrow = 3, ncol = 3)
 
-      expect_equal(R, matrix(unlist(ref$R), nrow = 3, ncol = 3), tolerance = 1e-12)
+      expect_equal(rot, as.matrix(ref$R), tolerance = 1e-12)
     })
   })
 
@@ -115,7 +121,10 @@ describe("cross-validation with Python reference", {
     it("preserves rank distribution", {
       skip_if(
         !file.exists(file.path(fixture_dir(), "burt2020_stats.json")),
-        "burt2020 stats fixture not available (brainsmash not installed in Python)"
+        paste(
+          "burt2020 stats fixture not available",
+          "(brainsmash not installed in Python)"
+        )
       )
       ref <- load_python_fixture("burt2020_stats")
       expect_true(ref$rank_preserved)

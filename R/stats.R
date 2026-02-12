@@ -35,9 +35,10 @@ permtest_metric <- function(x,
   validate_data(x, "x")
   validate_data(y, "y")
   if (length(x) != length(y)) {
-    cli::cli_abort(
-      "{.arg x} ({length(x)}) and {.arg y} ({length(y)}) must have the same length."
-    )
+    cli::cli_abort(paste(
+      "{.arg x} ({length(x)}) and {.arg y} ({length(y)})",
+      "must have the same length."
+    ))
   }
 
   observed <- metric_func(x, y)

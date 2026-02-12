@@ -31,7 +31,10 @@ null_alexander_bloch <- function(data, coords, n_perm = 1000L, seed = NULL,
     )
   }
 
-  rotated <- rotate_coords(coords$lh, coords$rh, n_perm, seed, rotation = rotation)
+  rotated <- rotate_coords(
+    coords$lh, coords$rh, n_perm, seed,
+    rotation = rotation
+  )
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
   for (i in seq_len(n_perm)) {

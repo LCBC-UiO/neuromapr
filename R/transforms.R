@@ -39,7 +39,10 @@ transform_to_space <- function(paths,
                                area_surf_new = NULL,
                                wb_path = NULL,
                                verbose = TRUE) {
-  rlang::check_installed("ciftiTools", reason = "to transform brain maps between spaces")
+  rlang::check_installed(
+    "ciftiTools",
+    reason = "to transform brain maps between spaces"
+  )
   target_space <- match.arg(target_space)
   method <- match.arg(method)
   hemisphere <- match.arg(hemisphere, several.ok = TRUE)
@@ -56,10 +59,16 @@ transform_to_space <- function(paths,
 
     out_dir <- dirname(path)
     base <- tools::file_path_sans_ext(basename(path))
-    out_file <- file.path(out_dir, paste0(base, "_", target_space, "_", target_density, ".func.gii"))
+    out_file <- file.path(
+      out_dir,
+      paste0(base, "_", target_space, "_", target_density, ".func.gii")
+    )
 
     if (verbose) {
-      cli::cli_alert_info("Transforming {.file {basename(path)}} to {target_space} {target_density}")
+      cli::cli_alert_info(paste(
+        "Transforming {.file {basename(path)}}",
+        "to {target_space} {target_density}"
+      ))
     }
 
     resample_args <- list(
@@ -69,7 +78,11 @@ transform_to_space <- function(paths,
       file_type = "metric",
       original_res = NULL,
       target_res = as.integer(gsub("k", "000", target_density)),
-      resamp_method = if (method == "adaptive") "ADAP_BARY_AREA" else "BARYCENTRIC"
+      resamp_method = if (method == "adaptive") {
+        "ADAP_BARY_AREA"
+      } else {
+        "BARYCENTRIC"
+      }
     )
     if (!is.null(area_surf_current)) {
       resample_args$area_original_fname <- area_surf_current
@@ -120,7 +133,14 @@ check_wb_command <- function(wb_path = NULL) {
 
   cli::cli_abort(c(
     "Connectome Workbench {.code wb_command} not found.",
-    i = "Install from {.url https://www.humanconnectome.org/software/get-connectome-workbench}",
-    i = "Or set path with {.code ciftiTools::ciftiTools.setOption('wb_path', '/path/to/wb_command')}"
+    i = paste(
+      "Install from",
+      "{.url https://www.humanconnectome.org/software/get-connectome-workbench}"
+    ),
+    i = paste(
+      "Or set path with",
+      "{.code ciftiTools::ciftiTools.setOption(",
+      "'wb_path', '/path/to/wb_command')}"
+    )
   ))
 }
