@@ -1,5 +1,6 @@
 ---
 output: github_document
+format: gfm
 ---
 
 <!-- README.md is generated from README.Rmd. Please edit that file -->
@@ -149,12 +150,6 @@ result$p_value
 **Format conversions** --- convert FreeSurfer `.annot` and morphometry files
 to GIFTI with `annot_to_gifti()` and `fsmorph_to_gifti()`.
 
-## Vignettes
-
-- `vignette("neuromapr")` --- getting started
-- `vignette("null-models")` --- choosing and using null models
-- `vignette("parcellation")` --- working with parcellated data
-- `vignette("surface-geometry")` --- geodesic distance and surface meshes
 
 ## Citation
 

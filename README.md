@@ -1,4 +1,5 @@
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # neuromapr
@@ -20,6 +21,16 @@ The package implements the framework described in [Markello et
 al. (2022)](https://doi.org/10.1038/s41592-022-01625-w) and provides
 eight null model methods, parcellation utilities, geodesic surface
 distance, and coordinate-space transforms.
+
+This package was co-developed with [Claude
+Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
+(Anthropic’s Claude Opus 4.6). While the test suite is thorough and
+defaults are aligned with the
+[neuromaps](https://netneurolab.github.io/neuromaps/) Python reference
+implementation, discrepancies may still exist at this early stage. We
+encourage users to cross-validate results against
+[neuromaps](https://github.com/netneurolab/neuromaps) and to [report any
+issues](https://github.com/ggseg/neuromapr/issues).
 
 ## Installation
 
@@ -58,7 +69,8 @@ map_a <- rnorm(n)
 map_b <- 0.4 * map_a + rnorm(n, sd = 0.8)
 
 compare_maps(
-  map_a, map_b,
+  map_a,
+  map_b,
   null_method = "burt2020",
   distmat = distmat,
   n_perm = 500L,
@@ -117,10 +129,19 @@ triangular mesh, for analyses where Euclidean distance through the brain
 does not reflect cortical proximity.
 
 ``` r
-vertices <- matrix(c(0,0,0, 1,0,0, 0,1,0, 1,1,0), ncol = 3, byrow = TRUE)
-faces <- matrix(c(1,2,3, 2,3,4), ncol = 3, byrow = TRUE)
+vertices <- matrix(
+  c(0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0),
+  ncol = 3,
+  byrow = TRUE
+)
+faces <- matrix(c(1, 2, 3, 2, 3, 4), ncol = 3, byrow = TRUE)
 
 get_surface_distance(vertices, faces)
+#>      [,1]     [,2]     [,3] [,4]
+#> [1,]    0 1.000000 1.000000    2
+#> [2,]    1 0.000000 1.414214    1
+#> [3,]    1 1.414214 0.000000    1
+#> [4,]    2 1.000000 1.000000    0
 ```
 
 **Custom metric testing** — `permtest_metric()` runs a permutation test
@@ -128,7 +149,8 @@ with any metric function, optionally using spatial null surrogates:
 
 ``` r
 result <- permtest_metric(
-  map_a, map_b,
+  map_a,
+  map_b,
   metric_func = function(x, y) mean(abs(x - y)),
   n_perm = 200L,
   seed = 1
@@ -140,20 +162,13 @@ result$p_value
 **Format conversions** — convert FreeSurfer `.annot` and morphometry
 files to GIFTI with `annot_to_gifti()` and `fsmorph_to_gifti()`.
 
-## Vignettes
-
-- `vignette("neuromapr")` — getting started
-- `vignette("null-models")` — choosing and using null models
-- `vignette("parcellation")` — working with parcellated data
-- `vignette("surface-geometry")` — geodesic distance and surface meshes
-
 ## Citation
 
 If you use neuromapr, please cite the neuromaps framework:
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
-> 1472–1480. <doi:10.1038/s41592-022-01625-w>
+> 1472–1480. doi:10.1038/s41592-022-01625-w
 
 Individual null model methods have their own citations documented in
 each function’s help page.
