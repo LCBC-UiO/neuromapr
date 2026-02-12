@@ -2,13 +2,13 @@ name: Cross-validate with Python
 
 on:
   schedule:
-    - cron: '0 6 * * 1'
+    - cron: "04 06 * * 1"
   workflow_dispatch:
   push:
     paths:
-      - 'R/nulls-*.R'
-      - 'tools/generate-reference-data.py'
-      - 'tests/testthat/test-cross-validation.R'
+      - "R/nulls-*.R"
+      - "tools/generate-reference-data.py"
+      - "tests/testthat/test-cross-validation.R"
 
 permissions:
   contents: read
@@ -22,7 +22,7 @@ jobs:
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
-          python-version: '3.11'
+          python-version: "3.11"
 
       - name: Install Python dependencies
         run: pip install numpy scipy brainsmash
@@ -36,7 +36,7 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::jsonlite
+          extra-packages: any::jsonlite local::.
 
       - name: Run cross-validation tests
         run: |

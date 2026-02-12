@@ -1,0 +1,96 @@
+url: https://lcbc-uio.github.io/neuromapr/
+
+template:
+  bootstrap: 5
+  light-switch: true
+  bslib:
+    primary: "#2980b9"
+    secondary: "#f3f6f6"
+    tertiary: "#ffa819"
+    success: "#27ae60"
+    body-color: "#404040"
+    border-color: "#e1e4e5"
+
+navbar:
+  bg: primary
+  type: dark
+  structure:
+    left: [intro, reference, articles]
+    right: [search, lightswitch, github]
+  components:
+    articles:
+      text: Articles
+      menu:
+        - text: Choosing and Using Null Models
+          href: articles/null-models.html
+        - text: Working with Parcellated Data
+          href: articles/parcellation.html
+        - text: Surface Geometry
+          href: articles/surface-geometry.html
+
+articles:
+  - title: Workflows
+    contents:
+      - null-models
+      - parcellation
+      - surface-geometry
+
+reference:
+  - title: Annotation Registry
+    desc: >
+      Browse and download brain map annotations from the
+      [neuromaps](https://github.com/netneurolab/neuromaps) OSF repository.
+    contents:
+      - neuromaps_available
+      - fetch_neuromaps_annotation
+
+  - title: Map Comparison
+    desc: >
+      Statistical comparison of brain maps using spatial null models.
+    contents:
+      - compare_maps
+      - permtest_metric
+
+  - title: Null Model Generation
+    desc: >
+      Generate spatially-constrained null distributions for brain maps.
+      `generate_nulls()` is the main entry point; individual methods are
+      also available directly.
+    contents:
+      - contains("null")
+
+  - title: Parcellation
+    desc: >
+      Convert between vertex-level and parcel-level representations.
+    contents:
+      - parcellate
+      - unparcellate
+      - vertices_to_parcels
+      - parcels_to_vertices
+      - get_parcel_centroids
+
+  - title: Surface Geometry
+    desc: >
+      Compute geodesic distances and other surface properties.
+    contents:
+      - make_surf_graph
+      - get_surface_distance
+      - vertex_areas
+
+  - title: Transforms and Resampling
+    desc: >
+      Transform brain maps between coordinate spaces using
+      Connectome Workbench.
+    contents:
+      - transform_to_space
+      - resample_images
+      - check_wb_command
+
+  - title: File I/O and Conversion
+    desc: >
+      Read brain maps from various neuroimaging formats and convert
+      between them.
+    contents:
+      - read_brain_map_values
+      - annot_to_gifti
+      - fsmorph_to_gifti

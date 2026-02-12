@@ -12,3 +12,4 @@
 ^Meta$
 ^tools$
 tests/testthat/fixtures/python$
+.claude/
