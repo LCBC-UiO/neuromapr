@@ -12,17 +12,19 @@ knitr::opts_chunk$set(
   collapse = TRUE,
   comment = "#>",
   fig.width = 6,
-  fig.height = 4
+  fig.height = 5
 )
 ```
 
 The cortical surface is not flat. Two regions can be close in Euclidean
-space---a straight line through the brain---yet far apart along the cortical
-sheet. This distinction matters whenever distance drives an analysis: computing
-spatial autocorrelation, selecting neighbours, or estimating how much cortex a
-region actually covers.
-neuromapr provides tools for working with triangular surface meshes: building
-graphs, computing geodesic distances, and calculating per-vertex surface areas.
+space---a straight line through the brain---yet far apart along the
+cortical sheet. This distinction matters whenever distance drives an
+analysis: computing spatial autocorrelation, selecting neighbours, or
+estimating how much cortex a region actually covers.
+
+neuromapr provides tools for working with triangular surface meshes:
+building graphs, computing geodesic distances, calculating per-vertex
+surface areas, and converting between neuroimaging file formats.
 
 ```{r setup}
 library(neuromapr)
@@ -32,11 +34,12 @@ library(neuromapr)
 
 A cortical surface mesh consists of two pieces:
 
-- **Vertices**: an n x 3 matrix of 3D coordinates, one row per point on the surface.
-- **Faces**: an m x 3 matrix of integer indices, each row defining a triangle by
-  referencing three vertices.
+- **Vertices**: an n x 3 matrix of 3D coordinates, one row per point
+  on the surface.
+- **Faces**: an m x 3 matrix of integer indices, each row defining a
+  triangle by referencing three vertices.
 
-Together they describe the geometry. We will build a small mesh by hand to
+Together they describe the geometry. We build a small mesh by hand to
 make the examples concrete:
 
 ```{r mesh}
@@ -57,35 +60,64 @@ faces <- matrix(c(
 ), ncol = 3, byrow = TRUE)
 ```
 
-This gives us six vertices and four triangles forming a small irregular strip.
-Real cortical surfaces have tens of thousands of vertices, but the operations
-are the same.
+Six vertices and four triangles forming a small irregular strip. Real
+cortical surfaces have tens of thousands of vertices, but the
+operations are the same.
 
 ## Building a surface graph
 
-`make_surf_graph()` takes a mesh and returns a weighted graph. Each edge
-connects two vertices that share a triangle, and the weight is the Euclidean
-distance between them.
+`make_surf_graph()` converts a mesh into a weighted igraph object. Each
+edge connects two vertices that share a triangle, and the weight is the
+Euclidean distance between them.
 
-```{r graph, eval = TRUE}
+```{r graph}
 g <- make_surf_graph(vertices, faces)
 g
 ```
 
-The graph is the foundation for geodesic distance computation. It captures the
-connectivity structure of the mesh---which vertices are adjacent, and how far
-apart they are along the surface.
+The graph captures the connectivity structure of the mesh---which
+vertices are adjacent and how far apart they are along the surface. It
+is the foundation for geodesic distance computation.
+
+Here is what the graph looks like, using the vertex positions as layout
+coordinates. Edge labels show the Euclidean distance between connected
+vertices:
+
+```{r igraph-plot, fig.cap = "Surface graph of the toy mesh. Vertices are positioned at their x-y coordinates, edges are weighted by Euclidean distance."}
+layout_xy <- vertices[, 1:2]
+edge_weights <- round(
+  igraph::E(g)$weight, 2
+)
+
+plot(
+  g,
+  layout = layout_xy,
+  vertex.size = 20,
+  vertex.color = "steelblue",
+  vertex.label.color = "white",
+  vertex.label.cex = 0.9,
+  edge.label = edge_weights,
+  edge.label.cex = 0.8,
+  edge.color = "grey40",
+  main = "Surface mesh graph"
+)
+```
+
+On a real cortical surface, this graph has thousands of nodes and edges.
+The structure is the same: vertices connected by triangle edges, weights
+encoding surface distances.
 
 ## Geodesic distances
 
-Euclidean distance is a straight line through 3D space. Geodesic distance follows
-the surface, taking the shortest path along mesh edges. For a convoluted surface
-like the cortex, the two can differ substantially.
+Euclidean distance is a straight line through 3D space. Geodesic
+distance follows the surface, taking the shortest path along mesh edges.
+For a convoluted surface like the cortex, the two can differ
+substantially.
 
-`get_surface_distance()` computes geodesic distances via Dijkstra's algorithm on
-the surface graph:
+`get_surface_distance()` computes geodesic distances via Dijkstra's
+algorithm on the surface graph:
 
-```{r geodesic-full, eval = TRUE}
+```{r geodesic-full}
 dmat <- get_surface_distance(vertices, faces)
 dmat
 ```
@@ -94,41 +126,45 @@ The result is a symmetric n x n matrix of shortest-path distances.
 
 ### Partial distance matrices
 
-Computing the full n x n matrix is expensive for large meshes. If you only need
-distances from a subset of source vertices, pass them explicitly:
+Computing the full n x n matrix gets expensive for large meshes. If you
+only need distances from a subset of source vertices, pass them
+explicitly:
 
-```{r geodesic-partial, eval = TRUE}
-dmat_partial <- get_surface_distance(vertices, faces, source_vertices = c(1, 6))
+```{r geodesic-partial}
+dmat_partial <- get_surface_distance(
+  vertices, faces, source_vertices = c(1, 6)
+)
 dmat_partial
 ```
 
-This returns a 2 x 6 matrix: distances from vertices 1 and 6 to all six
-vertices. For parcellation centroid computations and neighbourhood queries, this
+A 2 x 6 matrix: distances from vertices 1 and 6 to all six vertices.
+For parcellation centroid computations and neighbourhood queries, this
 selective approach saves considerable time.
 
 ### Euclidean vs geodesic
 
-The `compute_distance_matrix()` utility supports both methods:
+On a flat mesh the two distance measures coincide. On a folded cortex,
+geodesic distances are always greater than or equal to Euclidean, often
+substantially so for regions separated by a sulcus.
 
-```{r compare-distances, eval = TRUE}
-euclid <- compute_distance_matrix(vertices, method = "euclidean")
-geodesic <- compute_distance_matrix(vertices, method = "geodesic", faces = faces)
+```{r compare-distances}
+euclid <- as.matrix(dist(vertices))
+geodesic <- get_surface_distance(vertices, faces)
 
 max(abs(geodesic - euclid))
 ```
 
-On a flat mesh the two are identical. On a folded cortex, geodesic distances
-are always greater than or equal to Euclidean distances, often substantially so
-for regions separated by a sulcus.
+On our flat toy mesh the difference is zero. On real cortical surfaces,
+it is not.
 
 ## Vertex areas
 
-Each vertex on a surface mesh represents a patch of cortex. Knowing its area
-matters for area-weighted averaging and for understanding how much cortical
-surface a parcel actually covers.
+Each vertex on a surface mesh represents a patch of cortex. Knowing its
+area matters for area-weighted averaging and for understanding how much
+cortical surface a parcel covers.
 
-`vertex_areas()` assigns area by distributing each triangle's area equally among
-its three vertices:
+`vertex_areas()` distributes each triangle's area equally among its
+three vertices:
 
 ```{r vertex-areas}
 areas <- vertex_areas(vertices, faces)
@@ -139,22 +175,22 @@ areas
 sum(areas)
 ```
 
-The total vertex area equals the total surface area of all triangles. The
-per-vertex values tell you how much surface each vertex represents. Corner
-vertices (part of fewer triangles) get less area than interior vertices (shared
-by many triangles).
+The total vertex area equals the total surface area of all triangles.
+Corner vertices (part of fewer triangles) get less area than interior
+vertices (shared by more triangles).
 
 ### Checking the geometry
 
-A useful sanity check: compute the triangle areas directly and verify they match.
+A sanity check: compute triangle areas directly and verify they sum to
+the same total.
 
 ```{r triangle-check}
 tri_area <- function(v, f) {
   a <- v[f[1], ]
   b <- v[f[2], ]
-  c <- v[f[3], ]
+  cc <- v[f[3], ]
   ab <- b - a
-  ac <- c - a
+  ac <- cc - a
   cross <- c(
     ab[2] * ac[3] - ab[3] * ac[2],
     ab[3] * ac[1] - ab[1] * ac[3],
@@ -163,24 +199,26 @@ tri_area <- function(v, f) {
   0.5 * sqrt(sum(cross^2))
 }
 
-total_tri <- sum(vapply(seq_len(nrow(faces)), function(i) {
-  tri_area(vertices, faces[i, ])
-}, numeric(1)))
+total_tri <- sum(vapply(
+  seq_len(nrow(faces)),
+  function(i) tri_area(vertices, faces[i, ]),
+  numeric(1)
+))
 
 all.equal(sum(areas), total_tri)
 ```
 
 ## Format conversions
 
-Cortical surfaces come in many file formats. FreeSurfer uses its own binary
-formats (`.annot` for parcellations, `.curv`/`.thickness`/`.sulc` for
-morphometry), while modern tools increasingly expect GIFTI. neuromapr provides
-two conversion functions.
+Cortical surfaces come in many file formats. FreeSurfer uses its own
+binary formats (`.annot` for parcellations, `.curv`/`.thickness`/`.sulc`
+for morphometry), while modern tools increasingly expect GIFTI.
+neuromapr provides two conversion functions.
 
 ### Annotation to GIFTI
 
-`annot_to_gifti()` converts a FreeSurfer `.annot` file (parcellation labels) to
-a GIFTI label file:
+`annot_to_gifti()` converts a FreeSurfer `.annot` file (parcellation
+labels) to a GIFTI label file:
 
 ```r
 annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
@@ -188,36 +226,97 @@ annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
 
 ### Morphometry to GIFTI
 
-`fsmorph_to_gifti()` converts FreeSurfer morphometry files to GIFTI func files:
+`fsmorph_to_gifti()` converts FreeSurfer morphometry files to GIFTI
+func files:
 
 ```r
 fsmorph_to_gifti("lh.thickness", "lh.thickness.func.gii")
 ```
 
-Both functions require the **freesurferformats** and **gifti** packages. If no
-output path is given, they replace the file extension automatically (`.annot`
-becomes `.label.gii`, `.curv` becomes `.func.gii`).
+Both functions require the **freesurferformats** and **gifti** packages.
+If no output path is given, they replace the file extension
+automatically (`.annot` becomes `.label.gii`, `.curv` becomes
+`.func.gii`).
+
+## Resampling between coordinate spaces
+
+Brain maps from different studies often live in different coordinate
+spaces (fsaverage vs fsLR) and at different mesh densities (32k vs
+164k). Before you can compare them, they need to be in the same space
+at the same resolution.
+
+`transform_to_space()` handles this resampling using Connectome
+Workbench via the **ciftiTools** package:
+
+```r
+transformed <- transform_to_space(
+  "map.func.gii",
+  target_space = "fsLR",
+  target_density = "32k"
+)
+```
+
+For pairwise comparisons, `resample_images()` aligns two maps into a
+common space with a single call:
+
+```r
+aligned <- resample_images(
+  src = "map_a.func.gii",
+  trg = "map_b.func.gii",
+  src_space = "fsaverage",
+  trg_space = "fsLR",
+  strategy = "transform_to_trg"
+)
+```
+
+Four strategies are available:
+
+- `"downsample_only"` --- both maps already share a coordinate space;
+  downsample the higher-density one.
+- `"transform_to_src"` --- bring the target into the source's space.
+- `"transform_to_trg"` --- bring the source into the target's space.
+- `"transform_to_alt"` --- bring both into a third space and density.
+
+All resampling functions require Connectome Workbench (`wb_command`).
+Use `check_wb_command()` to verify it is installed and locatable:
+
+```r
+check_wb_command()
+```
 
 ## Putting it together
 
-A typical workflow that combines surface geometry with the rest of neuromapr:
+A typical workflow that combines surface geometry with the rest of
+neuromapr:
 
-1. **Load a surface mesh** (from a GIFTI `.surf.gii` file).
-2. **Compute geodesic distances** between parcel centroids.
-3. **Use that distance matrix** for spatially-constrained null model generation.
+1. Load a surface mesh from a GIFTI `.surf.gii` file.
+2. Compute geodesic distances between parcel centroids.
+3. Feed that distance matrix into spatially-constrained null model
+   generation.
 
 ```r
-centroids <- get_parcel_centroids(vertices, labels, method = "surface")
+centroids <- get_parcel_centroids(
+  vertices, labels, method = "surface"
+)
 distmat <- as.matrix(dist(centroids))
-nulls <- generate_nulls(parcel_data, method = "burt2020", distmat = distmat)
+nulls <- generate_nulls(
+  parcel_data,
+  method = "burt2020",
+  distmat = distmat
+)
 ```
 
-For analyses where the distinction between Euclidean and geodesic distance
-matters---highly folded cortex, parcels separated by deep sulci---computing
-geodesic distances between centroids can produce more accurate null models.
+For analyses where the distinction between Euclidean and geodesic
+distance matters---highly folded cortex, parcels separated by deep
+sulci---computing geodesic distances between centroids can produce
+more accurate null models.
 
 ## References
 
-Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural and
-functional interpretation of brain maps. *Nature Methods*, 19, 1472--1480.
-doi:10.1038/s41592-022-01625-w
+Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
+and functional interpretation of brain maps. *Nature Methods*, 19,
+1472--1480. doi:10.1038/s41592-022-01625-w
+
+Robinson EC, Jbabdi S, Glasser MF, et al. (2014). MSM: a new flexible
+framework for Multimodal Surface Matching. *NeuroImage*, 100,
+414--426. doi:10.1016/j.neuroimage.2014.07.033

@@ -16,16 +16,16 @@ knitr::opts_chunk$set(
 )
 ```
 
-Most brain imaging analyses eventually need to move between two resolutions:
-vertex-level (one value per surface point, typically 32k--164k per hemisphere)
-and parcel-level (one value per brain region, typically 50--400). A cortical
-thickness map is vertex-level. A table of regional volumes from the
-Desikan-Killiany atlas is parcel-level. Comparing the two requires converting
-one to match the other.
+Most brain imaging analyses eventually need to move between two
+resolutions: vertex-level (one value per surface point, typically
+32k--164k per hemisphere) and parcel-level (one value per brain region,
+typically 50--400). A cortical thickness map is vertex-level. A table of
+regional volumes from the Desikan-Killiany atlas is parcel-level.
+Comparing the two requires converting one to match the other.
 
-neuromapr provides a set of tools for this conversion---aggregating vertices
-into parcels, mapping parcel values back to vertices, and computing parcel
-centroids on the cortical surface.
+neuromapr provides tools for this conversion---aggregating vertices
+into parcels, mapping parcel values back to vertices, and computing
+parcel centroids on the cortical surface.
 
 ```{r setup}
 library(neuromapr)
@@ -33,37 +33,41 @@ library(neuromapr)
 
 ## Vertices to parcels
 
-Suppose you have a vertex-level brain map and a parcellation that assigns each
-vertex to a region. The parcellation is an integer vector: each vertex gets a
-label, with `0` or `NA` marking the medial wall (vertices that don't belong to
-any region).
+Suppose you have a vertex-level brain map and a parcellation that
+assigns each vertex to a region. The parcellation is an integer vector
+where each vertex gets a label, with `0` or `NA` marking the medial
+wall (vertices that belong to no region).
 
 ```{r vertices-to-parcels}
 set.seed(42)
 n_vertices <- 1000
 vertex_data <- rnorm(n_vertices)
 
-labels <- sample(c(0, 1:10), n_vertices, replace = TRUE, prob = c(0.1, rep(0.09, 10)))
+labels <- sample(
+  c(0, 1:10), n_vertices,
+  replace = TRUE, prob = c(0.1, rep(0.09, 10))
+)
 
 parcel_values <- vertices_to_parcels(vertex_data, labels)
 parcel_values
 ```
 
-Each parcel gets the mean of its constituent vertices. Medial wall vertices
-(label 0) are excluded automatically.
+Each parcel gets the mean of its constituent vertices. Medial wall
+vertices (label 0) are excluded automatically.
 
-The summary function is configurable. If you want the median, or the standard
-deviation, or the 90th percentile:
+The summary function is configurable:
 
 ```{r custom-summary}
-parcel_sd <- vertices_to_parcels(vertex_data, labels, summary_func = sd)
+parcel_sd <- vertices_to_parcels(
+  vertex_data, labels, summary_func = sd
+)
 parcel_sd
 ```
 
 ## Parcels back to vertices
 
-The reverse operation takes parcel-level values and paints them back onto the
-vertex mesh. Every vertex gets its parcel's value; medial wall vertices get a
+The reverse operation paints parcel-level values back onto the vertex
+mesh. Every vertex gets its parcel's value; medial wall vertices get a
 fill value.
 
 ```{r parcels-to-vertices}
@@ -74,14 +78,17 @@ head(vertex_filled, 20)
 Vertices with label 0 receive `NA` by default. You can change the fill:
 
 ```{r custom-fill}
-vertex_filled_zero <- parcels_to_vertices(parcel_values, labels, fill = 0)
+vertex_filled_zero <- parcels_to_vertices(
+  parcel_values, labels, fill = 0
+)
 sum(vertex_filled_zero == 0)
 ```
 
 ## The high-level wrappers
 
-`parcellate()` and `unparcellate()` wrap the low-level functions with file
-reading. If your data lives on disk as GIFTI files, you can pass paths directly:
+`parcellate()` and `unparcellate()` add file-reading convenience on top
+of the low-level functions. If your data lives on disk as GIFTI files,
+pass paths directly:
 
 ```r
 parcel_vals <- parcellate(
@@ -90,11 +97,12 @@ parcel_vals <- parcellate(
 )
 ```
 
-The function reads the data file, reads the parcellation labels, validates
-that they match in length, and calls `vertices_to_parcels()` underneath.
+The function reads the data file, reads the parcellation labels,
+validates that they match in length, and calls `vertices_to_parcels()`
+underneath.
 
-When working with vectors already in memory, the wrappers still work---they
-just skip the file-reading step:
+When working with vectors already in memory, the wrappers still
+work---they skip the file-reading step:
 
 ```{r parcellate-vectors}
 parcellated <- parcellate(vertex_data, labels)
@@ -106,15 +114,16 @@ all.equal(
 )
 ```
 
-The roundtrip is not lossless (parcellation is a lossy aggregation), but
-`unparcellate(parcellate(x))` gives you the parcel means broadcast back to
+The roundtrip is not lossless---parcellation is lossy aggregation. But
+`unparcellate(parcellate(x))` gives you parcel means broadcast back to
 vertex positions, which is the expected behaviour.
 
 ## Parcel centroids
 
-Some analyses need to know where each parcel "lives" in 3D space---for example,
-to compute a parcel-level distance matrix. `get_parcel_centroids()` offers three
-methods for finding the representative point of each parcel.
+Some analyses need to know where each parcel lives in 3D space---for
+example, to compute a parcel-level distance matrix.
+`get_parcel_centroids()` offers three methods for finding the
+representative point of each parcel.
 
 ```{r centroids-setup}
 vertices <- matrix(rnorm(n_vertices * 3), ncol = 3)
@@ -122,31 +131,35 @@ vertices <- matrix(rnorm(n_vertices * 3), ncol = 3)
 
 ### Average centroid
 
-The simplest approach: take the mean x, y, z coordinates of all vertices in the
-parcel. Fast, but the resulting point may not lie on the actual cortical surface.
+Take the mean x, y, z coordinates of all vertices in the parcel. Fast,
+but the resulting point may not lie on the actual cortical surface.
 
 ```{r centroid-average}
-centroids_avg <- get_parcel_centroids(vertices, labels, method = "average")
+centroids_avg <- get_parcel_centroids(
+  vertices, labels, method = "average"
+)
 head(centroids_avg)
 ```
 
 ### Surface centroid
 
-Finds the vertex closest to the average centroid. The result is always an actual
-vertex on the surface, which matters when you need centroids that respect the
-cortical geometry.
+Find the vertex closest to the average centroid. The result is always
+an actual vertex on the surface, which matters when centroids must
+respect the cortical geometry.
 
 ```{r centroid-surface}
-centroids_surf <- get_parcel_centroids(vertices, labels, method = "surface")
+centroids_surf <- get_parcel_centroids(
+  vertices, labels, method = "surface"
+)
 head(centroids_surf)
 ```
 
 ### Geodesic centroid
 
-The most principled approach: finds the vertex that minimizes the sum of
-geodesic (shortest-path-on-surface) distances to all other vertices in the
-parcel. This requires the face matrix of the surface mesh and the **igraph**
-package.
+The most principled approach: find the vertex that minimizes the sum
+of geodesic (shortest-path-on-surface) distances to all other vertices
+in the parcel. This requires the face matrix of the surface mesh and
+the **igraph** package.
 
 ```r
 centroids_geo <- get_parcel_centroids(
@@ -156,21 +169,22 @@ centroids_geo <- get_parcel_centroids(
 )
 ```
 
-The geodesic centroid is computationally expensive---it computes pairwise
-shortest paths within each parcel. For large parcellations on high-resolution
-meshes, consider using the surface centroid as a practical approximation.
+Geodesic centroids are computationally expensive---they compute
+pairwise shortest paths within each parcel. For large parcellations on
+high-resolution meshes, the surface centroid is a practical
+approximation.
 
 ## Building a parcel-level distance matrix
 
-A common use case: you have parcellated data and need a distance matrix for
-null model generation. Parcel centroids get you there.
+A common use case: you have parcellated data and need a distance matrix
+for null model generation. Parcel centroids get you there.
 
 ```{r parcel-distmat}
 parcel_distmat <- as.matrix(dist(centroids_avg))
 dim(parcel_distmat)
 ```
 
-This distance matrix can feed directly into `generate_nulls()`:
+This distance matrix feeds directly into `generate_nulls()`:
 
 ```{r parcel-nulls}
 parcel_map <- rnorm(nrow(centroids_avg))
@@ -186,9 +200,9 @@ nulls
 
 ## Parcellation and null models together
 
-The parcel spin methods (`baum` and `cornblath`) combine parcellation with
-spin-based null generation. They need both spherical coordinates and the
-parcellation vector:
+The parcel spin methods (`baum` and `cornblath`) combine parcellation
+with spin-based null generation. They need both spherical coordinates
+and the parcellation vector:
 
 ```{r parcel-spin}
 n_lh <- 500
@@ -207,30 +221,33 @@ nulls_baum <- null_baum(
 nulls_baum
 ```
 
-The rotation happens at vertex resolution, but the output is parcel-level:
-one surrogate value per parcel per permutation. This is the right approach when
-your analysis variable is measured at the parcel level but you want the null
-model to respect vertex-level spatial structure.
+The rotation happens at vertex resolution, but the output is
+parcel-level: one surrogate value per parcel per permutation. This is
+the right approach when your analysis variable is measured at the parcel
+level but you want the null model to respect vertex-level spatial
+structure.
 
 ## Practical considerations
 
-**Parcellation size matters for null models.** With only 30--50 parcels, distance-based
-methods like `burt2020` and `moran` work well. With hundreds of parcels (e.g.,
-Schaefer 400), spin-based methods become more attractive because they leverage the
-full vertex-level spatial structure.
+**Parcellation size matters for null models.** With 30--50 parcels,
+distance-based methods like `burt2020` and `moran` work well. With
+hundreds of parcels (e.g., Schaefer 400), spin-based methods become
+more attractive because they leverage the full vertex-level spatial
+structure.
 
-**Medial wall handling.** All parcellation functions treat label 0 and `NA` as medial
-wall. The `cornblath` null model is specifically designed to handle medial wall
-vertices gracefully during spin-based reassignment. If your parcellation has
-substantial medial wall coverage, prefer `cornblath` over `baum`.
+**Medial wall handling.** All parcellation functions treat label 0 and
+`NA` as medial wall. The `cornblath` null model handles medial wall
+vertices gracefully during spin-based reassignment. If your
+parcellation has substantial medial wall coverage, prefer `cornblath`
+over `baum`.
 
-**The summary function determines what you are testing.** Using `mean` (the
-default) tests whether the average value in each region relates to another
-variable. Using `sd` would test whether within-region variability relates to it.
-Choose deliberately.
+**The summary function determines what you are testing.** Using `mean`
+(the default) tests whether the average value in each region relates to
+another variable. Using `sd` would test whether within-region
+variability relates to it. Choose deliberately.
 
 ## References
 
-Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural and
-functional interpretation of brain maps. *Nature Methods*, 19, 1472--1480.
-doi:10.1038/s41592-022-01625-w
+Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
+and functional interpretation of brain maps. *Nature Methods*, 19,
+1472--1480. doi:10.1038/s41592-022-01625-w
