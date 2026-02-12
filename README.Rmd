@@ -20,7 +20,7 @@ knitr::opts_chunk$set(
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Brain maps are spatially autocorrelated---nearby regions have similar values
+Brain maps are spatially autocorrelated --- nearby regions have similar values
 just because they are neighbours. Standard correlation tests ignore this and
 produce inflated p-values. neuromapr generates spatially-constrained surrogate
 maps that preserve autocorrelation structure, so you can test whether the
@@ -159,5 +159,4 @@ If you use neuromapr, please cite the neuromaps framework:
 > functional interpretation of brain maps. *Nature Methods*, 19, 1472--1480.
 > doi:10.1038/s41592-022-01625-w
 
-Individual null model methods have their own citations documented in each
-function's help page.
+Individual null model methods have their own citations documented in each function's help page.

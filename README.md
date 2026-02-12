@@ -1,4 +1,5 @@
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # neuromapr <a href="https://lcbc-uio.github.io/neuromapr/"><img src="man/figures/logo.png" align="right" height="138" alt="neuromapr website" /></a>
@@ -9,7 +10,7 @@
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 <!-- badges: end -->
 
-Brain maps are spatially autocorrelated—nearby regions have similar
+Brain maps are spatially autocorrelated — nearby regions have similar
 values just because they are neighbours. Standard correlation tests
 ignore this and produce inflated p-values. neuromapr generates
 spatially-constrained surrogate maps that preserve autocorrelation
@@ -168,7 +169,7 @@ If you use neuromapr, please cite the neuromaps framework:
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
-> 1472–1480. <doi:10.1038/s41592-022-01625-w>
+> 1472–1480. doi:10.1038/s41592-022-01625-w
 
 Individual null model methods have their own citations documented in
 each function’s help page.
