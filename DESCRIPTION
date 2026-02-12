@@ -42,3 +42,5 @@ Suggests:
     testthat (>= 3.0.0),
     withr
 VignetteBuilder: knitr
+URL: https://github.com/drmowinckels/neuromapr
+BugReports: https://github.com/drmowinckels/neuromapr/issues
