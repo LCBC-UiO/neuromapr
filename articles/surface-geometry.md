@@ -58,9 +58,9 @@ between them.
 ``` r
 g <- make_surf_graph(vertices, faces)
 g
-#> IGRAPH fadb471 U-W- 6 9 -- 
+#> IGRAPH 63a1fd5 U-W- 6 9 -- 
 #> + attr: weight (e/n)
-#> + edges from fadb471:
+#> + edges from 63a1fd5:
 #> [1] 1--2 2--3 3--4 3--5 4--6 5--6 1--3 2--4 3--6
 ```
 

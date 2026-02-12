@@ -1,6 +1,6 @@
 # neuromapr
 
-Brain maps are spatially autocorrelated—nearby regions have similar
+Brain maps are spatially autocorrelated — nearby regions have similar
 values just because they are neighbours. Standard correlation tests
 ignore this and produce inflated p-values. neuromapr generates
 spatially-constrained surrogate maps that preserve autocorrelation
