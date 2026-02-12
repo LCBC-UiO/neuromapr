@@ -250,8 +250,14 @@ coordinates (for the rotation) and a parcellation vector (to know which
 vertices belong to which parcel).
 
 ```{r parcel-setup}
-parcellation <- rep(1:8, each = 10)
-parcel_data <- rnorm(8)
+n_parcel_lh <- 340
+n_parcel_rh <- 340
+parcel_coords <- list(
+  lh = matrix(rnorm(n_parcel_lh * 3), ncol = 3),
+  rh = matrix(rnorm(n_parcel_rh * 3), ncol = 3)
+)
+parcellation <- rep(1:68, each = 10)
+parcel_data <- rnorm(68)
 ```
 
 ### Maximum overlap (`baum`)
@@ -264,8 +270,8 @@ parcel 3 gets parcel 7's value.
 
 ```{r baum}
 nulls_baum <- null_baum(
-  parcel_data, sphere_coords, parcellation,
-  n_perm = 100L, seed = 1
+  parcel_data, parcel_coords, parcellation,
+  n_perm = 50L, seed = 1
 )
 nulls_baum
 ```
@@ -281,8 +287,8 @@ get interpolated to the nearest valid region instead of being lost.
 
 ```{r cornblath}
 nulls_corn <- null_cornblath(
-  parcel_data, sphere_coords, parcellation,
-  n_perm = 100L, seed = 1
+  parcel_data, parcel_coords, parcellation,
+  n_perm = 50L, seed = 1
 )
 nulls_corn
 ```

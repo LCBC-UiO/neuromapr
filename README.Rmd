@@ -14,7 +14,7 @@ knitr::opts_chunk$set(
 )
 ```
 
-# neuromapr
+# neuromapr <a href="https://lcbc-uio.github.io/neuromapr/"><img src="man/figures/logo.png" align="right" height="138" alt="neuromapr website" /></a>
 
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
@@ -35,15 +35,15 @@ This package was co-developed with [Claude Code](https://docs.anthropic.com/en/d
 While the test suite is thorough and defaults are aligned with the
 [neuromaps](https://netneurolab.github.io/neuromaps/) Python reference
 implementation, discrepancies may still exist at this early stage. 
-We encourage users to cross-validate results against [neuromaps](https://github.com/netneurolab/neuromaps) and to [report any issues](https://github.com/ggseg/neuromapr/issues).
+We encourage users to cross-validate results against [neuromaps](https://github.com/netneurolab/neuromaps) and to [report any issues](https://github.com/lcbc-uio/neuromapr/issues).
 
 ## Installation
 
-Install from the ggseg [r-universe](https://ggseg.r-universe.dev/):
+Install from the lcbc-uio [r-universe](https://lcbc-uio.r-universe.dev/):
 
 ```r
 options(repos = c(
-  ggseg = "https://ggseg.r-universe.dev",
+  lcbcuio = "https://lcbc-uio.r-universe.dev",
   CRAN = "https://cloud.r-project.org"
 ))
 
@@ -54,7 +54,7 @@ Or install the development version from GitHub:
 
 ```r
 # install.packages("pak")
-pak::pak("ggseg/neuromapr")
+pak::pak("lcbc-uio/neuromapr")
 ```
 
 ## Quick start

@@ -12,8 +12,9 @@ Description: Implements spatial null models and coordinate-space
     <doi:10.1038/s41592-022-01625-w>. Provides variogram-matching
     surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &
     Dray 2015), and spin-based permutation tests (Alexander-Bloch et al.
-    2018). Integrates with 'ggseg.hub' for brain map annotation fetching
-    and 'ciftiTools' for coordinate-space transforms.
+    2018). Includes an R interface to the 'neuromaps' annotation registry
+    for browsing, downloading, and comparing brain map annotations from OSF.
+    Integrates with 'ciftiTools' for coordinate-space transforms.
 License: MIT + file LICENSE
 Encoding: UTF-8
 Roxygen: list(markdown = TRUE)
@@ -24,12 +25,17 @@ Depends:
     R (>= 4.2.0)
 Imports:
     cli,
+    dplyr,
     ggplot2,
     gifti,
+    httr2,
     igraph,
     lifecycle,
     rlang,
-    stats
+    stats,
+    tibble,
+    tools,
+    utils
 Suggests:
     ciftiTools,
     clue,
@@ -40,7 +46,8 @@ Suggests:
     RNifti,
     RSpectra,
     testthat (>= 3.0.0),
+    vcr (>= 1.0.0),
     withr
 VignetteBuilder: knitr
-URL: https://github.com/drmowinckels/neuromapr
-BugReports: https://github.com/drmowinckels/neuromapr/issues
+URL: https://github.com/lcbc-uio/neuromapr, https://lcbc-uio.github.io/neuromapr/
+BugReports: https://github.com/lcbc-uio/neuromapr/issues

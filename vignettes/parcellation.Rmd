@@ -205,14 +205,14 @@ with spin-based null generation. They need both spherical coordinates
 and the parcellation vector:
 
 ```{r parcel-spin}
-n_lh <- 500
-n_rh <- 500
+n_lh <- 680
+n_rh <- 680
 sphere_coords <- list(
   lh = matrix(rnorm(n_lh * 3), ncol = 3),
   rh = matrix(rnorm(n_rh * 3), ncol = 3)
 )
-parcellation <- rep(1:20, each = 50)
-parcel_data <- rnorm(20)
+parcellation <- rep(1:68, each = 20)
+parcel_data <- rnorm(68)
 
 nulls_baum <- null_baum(
   parcel_data, sphere_coords, parcellation,

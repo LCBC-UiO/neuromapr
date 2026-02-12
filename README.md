@@ -1,8 +1,7 @@
 
-
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
-# neuromapr
+# neuromapr <a href="https://lcbc-uio.github.io/neuromapr/"><img src="man/figures/logo.png" align="right" height="138" alt="neuromapr website" /></a>
 
 <!-- badges: start -->
 
@@ -30,15 +29,16 @@ defaults are aligned with the
 implementation, discrepancies may still exist at this early stage. We
 encourage users to cross-validate results against
 [neuromaps](https://github.com/netneurolab/neuromaps) and to [report any
-issues](https://github.com/ggseg/neuromapr/issues).
+issues](https://github.com/lcbc-uio/neuromapr/issues).
 
 ## Installation
 
-Install from the ggseg [r-universe](https://ggseg.r-universe.dev/):
+Install from the lcbc-uio
+[r-universe](https://lcbc-uio.r-universe.dev/):
 
 ``` r
 options(repos = c(
-  ggseg = "https://ggseg.r-universe.dev",
+  lcbcuio = "https://lcbc-uio.r-universe.dev",
   CRAN = "https://cloud.r-project.org"
 ))
 
@@ -49,7 +49,7 @@ Or install the development version from GitHub:
 
 ``` r
 # install.packages("pak")
-pak::pak("ggseg/neuromapr")
+pak::pak("lcbc-uio/neuromapr")
 ```
 
 ## Quick start
@@ -168,7 +168,7 @@ If you use neuromapr, please cite the neuromaps framework:
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
-> 1472–1480. doi:10.1038/s41592-022-01625-w
+> 1472–1480. <doi:10.1038/s41592-022-01625-w>
 
 Individual null model methods have their own citations documented in
 each function’s help page.

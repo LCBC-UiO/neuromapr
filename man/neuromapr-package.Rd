@@ -6,7 +6,18 @@
 \alias{neuromapr-package}
 \title{\ifelse{html}{\href{https://lifecycle.r-lib.org/articles/stages.html#experimental}{\figure{lifecycle-experimental.svg}{options: alt='[Experimental]'}}}{\strong{[Experimental]}}}
 \description{
-Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) \doi{10.1038/s41592-022-01625-w}. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner & Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Integrates with 'ggseg.hub' for brain map annotation fetching and 'ciftiTools' for coordinate-space transforms.
+\if{html}{\figure{logo.png}{options: style='float: right' alt='logo' width='120'}}
+
+Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) \doi{10.1038/s41592-022-01625-w}. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner & Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Includes an R interface to the 'neuromaps' annotation registry for browsing, downloading, and comparing brain map annotations from OSF. Integrates with 'ciftiTools' for coordinate-space transforms.
+}
+\seealso{
+Useful links:
+\itemize{
+  \item \url{https://github.com/lcbc-uio/neuromapr}
+  \item \url{https://lcbc-uio.github.io/neuromapr/}
+  \item Report bugs at \url{https://github.com/lcbc-uio/neuromapr/issues}
+}
+
 }
 \author{
 \strong{Maintainer}: Athanasia Mo Mowinckel \email{a.m.mowinckel@psykologi.uio.no} (\href{https://orcid.org/0000-0002-5756-0223}{ORCID})
