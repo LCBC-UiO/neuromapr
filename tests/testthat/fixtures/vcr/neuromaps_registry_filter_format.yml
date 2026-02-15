@@ -13,21 +13,21 @@ http_interactions:
       x-content-type-options: nosniff
       x-frame-options: deny
       x-xss-protection: 1; mode=block
-      x-github-request-id: D81D:35C993:3D1358B:4286199:698DD777
+      x-github-request-id: 84F6:35E98:6B751:79D30:698E519D
       content-encoding: gzip
       accept-ranges: bytes
-      date: Thu, 12 Feb 2026 13:36:56 GMT
+      date: Thu, 12 Feb 2026 22:18:09 GMT
       via: 1.1 varnish
-      x-served-by: cache-osl6547-OSL
+      x-served-by: cache-osl6531-OSL
       x-cache: HIT
-      x-cache-hits: '1'
-      x-timer: S1770903416.267914,VS0,VE1
+      x-cache-hits: '3'
+      x-timer: S1770934689.384909,VS0,VE0
       vary: Authorization,Accept-Encoding
       access-control-allow-origin: '*'
       cross-origin-resource-policy: cross-origin
-      x-fastly-request-id: 91e3c48446aa44f2eb63bda8b6e2840127ccf093
-      expires: Thu, 12 Feb 2026 13:41:56 GMT
-      source-age: '0'
+      x-fastly-request-id: fc2362322d823a975684f75008482fcdfd0818f6
+      expires: Thu, 12 Feb 2026 22:23:09 GMT
+      source-age: '1'
       content-length: '8443'
     body:
       string: "{\n    \"civet\": {\n        \"41k\": {\n            \"url\": [\n                \"4mw3a\",\n
@@ -1094,7 +1094,7 @@ http_interactions:
         [\n                \"structural\",\n                \"MRI\"\n            ],\n
         \           \"redir\": null,\n            \"url\": [\n                \"4mw3a\",\n
         \               \"61e7053c53349e06925fa79c\"\n            ]\n        }\n    ]\n}\n"
-  recorded_at: 2026-02-12 13:36:56
+  recorded_at: 2026-02-12 22:18:09
 - request:
     method: GET
     uri: https://raw.githubusercontent.com/netneurolab/neuromaps/main/neuromaps/datasets/data/meta.json
@@ -1109,21 +1109,21 @@ http_interactions:
       x-content-type-options: nosniff
       x-frame-options: deny
       x-xss-protection: 1; mode=block
-      x-github-request-id: 761A:312C73:3E7A48C:43ECE3E:698DD772
+      x-github-request-id: 1859:69A6:6E8F8:7CD74:698E519F
       content-encoding: gzip
       accept-ranges: bytes
-      date: Thu, 12 Feb 2026 13:36:56 GMT
+      date: Thu, 12 Feb 2026 22:18:09 GMT
       via: 1.1 varnish
-      x-served-by: cache-osl6547-OSL
+      x-served-by: cache-osl6531-OSL
       x-cache: HIT
-      x-cache-hits: '1'
-      x-timer: S1770903416.312687,VS0,VE1
+      x-cache-hits: '3'
+      x-timer: S1770934689.405698,VS0,VE0
       vary: Authorization,Accept-Encoding
       access-control-allow-origin: '*'
       cross-origin-resource-policy: cross-origin
-      x-fastly-request-id: 13d42826ea7372735234bd3c2bf34b5ddf359c79
-      expires: Thu, 12 Feb 2026 13:41:56 GMT
-      source-age: '0'
+      x-fastly-request-id: 3d3a701ca6e77ae5124c6e41d4cba1f83df5f01e
+      expires: Thu, 12 Feb 2026 22:23:09 GMT
+      source-age: '1'
       content-length: '17237'
     body:
       string: |-
@@ -3746,5 +3746,5 @@ http_interactions:
                 }
             ]
         }
-  recorded_at: 2026-02-12 13:36:56
-recorded_with: VCR-vcr/2.0.0
+  recorded_at: 2026-02-12 22:18:09
+recorded_with: VCR-vcr/2.1.0

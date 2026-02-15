@@ -1,7 +1,17 @@
 describe("get_gifti_density", {
-  it("is not tested without gifti package and real files", {
-    skip_if_not_installed("gifti")
-    skip("Requires real GIFTI files")
+  it("detects density from a real GIFTI", {
+    skip_on_cran()
+    skip_if_offline()
+
+    cache <- withr::local_tempdir()
+    paths <- fetch_neuromaps_annotation(
+      "abagen", "genepc1", "fsaverage",
+      density = "10k",
+      data_dir = cache,
+      verbose = FALSE
+    )
+
+    expect_equal(get_gifti_density(paths[1]), "10k")
   })
 })
 

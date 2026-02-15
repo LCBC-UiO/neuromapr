@@ -1,7 +1,7 @@
 # print.neuromaps_enhanced_comparison / prints without null model info when no nulls used
 
     Code
-      print(result)
+      res <- print(result)
     Message
       
       -- Brain Map Comparison 

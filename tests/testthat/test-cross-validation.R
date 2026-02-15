@@ -64,8 +64,11 @@ describe("cross-validation with Python reference", {
     it("matches Python output with fixed indices", {
       idx_r <- sort(ref$idx) + 1L
       vg <- compute_variogram(
-        data, distmat,
-        nh = ref$nh, pv = ref$pv, ns = ref$ns,
+        data,
+        distmat,
+        nh = ref$nh,
+        pv = ref$pv,
+        ns = ref$ns,
         idx = idx_r
       )
       expect_equal(vg$gamma, ref$gamma, tolerance = 1e-10)
@@ -87,11 +90,22 @@ describe("cross-validation with Python reference", {
       cg <- cos(gamma)
       sg <- sin(gamma)
 
-      rot <- matrix(c( # nolint: object_name
-        cg * cb * ca - sg * sa, sg * cb * ca + cg * sa, -sb * ca,
-        -cg * cb * sa - sg * ca, -sg * cb * sa + cg * ca, sb * sa,
-        cg * sb,                  sg * sb,                 cb
-      ), nrow = 3, ncol = 3)
+      rot <- matrix(
+        c(
+          # nolint: object_name
+          cg * cb * ca - sg * sa,
+          sg * cb * ca + cg * sa,
+          -sb * ca,
+          -cg * cb * sa - sg * ca,
+          -sg * cb * sa + cg * ca,
+          sb * sa,
+          cg * sb,
+          sg * sb,
+          cb
+        ),
+        nrow = 3,
+        ncol = 3
+      )
 
       expect_equal(rot, as.matrix(ref$R), tolerance = 1e-12)
     })

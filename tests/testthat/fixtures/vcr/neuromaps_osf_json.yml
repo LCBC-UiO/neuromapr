@@ -13,20 +13,20 @@ http_interactions:
       x-content-type-options: nosniff
       x-frame-options: deny
       x-xss-protection: 1; mode=block
-      x-github-request-id: D81D:35C993:3D1358B:4286199:698DD777
+      x-github-request-id: 84F6:35E98:6B751:79D30:698E519D
       content-encoding: gzip
       accept-ranges: bytes
-      date: Thu, 12 Feb 2026 13:36:55 GMT
+      date: Thu, 12 Feb 2026 22:18:08 GMT
       via: 1.1 varnish
-      x-served-by: cache-osl6547-OSL
+      x-served-by: cache-osl6531-OSL
       x-cache: MISS
       x-cache-hits: '0'
-      x-timer: S1770903416.636286,VS0,VE155
+      x-timer: S1770934688.305323,VS0,VE156
       vary: Authorization,Accept-Encoding
       access-control-allow-origin: '*'
       cross-origin-resource-policy: cross-origin
-      x-fastly-request-id: 803facdc75d466ae7953bb88758ceb1b0b6b1bc1
-      expires: Thu, 12 Feb 2026 13:41:55 GMT
+      x-fastly-request-id: 3e06212d2bcc5e02016ec1457722bd9065507248
+      expires: Thu, 12 Feb 2026 22:23:08 GMT
       source-age: '0'
       content-length: '8443'
     body:
@@ -1094,5 +1094,5 @@ http_interactions:
         [\n                \"structural\",\n                \"MRI\"\n            ],\n
         \           \"redir\": null,\n            \"url\": [\n                \"4mw3a\",\n
         \               \"61e7053c53349e06925fa79c\"\n            ]\n        }\n    ]\n}\n"
-  recorded_at: 2026-02-12 13:36:55
-recorded_with: VCR-vcr/2.0.0
+  recorded_at: 2026-02-12 22:18:08
+recorded_with: VCR-vcr/2.1.0

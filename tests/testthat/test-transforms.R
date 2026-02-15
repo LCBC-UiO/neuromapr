@@ -29,7 +29,12 @@ describe("check_wb_command", {
 
 describe("transform_to_space", {
   it("errors for missing ciftiTools", {
-    skip_if(rlang::is_installed("ciftiTools"))
+    local_mocked_bindings(
+      check_installed = function(pkg, ...) {
+        rlang::abort(paste0("Package {.pkg ", pkg, "} is required."))
+      },
+      .package = "rlang"
+    )
     expect_error(
       transform_to_space("test.gii"),
       "ciftiTools"

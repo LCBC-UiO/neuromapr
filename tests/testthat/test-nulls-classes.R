@@ -36,13 +36,8 @@ describe("print.null_distribution", {
   it("prints method, permutations, and observations", {
     nulls <- matrix(rnorm(50), nrow = 5, ncol = 10)
     nd <- new_null_distribution(nulls, "moran", rnorm(5))
-    expect_snapshot(print(nd))
-  })
-
-  it("returns object invisibly", {
-    nulls <- matrix(rnorm(50), nrow = 5, ncol = 10)
-    nd <- new_null_distribution(nulls, "moran", rnorm(5))
-    expect_invisible(print(nd))
+    expect_snapshot(res <- print(nd))
+    expect_identical(res, nd)
   })
 })
 

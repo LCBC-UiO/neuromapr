@@ -1,7 +1,7 @@
 # print.null_distribution / prints method, permutations, and observations
 
     Code
-      print(nd)
+      res <- print(nd)
     Message
       
       -- Null Distribution 

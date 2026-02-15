@@ -1,6 +1,6 @@
 library(vcr)
 
 vcr_configure(
-  dir = "../fixtures/vcr",
+  dir = "fixtures/vcr",
   record = "once"
 )

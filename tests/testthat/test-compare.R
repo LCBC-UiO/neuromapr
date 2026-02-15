@@ -99,7 +99,8 @@ describe("print.neuromaps_enhanced_comparison", {
            null_method = NULL, null_r = NULL, n_perm = NULL),
       class = c("neuromaps_enhanced_comparison", "neuromaps_comparison")
     )
-    expect_snapshot(print(result))
+    expect_snapshot(res <- print(result))
+    expect_identical(res, result)
   })
 
   it("prints null model info when nulls used", {
@@ -109,14 +110,5 @@ describe("print.neuromaps_enhanced_comparison", {
       class = c("neuromaps_enhanced_comparison", "neuromaps_comparison")
     )
     expect_snapshot(print(result))
-  })
-
-  it("returns object invisibly", {
-    result <- structure(
-      list(r = 0.5, p = 0.01, p_null = NULL, method = "pearson", n = 50,
-           null_method = NULL, null_r = NULL, n_perm = NULL),
-      class = c("neuromaps_enhanced_comparison", "neuromaps_comparison")
-    )
-    expect_invisible(print(result))
   })
 })

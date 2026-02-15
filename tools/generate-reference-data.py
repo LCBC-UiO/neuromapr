@@ -233,7 +233,7 @@ def generate_burt2020_stats():
         kernel="exp",
         pv=25,
         nh=25,
-        resample=False,
+        resample=True,
         seed=1,
     )
     surrogates = gen(n=500)

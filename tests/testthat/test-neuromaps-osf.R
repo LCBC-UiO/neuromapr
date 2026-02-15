@@ -77,7 +77,9 @@ describe("download_neuromaps_file", {
     tmp_dir <- withr::local_tempdir()
     destfile <- file.path(tmp_dir, "test.gii")
     writeLines("stale content", destfile)
-    fresh_md5 <- "4f559bd09e47dc72b91335762338794a"
+    fresh_file <- withr::local_tempfile()
+    writeLines("fresh content", fresh_file)
+    fresh_md5 <- unname(tools::md5sum(fresh_file))
 
     local_mocked_bindings(
       download.file = function(url, destfile, ...) {
@@ -87,14 +89,20 @@ describe("download_neuromaps_file", {
     )
 
     expect_message(
-      download_neuromaps_file(
-        url = "https://example.com/fake",
-        destfile = destfile,
-        checksum = fresh_md5,
-        overwrite = FALSE,
-        verbose = TRUE
+      expect_message(
+        expect_message(
+          download_neuromaps_file(
+            url = "https://example.com/fake",
+            destfile = destfile,
+            checksum = fresh_md5,
+            overwrite = FALSE,
+            verbose = TRUE
+          ),
+          "mismatch"
+        ),
+        "Downloading"
       ),
-      "mismatch"
+      "Saved"
     )
   })
 
@@ -126,11 +134,14 @@ describe("download_neuromaps_file", {
     )
 
     expect_message(
-      download_neuromaps_file(
-        url = "https://example.com/fake",
-        destfile = destfile,
-        checksum = NULL,
-        verbose = TRUE
+      expect_message(
+        download_neuromaps_file(
+          url = "https://example.com/fake",
+          destfile = destfile,
+          checksum = NULL,
+          verbose = TRUE
+        ),
+        "Downloading"
       ),
       "Saved"
     )
