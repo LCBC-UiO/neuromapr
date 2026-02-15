@@ -163,7 +163,15 @@ and
 
 ## Citation
 
-If you use neuromapr, please cite the neuromaps framework:
+If you use neuromapr, please cite the package and the neuromaps
+framework it implements. You can get the package citation from R with:
+
+``` r
+citation("neuromapr")
+```
+
+Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
+Brain Map Comparison*. R package version 0.2.0.
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
