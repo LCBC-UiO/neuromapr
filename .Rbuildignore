@@ -12,4 +12,5 @@
 ^Meta$
 ^tools$
 tests/testthat/fixtures/python$
+^CITATION\.cff$
 .claude/

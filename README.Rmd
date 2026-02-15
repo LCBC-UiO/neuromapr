@@ -153,10 +153,21 @@ to GIFTI with `annot_to_gifti()` and `fsmorph_to_gifti()`.
 
 ## Citation
 
-If you use neuromapr, please cite the neuromaps framework:
+If you use neuromapr, please cite the package and the neuromaps framework it
+implements. You can get the package citation from R with:
+
+```r
+citation("neuromapr")
+```
+
+```{r citation, echo = FALSE, results = "asis"}
+cit <- citation("neuromapr")
+cat(format(cit, style = "text"), sep = "\n\n")
+```
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural and
 > functional interpretation of brain maps. *Nature Methods*, 19, 1472--1480.
 > doi:10.1038/s41592-022-01625-w
 
-Individual null model methods have their own citations documented in each function's help page.
+Individual null model methods have their own citations documented in each
+function's help page.

@@ -1,0 +1,64 @@
+cff-version: 1.2.0
+message: "If you use this software, please cite it as below."
+type: software
+title: "neuromapr: Spatial Null Models and Transforms for Brain Map Comparison"
+version: 0.2.0
+authors:
+  - family-names: Mowinckel
+    given-names: Athanasia Mo
+    email: a.m.mowinckel@psykologi.uio.no
+    orcid: "https://orcid.org/0000-0002-5756-0223"
+abstract: >-
+  Implements spatial null models and coordinate-space transformations for
+  statistical comparison of brain maps, following the framework described
+  in Markello et al. (2022). Provides variogram-matching surrogates,
+  Moran spectral randomization, and spin-based permutation tests.
+license: MIT
+url: "https://lcbc-uio.github.io/neuromapr/"
+repository-code: "https://github.com/lcbc-uio/neuromapr"
+keywords:
+  - neuroscience
+  - brain-maps
+  - spatial-null-models
+  - R
+  - neuroimaging
+references:
+  - type: article
+    title: "neuromaps: structural and functional interpretation of brain maps"
+    authors:
+      - family-names: Markello
+        given-names: Ross D
+      - family-names: Hansen
+        given-names: Justine Y
+      - family-names: Liu
+        given-names: Zhen-Qi
+      - family-names: Bazinet
+        given-names: Vincent
+      - family-names: Shafiei
+        given-names: Golia
+      - family-names: Suárez
+        given-names: Laura E
+      - family-names: Blostein
+        given-names: Nadia
+      - family-names: Seidlitz
+        given-names: Jakob
+      - family-names: Baillet
+        given-names: Sylvain
+      - family-names: Satterthwaite
+        given-names: Theodore D
+      - family-names: Bhatt
+        given-names: Rickson R
+      - family-names: Raznahan
+        given-names: Armin
+      - family-names: Yeo
+        given-names: B T Thomas
+      - family-names: Bhatt
+        given-names: Bratislav
+      - family-names: Misic
+        given-names: Bratislav
+    journal: Nature Methods
+    volume: 19
+    start: 1472
+    end: 1480
+    year: 2022
+    doi: "10.1038/s41592-022-01625-w"
