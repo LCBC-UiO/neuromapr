@@ -13,6 +13,11 @@ abstract: >-
   statistical comparison of brain maps, following the framework described
   in Markello et al. (2022). Provides variogram-matching surrogates,
   Moran spectral randomization, and spin-based permutation tests.
+doi: "10.5281/zenodo.18648937"
+identifiers:
+  - type: doi
+    value: "10.5281/zenodo.18648937"
+    description: Zenodo archive
 license: MIT
 url: "https://lcbc-uio.github.io/neuromapr/"
 repository-code: "https://github.com/lcbc-uio/neuromapr"

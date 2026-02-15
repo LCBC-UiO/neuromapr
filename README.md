@@ -7,6 +7,9 @@
 
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
+[![R-CMD-check](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml)
+[![Cross-validate](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml)
+[![DOI](https://zenodo.org/badge/1156352155.svg)](https://doi.org/10.5281/zenodo.18648936)
 <!-- badges: end -->
 
 Brain maps are spatially autocorrelated — nearby regions have similar
@@ -173,6 +176,8 @@ citation("neuromapr")
 
 Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
 Brain Map Comparison*. R package version 0.2.0.
+
+<https://doi.org/10.5281/zenodo.18648937>
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
