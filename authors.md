@@ -8,7 +8,7 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/lcbc-uio/neuromapr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/lcbc-uio/neuromapr/blob/v0.2.0/DESCRIPTION)
 
 Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
 Brain Map Comparison*. R package version 0.2.0,
