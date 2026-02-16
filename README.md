@@ -1,4 +1,5 @@
 
+
 <!-- README.md is generated from README.Rmd. Please edit that file -->
 
 # neuromapr <a href="https://lcbc-uio.github.io/neuromapr/"><img src="man/figures/logo.png" align="right" height="138" alt="neuromapr website" /></a>
@@ -8,6 +9,8 @@
 [![Lifecycle:
 experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml)
+[![code-quality](https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml)
+[![test-coverage](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml)
 [![Cross-validate](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml)
 [![DOI](https://zenodo.org/badge/1156352155.svg)](https://doi.org/10.5281/zenodo.18648936)
 <!-- badges: end -->
@@ -175,13 +178,14 @@ citation("neuromapr")
 ```
 
 Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
-Brain Map Comparison*. R package version 0.2.0.
+Brain Map Comparison*. R package version 0.2.0,
+<https://github.com/lcbc-uio/neuromapr>.
 
 <https://doi.org/10.5281/zenodo.18648937>
 
 > Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural
 > and functional interpretation of brain maps. *Nature Methods*, 19,
-> 1472–1480. <doi:10.1038/s41592-022-01625-w>
+> 1472–1480. doi:10.1038/s41592-022-01625-w
 
 Individual null model methods have their own citations documented in
 each function’s help page.

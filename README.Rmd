@@ -19,6 +19,8 @@ knitr::opts_chunk$set(
 <!-- badges: start -->
 [![Lifecycle: experimental](https://img.shields.io/badge/lifecycle-experimental-orange.svg)](https://lifecycle.r-lib.org/articles/stages.html#experimental)
 [![R-CMD-check](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml)
+[![code-quality](https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml)
+[![test-coverage](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml)
 [![Cross-validate](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml)
 [![DOI](https://zenodo.org/badge/1156352155.svg)](https://doi.org/10.5281/zenodo.18648936)
 <!-- badges: end -->
