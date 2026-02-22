@@ -43,6 +43,7 @@ reference:
     contents:
       - neuromaps_available
       - fetch_neuromaps_annotation
+      - clear_neuromaps_cache
 
   - title: Map Comparison
     desc: >

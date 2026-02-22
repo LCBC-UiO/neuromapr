@@ -1,6 +1,6 @@
 Package: neuromapr
 Title: Spatial Null Models and Transforms for Brain Map Comparison
-Version: 0.2.0
+Version: 0.2.1
 Authors@R: c(
     person("Athanasia Mo", "Mowinckel", , "a.m.mowinckel@psykologi.uio.no",
            role = c("aut", "cre", "cph"),
