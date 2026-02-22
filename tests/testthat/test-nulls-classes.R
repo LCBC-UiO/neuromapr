@@ -1,4 +1,12 @@
 describe("new_null_distribution", {
+  it("errors for non-numeric observed", {
+    nulls <- matrix(1:10, nrow = 5, ncol = 2)
+    expect_error(
+      new_null_distribution(nulls, "test", letters[1:5]),
+      "numeric"
+    )
+  })
+
   it("creates a valid null_distribution object", {
     nulls <- matrix(rnorm(100), nrow = 10, ncol = 10)
     observed <- rnorm(10)
@@ -27,8 +35,38 @@ describe("validate_null_distribution", {
 
   it("errors when observed length mismatches nulls rows", {
     nulls <- matrix(rnorm(50), nrow = 5, ncol = 10)
-    nd <- new_null_distribution(nulls, "moran", rnorm(3))
-    expect_error(validate_null_distribution(nd), "length")
+    expect_error(
+      new_null_distribution(nulls, "moran", rnorm(3)),
+      "observed.*length"
+    )
+  })
+
+  it("errors for non-numeric nulls", {
+    expect_error(
+      new_null_distribution("not a matrix", "test", 1),
+      "numeric matrix"
+    )
+  })
+
+  it("errors for non-character method", {
+    expect_error(
+      new_null_distribution(matrix(1:4, 2, 2), 42, 1:2),
+      "character string"
+    )
+  })
+
+  it("errors for corrupted nulls field", {
+    nulls <- matrix(rnorm(50), nrow = 5, ncol = 10)
+    nd <- new_null_distribution(nulls, "moran", rnorm(5))
+    nd$nulls <- "broken"
+    expect_error(validate_null_distribution(nd), "matrix")
+  })
+
+  it("errors for corrupted observed length", {
+    nulls <- matrix(rnorm(50), nrow = 5, ncol = 10)
+    nd <- new_null_distribution(nulls, "moran", rnorm(5))
+    nd$observed <- rnorm(3)
+    expect_error(validate_null_distribution(nd), "observed.*length")
   })
 })
 

@@ -5,6 +5,7 @@ describe("cross-validation with Python reference", {
   n <- inputs$n
   distmat <- as.matrix(inputs$distmat)
   data <- inputs$data
+  data_y <- inputs$data_y
 
   describe("weight matrix (inverse distance)", {
     ref <- load_python_fixture("weight_matrix_inverse_distance")
@@ -21,6 +22,25 @@ describe("cross-validation with Python reference", {
     it("matches Python output", {
       w <- compute_weight_matrix(distmat, kernel = "exponential")
       expect_equal(w, as.matrix(ref$w), tolerance = 1e-10)
+    })
+  })
+
+  describe("SAR weight matrix", {
+    ref <- load_python_fixture("sar_weight_matrix")
+
+    it("matches Python output", {
+      w <- build_sar_weights(distmat, ref$d0)
+      expect_equal(w, as.matrix(ref$w), tolerance = 1e-10)
+    })
+
+    it("has zero diagonal", {
+      w <- build_sar_weights(distmat, ref$d0)
+      expect_equal(diag(w), rep(0, n))
+    })
+
+    it("has unit row sums", {
+      w <- build_sar_weights(distmat, ref$d0)
+      expect_equal(rowSums(w), rep(1, n), tolerance = 1e-10)
     })
   })
 
@@ -55,6 +75,19 @@ describe("cross-validation with Python reference", {
         flip_sign <- sum((r_vecs[, j] + py_vecs[, j])^2)
         expect_lt(min(same_sign, flip_sign), 1e-8)
       }
+    })
+  })
+
+  describe("Moran double-centered matrix", {
+    ref <- load_python_fixture("moran_double_centered")
+
+    it("matches Python output", {
+      w <- compute_weight_matrix(distmat, kernel = "inverse_distance")
+      sym_w <- (w + t(w)) / 2
+      row_means <- rowMeans(sym_w)
+      grand_mean <- mean(row_means)
+      dbl_r <- sym_w - outer(row_means, row_means, "+") + grand_mean
+      expect_equal(dbl_r, as.matrix(ref$dbl), tolerance = 1e-10)
     })
   })
 
@@ -128,6 +161,52 @@ describe("cross-validation with Python reference", {
     it("matches Python output", {
       matched <- rank_match(ref$surrogate, ref$target)
       expect_equal(matched, ref$matched)
+    })
+  })
+
+  describe("correlations", {
+    ref <- load_python_fixture("correlation_reference")
+
+    it("Pearson r matches Python", {
+      r_val <- cor(data, data_y, method = "pearson")
+      expect_equal(r_val, ref$pearson_r, tolerance = 1e-6)
+    })
+
+    it("Spearman r matches Python", {
+      r_val <- cor(data, data_y, method = "spearman")
+      expect_equal(r_val, ref$spearman_r, tolerance = 1e-6)
+    })
+
+    it("compare_maps r matches Python", {
+      result <- compare_maps(data, data_y, verbose = FALSE)
+      expect_equal(result$r, ref$pearson_r, tolerance = 1e-6)
+    })
+  })
+
+  describe("null distribution statistics", {
+    ref <- load_python_fixture("null_distribution_stats")
+
+    it("SAR null correlations have similar distribution", {
+      sar_r <- null_burt2018(data, distmat, n_perm = ref$n_perm, seed = 1L)
+      sar_surr <- as.matrix(sar_r)
+      null_r <- apply(sar_surr, 2, function(s) cor(s, data_y))
+      expect_equal(mean(null_r), ref$sar_null_r_mean, tolerance = 0.15)
+      expect_equal(sd(null_r), ref$sar_null_r_std, tolerance = 0.15)
+    })
+
+    it("SAR surrogates preserve rank distribution", {
+      expect_true(ref$sar_rank_preserved)
+    })
+
+    it("Moran null correlations have similar distribution", {
+      moran_r <- null_moran(
+        data, distmat,
+        n_perm = ref$n_perm, seed = 1L, procedure = "singleton"
+      )
+      moran_surr <- as.matrix(moran_r)
+      null_r <- apply(moran_surr, 2, function(s) cor(s, data_y))
+      expect_equal(mean(null_r), ref$moran_null_r_mean, tolerance = 0.15)
+      expect_equal(sd(null_r), ref$moran_null_r_std, tolerance = 0.15)
     })
   })
 

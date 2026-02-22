@@ -158,6 +158,74 @@ describe("generate_nulls", {
     expect_s3_class(result, "null_distribution")
     expect_equal(result$method, "burt2018")
   })
+
+  it("dispatches to burt2020", {
+    set.seed(42)
+    n <- 20
+    data <- rnorm(n)
+    distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
+    result <- generate_nulls(
+      data, method = "burt2020",
+      n_perm = 3L, distmat = distmat, seed = 1
+    )
+    expect_s3_class(result, "null_distribution")
+    expect_equal(result$method, "burt2020")
+  })
+
+  it("dispatches to spin_hungarian", {
+    set.seed(42)
+    n_lh <- 10
+    n_rh <- 10
+    coords <- list(
+      lh = matrix(rnorm(n_lh * 3), ncol = 3),
+      rh = matrix(rnorm(n_rh * 3), ncol = 3)
+    )
+    data <- rnorm(n_lh + n_rh)
+    result <- generate_nulls(
+      data, method = "spin_hungarian",
+      n_perm = 3L, coords = coords, seed = 1
+    )
+    expect_s3_class(result, "null_distribution")
+    expect_equal(result$method, "spin_hungarian")
+  })
+
+  it("dispatches to baum", {
+    set.seed(42)
+    n_lh <- 10
+    n_rh <- 10
+    coords <- list(
+      lh = matrix(rnorm(n_lh * 3), ncol = 3),
+      rh = matrix(rnorm(n_rh * 3), ncol = 3)
+    )
+    parcellation <- rep(1:4, each = 5)
+    data <- rnorm(4)
+    result <- generate_nulls(
+      data, method = "baum",
+      n_perm = 3L, coords = coords,
+      parcellation = parcellation, seed = 1
+    )
+    expect_s3_class(result, "null_distribution")
+    expect_equal(result$method, "baum")
+  })
+
+  it("dispatches to cornblath", {
+    set.seed(42)
+    n_lh <- 10
+    n_rh <- 10
+    coords <- list(
+      lh = matrix(rnorm(n_lh * 3), ncol = 3),
+      rh = matrix(rnorm(n_rh * 3), ncol = 3)
+    )
+    parcellation <- rep(1:4, each = 5)
+    data <- rnorm(4)
+    result <- generate_nulls(
+      data, method = "cornblath",
+      n_perm = 3L, coords = coords,
+      parcellation = parcellation, seed = 1
+    )
+    expect_s3_class(result, "null_distribution")
+    expect_equal(result$method, "cornblath")
+  })
 })
 
 describe("compute_distance_matrix", {

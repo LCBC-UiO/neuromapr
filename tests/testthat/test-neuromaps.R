@@ -1,7 +1,7 @@
 describe("neuromaps_available", {
   it("returns full registry when no filters", {
     local_mocked_bindings(
-      build_neuromaps_registry = function() {
+      build_neuromaps_registry = function(refresh = FALSE) {
         tibble::tibble(
           source = c("a", "b"), desc = c("x", "y"),
           space = "fs", den = "10k", res = NA,
@@ -21,7 +21,7 @@ describe("neuromaps_available", {
 
   it("applies filters", {
     local_mocked_bindings(
-      build_neuromaps_registry = function() {
+      build_neuromaps_registry = function(refresh = FALSE) {
         tibble::tibble(
           source = c("abagen", "beliveau"),
           desc = c("x", "y"),

@@ -32,11 +32,10 @@ describe("download_neuromaps_file", {
 
     download_called <- FALSE
     local_mocked_bindings(
-      download.file = function(url, destfile, ...) {
+      perform_download = function(url, destfile) {
         download_called <<- TRUE
         writeLines("new content", destfile)
-      },
-      .package = "utils"
+      }
     )
 
     download_neuromaps_file(
@@ -54,10 +53,9 @@ describe("download_neuromaps_file", {
     destfile <- file.path(tmp_dir, "test.gii")
 
     local_mocked_bindings(
-      download.file = function(url, destfile, ...) {
+      perform_download = function(url, destfile) {
         writeLines("bad content", destfile)
-      },
-      .package = "utils"
+      }
     )
 
     expect_error(
@@ -82,10 +80,9 @@ describe("download_neuromaps_file", {
     fresh_md5 <- unname(tools::md5sum(fresh_file))
 
     local_mocked_bindings(
-      download.file = function(url, destfile, ...) {
+      perform_download = function(url, destfile) {
         writeLines("fresh content", destfile)
-      },
-      .package = "utils"
+      }
     )
 
     expect_message(
@@ -127,10 +124,9 @@ describe("download_neuromaps_file", {
     destfile <- file.path(tmp_dir, "test.gii")
 
     local_mocked_bindings(
-      download.file = function(url, destfile, ...) {
+      perform_download = function(url, destfile) {
         writeLines("content", destfile)
-      },
-      .package = "utils"
+      }
     )
 
     expect_message(
@@ -152,10 +148,9 @@ describe("download_neuromaps_file", {
     destfile <- file.path(tmp_dir, "a", "b", "test.gii")
 
     local_mocked_bindings(
-      download.file = function(url, destfile, ...) {
+      perform_download = function(url, destfile) {
         writeLines("content", destfile)
-      },
-      .package = "utils"
+      }
     )
 
     download_neuromaps_file(

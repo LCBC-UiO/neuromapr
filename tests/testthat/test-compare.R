@@ -69,6 +69,40 @@ describe("compare_maps", {
     expect_equal(result$null_method, "moran")
   })
 
+  it("verbose messages for pre-computed nulls", {
+    set.seed(42)
+    n <- 20
+    x <- rnorm(n)
+    y <- x + rnorm(n, sd = 0.5)
+    distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
+    nd <- null_moran(x, distmat, n_perm = 10L, seed = 1)
+
+    expect_message(
+      compare_maps(x, y, nulls = nd, verbose = TRUE),
+      "pre-computed"
+    )
+  })
+
+  it("verbose messages for generated nulls", {
+    set.seed(42)
+    n <- 20
+    x <- rnorm(n)
+    y <- x + rnorm(n, sd = 0.5)
+    distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
+
+    expect_message(
+      compare_maps(
+        x, y,
+        null_method = "moran",
+        n_perm = 5L,
+        distmat = distmat,
+        seed = 1,
+        verbose = TRUE
+      ),
+      "Generating"
+    )
+  })
+
   it("errors for mismatched pre-computed nulls", {
     set.seed(42)
     nd <- new_null_distribution(
