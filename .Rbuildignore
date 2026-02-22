@@ -14,3 +14,4 @@
 tests/testthat/fixtures/python$
 ^CITATION\.cff$
 .claude/
+^CRAN-SUBMISSION$

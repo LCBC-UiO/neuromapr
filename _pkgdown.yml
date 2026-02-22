@@ -27,6 +27,8 @@ navbar:
           href: articles/parcellation.html
         - text: Surface Geometry
           href: articles/surface-geometry.html
+        - text: Rotation Methods
+          href: articles/rotation-methods.html
 
 articles:
   - title: Workflows
@@ -34,6 +36,7 @@ articles:
       - null-models
       - parcellation
       - surface-geometry
+      - rotation-methods
 
 reference:
   - title: Annotation Registry
