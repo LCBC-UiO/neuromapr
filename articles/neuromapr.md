@@ -68,6 +68,8 @@ result_null <- compare_maps(
   seed = 1,
   verbose = FALSE
 )
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■                 53% | ETA:  4s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  2s
 result_null
 #> 
 #> ── Brain Map Comparison
@@ -253,6 +255,7 @@ result_spatial <- permtest_metric(
   null_method = "burt2020",
   distmat = distmat
 )
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■         79% | ETA:  1s
 result_spatial$p_value
 #> [1] 0.8159204
 ```

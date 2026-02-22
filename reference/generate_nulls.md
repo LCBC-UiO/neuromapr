@@ -67,3 +67,11 @@ object.
 
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w
+
+## Examples
+
+``` r
+data <- rnorm(100)
+distmat <- as.matrix(dist(seq_len(100)))
+nd <- generate_nulls(data, method = "moran", distmat = distmat, n_perm = 10L)
+```

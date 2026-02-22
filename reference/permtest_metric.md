@@ -76,3 +76,15 @@ List with `$observed`, `$null_values`, `$p_value`, and `$n_perm`.
 
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w
+
+## Examples
+
+``` r
+x <- rnorm(100)
+y <- x + rnorm(100)
+result <- permtest_metric(x, y, n_perm = 99L, seed = 1L)
+result$observed
+#> [1] 0.6552005
+result$p_value
+#> [1] 0.01
+```

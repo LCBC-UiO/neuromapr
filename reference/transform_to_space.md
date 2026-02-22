@@ -73,3 +73,11 @@ doi:10.1016/j.neuroimage.2014.07.033
 
 Robinson EC et al. (2018) NeuroImage 167:150-165.
 doi:10.1016/j.neuroimage.2017.10.037
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+transform_to_space("map.func.gii", target_space = "fsLR")
+} # }
+```

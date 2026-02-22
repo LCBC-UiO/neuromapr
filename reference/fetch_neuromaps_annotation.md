@@ -67,7 +67,7 @@ Character vector of downloaded file path(s).
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 fetch_neuromaps_annotation("abagen", "genepc1", "fsaverage", density = "10k")
-} # }
+}
 ```

@@ -9,12 +9,15 @@ Browse and download brain map annotations from the
   : List available neuromaps annotations
 - [`fetch_neuromaps_annotation()`](https://lcbc-uio.github.io/neuromapr/reference/fetch_neuromaps_annotation.md)
   : Download a neuromaps annotation
+- [`clear_neuromaps_cache()`](https://lcbc-uio.github.io/neuromapr/reference/clear_neuromaps_cache.md)
+  : Clear cached neuromaps registry data
 
 ## Map Comparison
 
 Statistical comparison of brain maps using spatial null models.
 
 - [`compare_maps()`](https://lcbc-uio.github.io/neuromapr/reference/compare_maps.md)
+  [`print(`*`<neuromaps_enhanced_comparison>`*`)`](https://lcbc-uio.github.io/neuromapr/reference/compare_maps.md)
   : Compare brain maps with spatial null model significance testing
 - [`permtest_metric()`](https://lcbc-uio.github.io/neuromapr/reference/permtest_metric.md)
   : Permutation test for any metric between brain maps
@@ -38,6 +41,10 @@ is the main entry point; individual methods are also available directly.
 - [`null_cornblath()`](https://lcbc-uio.github.io/neuromapr/reference/null_cornblath.md)
   : Cornblath spin test null model
 - [`new_null_distribution()`](https://lcbc-uio.github.io/neuromapr/reference/null_distribution.md)
+  [`print(`*`<null_distribution>`*`)`](https://lcbc-uio.github.io/neuromapr/reference/null_distribution.md)
+  [`summary(`*`<null_distribution>`*`)`](https://lcbc-uio.github.io/neuromapr/reference/null_distribution.md)
+  [`as.matrix(`*`<null_distribution>`*`)`](https://lcbc-uio.github.io/neuromapr/reference/null_distribution.md)
+  [`plot(`*`<null_distribution>`*`)`](https://lcbc-uio.github.io/neuromapr/reference/null_distribution.md)
   : Create a null distribution object
 - [`null_moran()`](https://lcbc-uio.github.io/neuromapr/reference/null_moran.md)
   : Moran spectral randomization null model

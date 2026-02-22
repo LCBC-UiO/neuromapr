@@ -28,3 +28,14 @@ An `igraph` graph object with weighted edges.
 
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w
+
+## Examples
+
+``` r
+vertices <- matrix(
+  c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+  nrow = 4, byrow = TRUE
+)
+faces <- matrix(c(1L, 2L, 3L, 2L, 3L, 4L), nrow = 2, byrow = TRUE)
+g <- make_surf_graph(vertices, faces)
+```

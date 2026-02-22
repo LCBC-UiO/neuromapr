@@ -39,3 +39,11 @@ object.
 
 Burt JB et al. (2018) Nature Neuroscience 21:1251-1259.
 doi:10.1038/s41593-018-0195-0
+
+## Examples
+
+``` r
+data <- rnorm(50)
+distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+nd <- null_burt2018(data, distmat, n_perm = 10L, seed = 1L)
+```

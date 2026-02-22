@@ -13,7 +13,7 @@ repository and cached for the session."><meta property="og:image" content="https
 
     <a class="navbar-brand me-2" href="../index.html">neuromapr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -28,6 +28,7 @@ repository and cached for the session."><meta property="og:image" content="https
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/null-models.html">Choosing and Using Null Models</a></li>
     <li><a class="dropdown-item" href="../articles/parcellation.html">Working with Parcellated Data</a></li>
     <li><a class="dropdown-item" href="../articles/surface-geometry.html">Surface Geometry</a></li>
+    <li><a class="dropdown-item" href="../articles/rotation-methods.html">Rotation Methods</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -67,7 +68,9 @@ repository and cached for the session.</p>
 <span>  resolution <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  hemisphere <span class="op">=</span> <span class="cn">NULL</span>,</span>
 <span>  tags <span class="op">=</span> <span class="cn">NULL</span>,</span>
-<span>  format <span class="op">=</span> <span class="cn">NULL</span></span>
+<span>  format <span class="op">=</span> <span class="cn">NULL</span>,</span>
+<span>  refresh <span class="op">=</span> <span class="cn">FALSE</span>,</span>
+<span>  fixed <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span></code></pre></div>
     </div>
 
@@ -108,6 +111,16 @@ exclusive with <code>density</code>.</p></dd>
 <dt id="arg-format">format<a class="anchor" aria-label="anchor" href="#arg-format"></a></dt>
 <dd><p>Filter by format (<code>"surface"</code> or <code>"volume"</code>).</p></dd>
 
+
+<dt id="arg-refresh">refresh<a class="anchor" aria-label="anchor" href="#arg-refresh"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, forces a fresh download of the
+registry data, ignoring any session cache.</p></dd>
+
+
+<dt id="arg-fixed">fixed<a class="anchor" aria-label="anchor" href="#arg-fixed"></a></dt>
+<dd><p>Logical. If <code>TRUE</code>, filter strings are matched literally
+rather than as regular expressions.</p></dd>
+
 </dl></div>
     <div class="section level2">
     <h2 id="value">Value<a class="anchor" aria-label="anchor" href="#value"></a></h2>
@@ -116,18 +129,23 @@ space, den, res, hemi, format, fname, full_desc, tags, N, age.</p>
     </div>
     <div class="section level2">
     <h2 id="details">Details<a class="anchor" aria-label="anchor" href="#details"></a></h2>
-    <p>When used in <code>neuromaps_available()</code>, all parameters act as regex filters.
-When used in <code><a href="fetch_neuromaps_annotation.html">fetch_neuromaps_annotation()</a></code>, <code>source</code>, <code>desc</code>, and <code>space</code>
+    <p>All string filter parameters (<code>source</code>, <code>desc</code>, <code>space</code>, <code>density</code>,
+<code>resolution</code>, <code>hemisphere</code>, <code>format</code>) are treated as <strong>R regular
+expressions</strong> and matched with <code><a href="https://rdrr.io/r/base/grep.html" class="external-link">grepl()</a></code>. For example,
+<code>source = "^beliveau$"</code> matches exactly, while <code>source = "bel"</code> matches
+any source containing <code>"bel"</code>. Set <code>fixed = TRUE</code> for literal string
+matching. The <code>tags</code> parameter always uses exact matching (AND logic).</p>
+<p>When used in <code><a href="fetch_neuromaps_annotation.html">fetch_neuromaps_annotation()</a></code>, <code>source</code>, <code>desc</code>, and <code>space</code>
 are exact matches.</p>
     </div>
 
     <div class="section level2">
     <h2 id="ref-examples">Examples<a class="anchor" aria-label="anchor" href="#ref-examples"></a></h2>
-    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># \dontrun{</span></span></span>
+    <div class="sourceCode"><pre class="sourceCode r"><code><span class="r-in"><span><span class="kw">if</span> <span class="op">(</span><span class="cn">FALSE</span><span class="op">)</span> <span class="op">{</span> <span class="co"># interactive()</span></span></span>
 <span class="r-in"><span><span class="fu">neuromaps_available</span><span class="op">(</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">neuromaps_available</span><span class="op">(</span>source <span class="op">=</span> <span class="st">"beliveau"</span><span class="op">)</span></span></span>
 <span class="r-in"><span><span class="fu">neuromaps_available</span><span class="op">(</span>tags <span class="op">=</span> <span class="st">"pet"</span><span class="op">)</span></span></span>
-<span class="r-in"><span><span class="op">}</span> <span class="co"># }</span></span></span>
+<span class="r-in"><span><span class="op">}</span></span></span>
 </code></pre></div>
     </div>
   </main><aside class="col-md-3"><nav id="toc" aria-label="Table of contents"><h2>On this page</h2>

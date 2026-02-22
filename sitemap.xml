@@ -6,11 +6,14 @@
 <url><loc>https://lcbc-uio.github.io/neuromapr/articles/neuromapr.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/articles/null-models.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/articles/parcellation.html</loc></url>
+<url><loc>https://lcbc-uio.github.io/neuromapr/articles/rotation-methods.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/articles/surface-geometry.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/authors.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/index.html</loc></url>
+<url><loc>https://lcbc-uio.github.io/neuromapr/news/index.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/annot_to_gifti.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/check_wb_command.html</loc></url>
+<url><loc>https://lcbc-uio.github.io/neuromapr/reference/clear_neuromaps_cache.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/compare_maps.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/fetch_neuromaps_annotation.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/fsmorph_to_gifti.html</loc></url>
@@ -19,7 +22,6 @@
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/get_surface_distance.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/index.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/make_surf_graph.html</loc></url>
-<url><loc>https://lcbc-uio.github.io/neuromapr/reference/neuromapr-package.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/neuromaps_available.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/null_alexander_bloch.html</loc></url>
 <url><loc>https://lcbc-uio.github.io/neuromapr/reference/null_baum.html</loc></url>

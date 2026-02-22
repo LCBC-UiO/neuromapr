@@ -60,3 +60,11 @@ object.
 
 Wagner HH, Dray S (2015) Methods in Ecology and Evolution 6:1169-1178.
 doi:10.1111/2041-210X.12407
+
+## Examples
+
+``` r
+data <- rnorm(50)
+distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+nd <- null_moran(data, distmat, n_perm = 10L, seed = 1L)
+```

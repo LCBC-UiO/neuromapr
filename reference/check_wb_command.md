@@ -18,3 +18,11 @@ check_wb_command(wb_path = NULL)
 ## Value
 
 Path to `wb_command` executable.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+check_wb_command()
+} # }
+```

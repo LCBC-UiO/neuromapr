@@ -16,8 +16,8 @@
 <script src="deps/bootstrap-5.3.1/bootstrap.bundle.min.js"></script><link href="deps/font-awesome-6.5.2/css/all.min.css" rel="stylesheet">
 <link href="deps/font-awesome-6.5.2/css/v4-shims.min.css" rel="stylesheet">
 <script src="deps/headroom-0.11.0/headroom.min.js"></script><script src="deps/headroom-0.11.0/jQuery.headroom.min.js"></script><script src="deps/bootstrap-toc-1.0.1/bootstrap-toc.min.js"></script><script src="deps/clipboard.js-2.0.11/clipboard.min.js"></script><script src="deps/search-1.0.0/autocomplete.jquery.min.js"></script><script src="deps/search-1.0.0/fuse.min.js"></script><script src="deps/search-1.0.0/mark.min.js"></script><!-- pkgdown --><script src="pkgdown.js"></script><meta property="og:title" content="Spatial Null Models and Transforms for Brain Map Comparison">
-<meta name="description" content="Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) &lt;doi:10.1038/s41592-022-01625-w&gt;. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &amp; Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Includes an R interface to the neuromaps annotation registry for browsing, downloading, and comparing brain map annotations from OSF. Integrates with ciftiTools for coordinate-space transforms.">
-<meta property="og:description" content="Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) &lt;doi:10.1038/s41592-022-01625-w&gt;. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &amp; Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Includes an R interface to the neuromaps annotation registry for browsing, downloading, and comparing brain map annotations from OSF. Integrates with ciftiTools for coordinate-space transforms.">
+<meta name="description" content="Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) &lt;doi:10.1038/s41592-022-01625-w&gt;. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &amp; Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Includes an R interface to the neuromaps annotation registry for browsing, downloading, and comparing brain map annotations from the Open Science Framework (OSF). Integrates with ciftiTools for coordinate-space transforms.">
+<meta property="og:description" content="Implements spatial null models and coordinate-space transformations for statistical comparison of brain maps, following the framework described in Markello et al. (2022) &lt;doi:10.1038/s41592-022-01625-w&gt;. Provides variogram-matching surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &amp; Dray 2015), and spin-based permutation tests (Alexander-Bloch et al. 2018). Includes an R interface to the neuromaps annotation registry for browsing, downloading, and comparing brain map annotations from the Open Science Framework (OSF). Integrates with ciftiTools for coordinate-space transforms.">
 <meta property="og:image" content="https://lcbc-uio.github.io/neuromapr/logo.svg">
 </head>
 <body>
@@ -28,7 +28,7 @@
 
     <a class="navbar-brand me-2" href="index.html">neuromapr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -45,6 +45,7 @@
 <li><a class="dropdown-item" href="articles/null-models.html">Choosing and Using Null Models</a></li>
     <li><a class="dropdown-item" href="articles/parcellation.html">Working with Parcellated Data</a></li>
     <li><a class="dropdown-item" href="articles/surface-geometry.html">Surface Geometry</a></li>
+    <li><a class="dropdown-item" href="articles/rotation-methods.html">Rotation Methods</a></li>
   </ul>
 </li>
       </ul>
@@ -78,12 +79,15 @@
 
 <p>Brain maps are spatially autocorrelated — nearby regions have similar values just because they are neighbours. Standard correlation tests ignore this and produce inflated p-values. neuromapr generates spatially-constrained surrogate maps that preserve autocorrelation structure, so you can test whether the similarity between two brain maps is more than a spatial artifact.</p>
 <p>The package implements the framework described in <a href="https://doi.org/10.1038/s41592-022-01625-w" class="external-link">Markello et al. (2022)</a> and provides eight null model methods, parcellation utilities, geodesic surface distance, and coordinate-space transforms.</p>
-<p>This package was co-developed with <a href="https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview" class="external-link">Claude Code</a> (Anthropic’s Claude Opus 4.6). While the test suite is thorough and defaults are aligned with the <a href="https://netneurolab.github.io/neuromaps/" class="external-link">neuromaps</a> Python reference implementation, discrepancies may still exist at this early stage. We encourage users to cross-validate results against <a href="https://github.com/netneurolab/neuromaps" class="external-link">neuromaps</a> and to <a href="https://github.com/lcbc-uio/neuromapr/issues" class="external-link">report any issues</a>.</p>
+<p>This package was co-developed with <a href="https://platform.claude.com/docs/en/docs/agents-and-tools/claude-code/overview" class="external-link">Claude Code</a> (Anthropic’s Claude Opus 4.6). While the test suite is thorough and defaults are aligned with the <a href="https://netneurolab.github.io/neuromaps/" class="external-link">neuromaps</a> Python reference implementation, discrepancies may still exist at this early stage. We encourage users to cross-validate results against <a href="https://github.com/netneurolab/neuromaps" class="external-link">neuromaps</a> and to <a href="https://github.com/lcbc-uio/neuromapr/issues" class="external-link">report any issues</a>.</p>
 <div class="section level2">
 <h2 id="installation">Installation<a class="anchor" aria-label="anchor" href="#installation"></a>
 </h2>
-<p>Install from the lcbc-uio <a href="https://lcbc-uio.r-universe.dev/" class="external-link">r-universe</a>:</p>
+<p>Install from CRAN:</p>
 <div class="sourceCode" id="cb1"><pre class="downlit sourceCode r">
+<code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"neuromapr"</span><span class="op">)</span></span></code></pre></div>
+<p>Or install from the lcbc-uio <a href="https://lcbc-uio.r-universe.dev/" class="external-link">r-universe</a>:</p>
+<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/options.html" class="external-link">options</a></span><span class="op">(</span>repos <span class="op">=</span> <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span></span>
 <span>  lcbcuio <span class="op">=</span> <span class="st">"https://lcbc-uio.r-universe.dev"</span>,</span>
 <span>  CRAN <span class="op">=</span> <span class="st">"https://cloud.r-project.org"</span></span>
@@ -91,17 +95,17 @@
 <span></span>
 <span><span class="fu"><a href="https://rdrr.io/r/utils/install.packages.html" class="external-link">install.packages</a></span><span class="op">(</span><span class="st">"neuromapr"</span><span class="op">)</span></span></code></pre></div>
 <p>Or install the development version from GitHub:</p>
-<div class="sourceCode" id="cb2"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="co"># install.packages("pak")</span></span>
 <span><span class="fu">pak</span><span class="fu">::</span><span class="fu"><a href="https://pak.r-lib.org/reference/pak.html" class="external-link">pak</a></span><span class="op">(</span><span class="st">"lcbc-uio/neuromapr"</span><span class="op">)</span></span></code></pre></div>
 </div>
 <div class="section level2">
 <h2 id="quick-start">Quick start<a class="anchor" aria-label="anchor" href="#quick-start"></a>
 </h2>
-<div class="sourceCode" id="cb3"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="kw"><a href="https://rdrr.io/r/base/library.html" class="external-link">library</a></span><span class="op">(</span><span class="va"><a href="https://github.com/lcbc-uio/neuromapr" class="external-link">neuromapr</a></span><span class="op">)</span></span></code></pre></div>
 <p>Compare two brain maps with a spatial null model in three lines:</p>
-<div class="sourceCode" id="cb4"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/base/Random.html" class="external-link">set.seed</a></span><span class="op">(</span><span class="fl">42</span><span class="op">)</span></span>
 <span><span class="va">n</span> <span class="op">&lt;-</span> <span class="fl">100</span></span>
 <span><span class="va">distmat</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">as.matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/dist.html" class="external-link">dist</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span><span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="va">n</span> <span class="op">*</span> <span class="fl">3</span><span class="op">)</span>, ncol <span class="op">=</span> <span class="fl">3</span><span class="op">)</span><span class="op">)</span><span class="op">)</span></span>
@@ -118,6 +122,11 @@
 <span>  seed <span class="op">=</span> <span class="fl">1</span>,</span>
 <span>  verbose <span class="op">=</span> <span class="cn">FALSE</span></span>
 <span><span class="op">)</span></span>
+<span><span class="co">#&gt; Generating burt2020 nulls ■■■■■■■                           20% | ETA: 19s</span></span>
+<span><span class="co">#&gt; Generating burt2020 nulls ■■■■■■■■■■■■■■■                   47% | ETA: 12s</span></span>
+<span><span class="co">#&gt; Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■               61% | ETA:  9s</span></span>
+<span><span class="co">#&gt; Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  5s</span></span>
+<span><span class="co">#&gt; Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA:  2s</span></span>
 <span><span class="co">#&gt; </span></span>
 <span><span class="co">#&gt; ── Brain Map Comparison</span></span>
 <span><span class="co">#&gt; Method: pearson</span></span>
@@ -199,7 +208,7 @@
 <h2 id="key-features">Key features<a class="anchor" aria-label="anchor" href="#key-features"></a>
 </h2>
 <p><strong>Parcellation utilities</strong> — aggregate vertex data into parcels, map parcel values back to vertices, and compute parcel centroids using average, surface, or geodesic methods.</p>
-<div class="sourceCode" id="cb5"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vertex_data</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/stats/Normal.html" class="external-link">rnorm</a></span><span class="op">(</span><span class="fl">1000</span><span class="op">)</span></span>
 <span><span class="va">labels</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/rep.html" class="external-link">rep</a></span><span class="op">(</span><span class="fl">1</span><span class="op">:</span><span class="fl">10</span>, each <span class="op">=</span> <span class="fl">100</span><span class="op">)</span></span>
 <span></span>
@@ -208,7 +217,7 @@
 <span><span class="co">#&gt;           1           2           3           4           5           6 </span></span>
 <span><span class="co">#&gt;  0.11795689 -0.03426519 -0.05073563  0.04712785  0.06088535 -0.04200267</span></span></code></pre></div>
 <p><strong>Geodesic surface distance</strong> — shortest-path distances along a triangular mesh, for analyses where Euclidean distance through the brain does not reflect cortical proximity.</p>
-<div class="sourceCode" id="cb6"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">vertices</span> <span class="op">&lt;-</span> <span class="fu"><a href="https://rdrr.io/r/base/matrix.html" class="external-link">matrix</a></span><span class="op">(</span></span>
 <span>  <span class="fu"><a href="https://rdrr.io/r/base/c.html" class="external-link">c</a></span><span class="op">(</span><span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">0</span>, <span class="fl">1</span>, <span class="fl">1</span>, <span class="fl">0</span><span class="op">)</span>,</span>
 <span>  ncol <span class="op">=</span> <span class="fl">3</span>,</span>
@@ -223,7 +232,7 @@
 <span><span class="co">#&gt; [3,]    1 1.414214 0.000000    1</span></span>
 <span><span class="co">#&gt; [4,]    2 1.000000 1.000000    0</span></span></code></pre></div>
 <p><strong>Custom metric testing</strong> — <code><a href="reference/permtest_metric.html">permtest_metric()</a></code> runs a permutation test with any metric function, optionally using spatial null surrogates:</p>
-<div class="sourceCode" id="cb7"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="va">result</span> <span class="op">&lt;-</span> <span class="fu"><a href="reference/permtest_metric.html">permtest_metric</a></span><span class="op">(</span></span>
 <span>  <span class="va">map_a</span>,</span>
 <span>  <span class="va">map_b</span>,</span>
@@ -239,9 +248,11 @@
 <h2 id="citation">Citation<a class="anchor" aria-label="anchor" href="#citation"></a>
 </h2>
 <p>If you use neuromapr, please cite the package and the neuromaps framework it implements. You can get the package citation from R with:</p>
-<div class="sourceCode" id="cb8"><pre class="downlit sourceCode r">
+<div class="sourceCode" id="cb9"><pre class="downlit sourceCode r">
 <code class="sourceCode R"><span><span class="fu"><a href="https://rdrr.io/r/utils/citation.html" class="external-link">citation</a></span><span class="op">(</span><span class="st">"neuromapr"</span><span class="op">)</span></span></code></pre></div>
-<p>Mowinckel A (2026). <em>neuromapr: Spatial Null Models and Transforms for Brain Map Comparison</em>. R package version 0.2.0.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode R"><code class="sourceCode r"><span id="cb10-1"><a href="#cb10-1" tabindex="-1"></a><span class="co">#&gt; Warning in citation("neuromapr"): could not determine year for 'neuromapr' from</span></span>
+<span id="cb10-2"><a href="#cb10-2" tabindex="-1"></a><span class="co">#&gt; package DESCRIPTION file</span></span></code></pre></div>
+<p>Mowinckel A (????). <em>neuromapr: Spatial Null Models and Transforms for Brain Map Comparison</em>. R package version 0.2.0, <a href="https://github.com/lcbc-uio/neuromapr" class="external-link uri">https://github.com/lcbc-uio/neuromapr</a>.</p>
 <p><a href="https://doi.org/10.5281/zenodo.18648937" class="external-link uri">https://doi.org/10.5281/zenodo.18648937</a></p>
 <blockquote>
 <p>Markello RD, Hansen JY, Liu Z-Q, et al. (2022). neuromaps: structural and functional interpretation of brain maps. <em>Nature Methods</em>, 19, 1472–1480. <a href="doi:10.1038/s41592-022-01625-w" class="uri">doi:10.1038/s41592-022-01625-w</a></p>
@@ -276,7 +287,7 @@
 <div class="developers">
 <h2 data-toc-skip>Developers</h2>
 <ul class="list-unstyled">
-<li>Athanasia Mo Mowinckel <br><small class="roles"> Author, maintainer </small> <a href="https://orcid.org/0000-0002-5756-0223" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
+<li>Athanasia Mo Mowinckel <br><small class="roles"> Author, maintainer, copyright holder </small> <a href="https://orcid.org/0000-0002-5756-0223" target="orcid.widget" aria-label="ORCID" class="external-link"><span class="fab fa-orcid orcid" aria-hidden="true"></span></a>  </li>
 </ul>
 </div>
 
@@ -285,6 +296,8 @@
 <ul class="list-unstyled">
 <li><a href="https://lifecycle.r-lib.org/articles/stages.html#experimental" class="external-link"><img src="https://img.shields.io/badge/lifecycle-experimental-orange.svg" alt="Lifecycle: experimental"></a></li>
 <li><a href="https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml" class="external-link"><img src="https://github.com/lcbc-uio/neuromapr/actions/workflows/R-CMD-check.yml/badge.svg" alt="R-CMD-check"></a></li>
+<li><a href="https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml" class="external-link"><img src="https://github.com/lcbc-uio/neuromapr/actions/workflows/code-quality.yaml/badge.svg" alt="code-quality"></a></li>
+<li><a href="https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml" class="external-link"><img src="https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml/badge.svg" alt="test-coverage"></a></li>
 <li><a href="https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml" class="external-link"><img src="https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml/badge.svg" alt="Cross-validate"></a></li>
 <li><a href="https://doi.org/10.5281/zenodo.18648936" class="external-link"><img src="https://zenodo.org/badge/1156352155.svg" alt="DOI"></a></li>
 </ul>

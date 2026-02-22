@@ -21,6 +21,9 @@ compare_maps(
   verbose = TRUE,
   ...
 )
+
+# S3 method for class 'neuromaps_enhanced_comparison'
+print(x, ...)
 ```
 
 ## Arguments
@@ -86,3 +89,16 @@ A `neuromaps_enhanced_comparison` object (inherits
 
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w
+
+## Examples
+
+``` r
+x <- rnorm(50)
+y <- x + rnorm(50)
+compare_maps(x, y, verbose = FALSE)
+#> 
+#> ── Brain Map Comparison 
+#> Method: pearson
+#> r = 0.8329, p = 6.33e-14
+#> n = 50
+```

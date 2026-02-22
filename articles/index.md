@@ -8,3 +8,5 @@
   Data](https://lcbc-uio.github.io/neuromapr/articles/parcellation.md):
 - [Surface
   Geometry](https://lcbc-uio.github.io/neuromapr/articles/surface-geometry.md):
+- [Rotation Methods for Spin
+  Tests](https://lcbc-uio.github.io/neuromapr/articles/rotation-methods.md):

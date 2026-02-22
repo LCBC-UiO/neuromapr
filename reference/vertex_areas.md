@@ -22,3 +22,12 @@ vertex_areas(vertices, faces)
 ## Value
 
 Numeric vector of length `nrow(vertices)`.
+
+## Examples
+
+``` r
+vertices <- matrix(c(0, 1, 0, 0, 0, 1, 0, 0, 0), nrow = 3, byrow = TRUE)
+faces <- matrix(c(1L, 2L, 3L), nrow = 1)
+vertex_areas(vertices, faces)
+#> [1] 0.1666667 0.1666667 0.1666667
+```

@@ -16,7 +16,9 @@ neuromaps_available(
   resolution = NULL,
   hemisphere = NULL,
   tags = NULL,
-  format = NULL
+  format = NULL,
+  refresh = FALSE,
+  fixed = FALSE
 )
 ```
 
@@ -56,6 +58,16 @@ neuromaps_available(
 
   Filter by format (`"surface"` or `"volume"`).
 
+- refresh:
+
+  Logical. If `TRUE`, forces a fresh download of the registry data,
+  ignoring any session cache.
+
+- fixed:
+
+  Logical. If `TRUE`, filter strings are matched literally rather than
+  as regular expressions.
+
 ## Value
 
 A tibble of available annotations with columns: source, desc, space,
@@ -63,17 +75,24 @@ den, res, hemi, format, fname, full_desc, tags, N, age.
 
 ## Details
 
-When used in `neuromaps_available()`, all parameters act as regex
-filters. When used in
+All string filter parameters (`source`, `desc`, `space`, `density`,
+`resolution`, `hemisphere`, `format`) are treated as **R regular
+expressions** and matched with
+[`grepl()`](https://rdrr.io/r/base/grep.html). For example,
+`source = "^beliveau$"` matches exactly, while `source = "bel"` matches
+any source containing `"bel"`. Set `fixed = TRUE` for literal string
+matching. The `tags` parameter always uses exact matching (AND logic).
+
+When used in
 [`fetch_neuromaps_annotation()`](https://lcbc-uio.github.io/neuromapr/reference/fetch_neuromaps_annotation.md),
 `source`, `desc`, and `space` are exact matches.
 
 ## Examples
 
 ``` r
-if (FALSE) { # \dontrun{
+if (FALSE) { # interactive()
 neuromaps_available()
 neuromaps_available(source = "beliveau")
 neuromaps_available(tags = "pet")
-} # }
+}
 ```

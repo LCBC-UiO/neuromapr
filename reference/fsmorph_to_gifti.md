@@ -27,3 +27,12 @@ The output file path (invisibly).
 
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+fsmorph_to_gifti("lh.thickness")
+fsmorph_to_gifti("lh.thickness", "lh.thickness.func.gii")
+} # }
+```

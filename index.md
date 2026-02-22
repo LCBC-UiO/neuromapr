@@ -13,7 +13,7 @@ eight null model methods, parcellation utilities, geodesic surface
 distance, and coordinate-space transforms.
 
 This package was co-developed with [Claude
-Code](https://docs.anthropic.com/en/docs/agents-and-tools/claude-code/overview)
+Code](https://platform.claude.com/docs/en/docs/agents-and-tools/claude-code/overview)
 (Anthropic’s Claude Opus 4.6). While the test suite is thorough and
 defaults are aligned with the
 [neuromaps](https://netneurolab.github.io/neuromaps/) Python reference
@@ -24,7 +24,13 @@ issues](https://github.com/lcbc-uio/neuromapr/issues).
 
 ## Installation
 
-Install from the lcbc-uio
+Install from CRAN:
+
+``` r
+install.packages("neuromapr")
+```
+
+Or install from the lcbc-uio
 [r-universe](https://lcbc-uio.r-universe.dev/):
 
 ``` r
@@ -68,6 +74,11 @@ compare_maps(
   seed = 1,
   verbose = FALSE
 )
+#> Generating burt2020 nulls ■■■■■■■                           20% | ETA: 19s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■                   47% | ETA: 12s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■               61% | ETA:  9s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  5s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA:  2s
 #> 
 #> ── Brain Map Comparison
 #> Method: pearson
@@ -170,8 +181,14 @@ framework it implements. You can get the package citation from R with:
 citation("neuromapr")
 ```
 
-Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
-Brain Map Comparison*. R package version 0.2.0.
+``` R
+#> Warning in citation("neuromapr"): could not determine year for 'neuromapr' from
+#> package DESCRIPTION file
+```
+
+Mowinckel A (????). *neuromapr: Spatial Null Models and Transforms for
+Brain Map Comparison*. R package version 0.2.0,
+<https://github.com/lcbc-uio/neuromapr>.
 
 <https://doi.org/10.5281/zenodo.18648937>
 

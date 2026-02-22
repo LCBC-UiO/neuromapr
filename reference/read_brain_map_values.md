@@ -20,3 +20,12 @@ read_brain_map_values(path)
 ## Value
 
 A numeric vector of map values.
+
+## Examples
+
+``` r
+if (FALSE) { # \dontrun{
+read_brain_map_values("cortical_thickness.func.gii")
+read_brain_map_values("brain_volume.nii.gz")
+} # }
+```

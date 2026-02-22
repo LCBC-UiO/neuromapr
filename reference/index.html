@@ -7,7 +7,7 @@
 
     <a class="navbar-brand me-2" href="../index.html">neuromapr</a>
 
-    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.0</small>
+    <small class="nav-text text-muted me-auto" data-bs-toggle="tooltip" data-bs-placement="bottom" title="">0.2.1</small>
 
 
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbar" aria-controls="navbar" aria-expanded="false" aria-label="Toggle navigation">
@@ -22,6 +22,7 @@
   <ul class="dropdown-menu" aria-labelledby="dropdown-articles"><li><a class="dropdown-item" href="../articles/null-models.html">Choosing and Using Null Models</a></li>
     <li><a class="dropdown-item" href="../articles/parcellation.html">Working with Parcellated Data</a></li>
     <li><a class="dropdown-item" href="../articles/surface-geometry.html">Surface Geometry</a></li>
+    <li><a class="dropdown-item" href="../articles/rotation-methods.html">Rotation Methods</a></li>
   </ul></li>
       </ul><ul class="navbar-nav"><li class="nav-item"><form class="form-inline" role="search">
  <input class="form-control" type="search" name="search-input" id="search-input" autocomplete="off" aria-label="Search site" placeholder="Search for" data-search-index="../search.json"></form></li>
@@ -65,6 +66,13 @@
 
         </dt>
         <dd>Download a neuromaps annotation</dd>
+
+        <dt>
+
+          <code><a href="clear_neuromaps_cache.html">clear_neuromaps_cache()</a></code>
+
+        </dt>
+        <dd>Clear cached neuromaps registry data</dd>
       </dl></div><div class="section level2">
       <h2 id="map-comparison">Map Comparison<a class="anchor" aria-label="anchor" href="#map-comparison"></a></h2>
 
@@ -77,7 +85,7 @@
 
       <dl><dt>
 
-          <code><a href="compare_maps.html">compare_maps()</a></code>
+          <code><a href="compare_maps.html">compare_maps()</a></code> <code><a href="compare_maps.html">print(<i>&lt;neuromaps_enhanced_comparison&gt;</i>)</a></code>
 
         </dt>
         <dd>Compare brain maps with spatial null model significance testing</dd>
@@ -142,7 +150,7 @@
 
         <dt>
 
-          <code><a href="null_distribution.html">new_null_distribution()</a></code>
+          <code><a href="null_distribution.html">new_null_distribution()</a></code> <code><a href="null_distribution.html">print(<i>&lt;null_distribution&gt;</i>)</a></code> <code><a href="null_distribution.html">summary(<i>&lt;null_distribution&gt;</i>)</a></code> <code><a href="null_distribution.html">as.matrix(<i>&lt;null_distribution&gt;</i>)</a></code> <code><a href="null_distribution.html">plot(<i>&lt;null_distribution&gt;</i>)</a></code>
 
         </dt>
         <dd>Create a null distribution object</dd>
