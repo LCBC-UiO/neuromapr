@@ -59,6 +59,11 @@ vertex_areas <- function(vertices, faces) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' \dontrun{
+#' annot_to_gifti("lh.aparc.annot")
+#' annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
+#' }
 #' @export
 annot_to_gifti <- function(annot_path, output_path = NULL) {
   rlang::check_installed(
@@ -110,6 +115,11 @@ annot_to_gifti <- function(annot_path, output_path = NULL) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' \dontrun{
+#' fsmorph_to_gifti("lh.thickness")
+#' fsmorph_to_gifti("lh.thickness", "lh.thickness.func.gii")
+#' }
 #' @export
 fsmorph_to_gifti <- function(morph_path, output_path = NULL) {
   rlang::check_installed(

@@ -28,12 +28,10 @@
 #' @return A tibble of available annotations with columns: source, desc,
 #'   space, den, res, hemi, format, fname, full_desc, tags, N, age.
 #' @export
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' neuromaps_available()
 #' neuromaps_available(source = "beliveau")
 #' neuromaps_available(tags = "pet")
-#' }
 neuromaps_available <- function(
   source = NULL,
   desc = NULL,
@@ -76,10 +74,8 @@ neuromaps_available <- function(
 #'
 #' @return Character vector of downloaded file path(s).
 #' @export
-#' @examples
-#' \dontrun{
+#' @examplesIf interactive()
 #' fetch_neuromaps_annotation("abagen", "genepc1", "fsaverage", density = "10k")
-#' }
 fetch_neuromaps_annotation <- function(
   source,
   desc,

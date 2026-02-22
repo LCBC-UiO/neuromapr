@@ -141,6 +141,7 @@ compute_null_correlations <- function(null_matrix, y, method) {
   })
 }
 
+#' @rdname compare_maps
 #' @export
 print.neuromaps_enhanced_comparison <- function(x, ...) {
   cli::cli_h3("Brain Map Comparison")

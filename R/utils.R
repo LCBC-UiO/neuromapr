@@ -84,6 +84,11 @@ validate_distmat <- function(distmat, n, arg = "distmat") {
 #' @param path Path to a `.func.gii` (GIFTI) or `.nii.gz` (NIfTI) file.
 #'
 #' @return A numeric vector of map values.
+#' @examples
+#' \dontrun{
+#' read_brain_map_values("cortical_thickness.func.gii")
+#' read_brain_map_values("brain_volume.nii.gz")
+#' }
 #' @export
 read_brain_map_values <- function(path) {
   if (grepl("\\.surf\\.gii$", path, ignore.case = TRUE)) {

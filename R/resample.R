@@ -25,6 +25,12 @@
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' \dontrun{
+#' resample_images("src.func.gii", "trg.func.gii",
+#'   src_space = "fsaverage", trg_space = "fsaverage"
+#' )
+#' }
 #' @export
 resample_images <- function(src,
                             trg,

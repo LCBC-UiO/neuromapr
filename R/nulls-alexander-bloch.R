@@ -17,11 +17,9 @@
 #' doi:10.1016/j.neuroimage.2018.04.023
 #'
 #' @examples
-#' \dontrun{
 #' coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
 #' data <- rnorm(20)
 #' nd <- null_alexander_bloch(data, coords, n_perm = 10L, seed = 1L)
-#' }
 #' @export
 null_alexander_bloch <- function(data, coords, n_perm = 1000L, seed = NULL,
                                  rotation = c("euler", "rodrigues")) {

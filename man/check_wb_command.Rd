@@ -16,3 +16,8 @@ Path to \code{wb_command} executable.
 Verifies that \code{wb_command} is available. If \code{wb_path} is \code{NULL},
 checks \code{ciftiTools} default and system PATH.
 }
+\examples{
+\dontrun{
+check_wb_command()
+}
+}

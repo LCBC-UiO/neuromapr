@@ -61,6 +61,9 @@ validate_null_distribution <- function(x) {
   invisible(x)
 }
 
+#' @rdname null_distribution
+#' @param x A `null_distribution` object.
+#' @param ... Ignored.
 #' @export
 print.null_distribution <- function(x, ...) {
   cli::cli_h3("Null Distribution")
@@ -72,6 +75,8 @@ print.null_distribution <- function(x, ...) {
   invisible(x)
 }
 
+#' @rdname null_distribution
+#' @param object A `null_distribution` object.
 #' @export
 summary.null_distribution <- function(object, ...) {
   null_means <- rowMeans(object$nulls)
@@ -86,11 +91,14 @@ summary.null_distribution <- function(object, ...) {
   )
 }
 
+#' @rdname null_distribution
 #' @export
 as.matrix.null_distribution <- function(x, ...) {
   x$nulls
 }
 
+#' @rdname null_distribution
+#' @param parcel Integer index of the parcel to plot.
 #' @export
 plot.null_distribution <- function(x, parcel = 1L, ...) {
   df <- data.frame(value = x$nulls[parcel, ])

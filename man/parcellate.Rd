@@ -21,6 +21,11 @@ Named numeric vector of parcel-level values.
 High-level wrapper that reads data and parcellation from file paths or
 vectors, then aggregates vertices into parcels.
 }
+\examples{
+data <- c(1.0, 2.0, 3.0, 4.0)
+labels <- c(1L, 1L, 2L, 2L)
+parcellate(data, labels)
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

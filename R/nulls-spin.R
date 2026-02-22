@@ -23,11 +23,9 @@
 #' doi:10.1016/j.neuroimage.2021.118052
 #'
 #' @examples
-#' \dontrun{
 #' coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
 #' data <- rnorm(20)
 #' nd <- null_spin_vasa(data, coords, n_perm = 10L, seed = 1L)
-#' }
 #' @export
 null_spin_vasa <- function(data, coords, n_perm = 1000L,
                            seed = NULL,

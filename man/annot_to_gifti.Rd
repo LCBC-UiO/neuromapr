@@ -18,6 +18,12 @@ The output file path (invisibly).
 \description{
 Reads a FreeSurfer \code{.annot} file and writes a GIFTI label file.
 }
+\examples{
+\dontrun{
+annot_to_gifti("lh.aparc.annot")
+annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
+}
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

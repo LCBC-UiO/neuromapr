@@ -15,11 +15,9 @@
 #' doi:10.1038/s41593-018-0195-0
 #'
 #' @examples
-#' \dontrun{
 #' data <- rnorm(50)
 #' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
 #' nd <- null_burt2018(data, distmat, n_perm = 10L, seed = 1L)
-#' }
 #' @export
 null_burt2018 <- function(data, distmat, n_perm = 1000L, seed = NULL) {
   validate_data(data)

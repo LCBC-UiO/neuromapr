@@ -21,11 +21,9 @@
 #' doi:10.1038/s41592-022-01625-w
 #'
 #' @examples
-#' \dontrun{
 #' data <- rnorm(100)
 #' distmat <- as.matrix(dist(seq_len(100)))
 #' nd <- generate_nulls(data, method = "moran", distmat = distmat, n_perm = 10L)
-#' }
 #' @export
 generate_nulls <- function(data,
                            method = c(

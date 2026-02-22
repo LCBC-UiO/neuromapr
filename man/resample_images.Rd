@@ -55,6 +55,13 @@ List with \verb{$src} and \verb{$trg} file paths in the aligned space.
 Aligns two brain maps into the same coordinate space and density before
 comparison. Supports multiple strategies for choosing the target space.
 }
+\examples{
+\dontrun{
+resample_images("src.func.gii", "trg.func.gii",
+  src_space = "fsaverage", trg_space = "fsaverage"
+)
+}
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

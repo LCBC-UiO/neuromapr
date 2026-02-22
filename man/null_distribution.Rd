@@ -3,9 +3,21 @@
 \name{null_distribution}
 \alias{null_distribution}
 \alias{new_null_distribution}
+\alias{print.null_distribution}
+\alias{summary.null_distribution}
+\alias{as.matrix.null_distribution}
+\alias{plot.null_distribution}
 \title{Create a null distribution object}
 \usage{
 new_null_distribution(nulls, method, observed, params = list())
+
+\method{print}{null_distribution}(x, ...)
+
+\method{summary}{null_distribution}(object, ...)
+
+\method{as.matrix}{null_distribution}(x, ...)
+
+\method{plot}{null_distribution}(x, parcel = 1L, ...)
 }
 \arguments{
 \item{nulls}{Numeric matrix (n x n_perm) of surrogate values.}
@@ -15,6 +27,14 @@ new_null_distribution(nulls, method, observed, params = list())
 \item{observed}{Numeric vector of original data values.}
 
 \item{params}{Named list of algorithm parameters.}
+
+\item{x}{A \code{null_distribution} object.}
+
+\item{...}{Ignored.}
+
+\item{object}{A \code{null_distribution} object.}
+
+\item{parcel}{Integer index of the parcel to plot.}
 }
 \value{
 A \code{null_distribution} object.

@@ -64,9 +64,9 @@ When used in \code{\link[=fetch_neuromaps_annotation]{fetch_neuromaps_annotation
 are exact matches.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 neuromaps_available()
 neuromaps_available(source = "beliveau")
 neuromaps_available(tags = "pet")
-}
+\dontshow{\}) # examplesIf}
 }

@@ -19,11 +19,9 @@
 #' doi:10.1111/2041-210X.12407
 #'
 #' @examples
-#' \dontrun{
 #' data <- rnorm(50)
 #' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
 #' nd <- null_moran(data, distmat, n_perm = 10L, seed = 1L)
-#' }
 #' @export
 null_moran <- function(data,
                        distmat,

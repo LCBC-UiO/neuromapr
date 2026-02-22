@@ -161,6 +161,8 @@ filter_neuromaps_registry <- function(
 #' [fetch_neuromaps_annotation()].
 #'
 #' @return `NULL`, invisibly.
+#' @examples
+#' clear_neuromaps_cache()
 #' @export
 clear_neuromaps_cache <- function() {
   the$osf_json <- NULL

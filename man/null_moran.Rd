@@ -40,11 +40,9 @@ Generates spatially-constrained surrogate brain maps using Moran's
 eigenvector maps (MEMs) for spectral randomization.
 }
 \examples{
-\dontrun{
 data <- rnorm(50)
 distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
 nd <- null_moran(data, distmat, n_perm = 10L, seed = 1L)
-}
 }
 \references{
 Wagner HH, Dray S (2015) Methods in Ecology and Evolution 6:1169-1178.

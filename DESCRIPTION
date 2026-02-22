@@ -3,7 +3,7 @@ Title: Spatial Null Models and Transforms for Brain Map Comparison
 Version: 0.2.0
 Authors@R: c(
     person("Athanasia Mo", "Mowinckel", , "a.m.mowinckel@psykologi.uio.no",
-           role = c("aut", "cre"),
+           role = c("aut", "cre", "cph"),
            comment = c(ORCID = "0000-0002-5756-0223"))
     )
 Description: Implements spatial null models and coordinate-space
@@ -13,7 +13,8 @@ Description: Implements spatial null models and coordinate-space
     surrogates (Burt et al. 2020), Moran spectral randomization (Wagner &
     Dray 2015), and spin-based permutation tests (Alexander-Bloch et al.
     2018). Includes an R interface to the 'neuromaps' annotation registry
-    for browsing, downloading, and comparing brain map annotations from OSF.
+    for browsing, downloading, and comparing brain map annotations from the
+    Open Science Framework ('OSF').
     Integrates with 'ciftiTools' for coordinate-space transforms.
 License: MIT + file LICENSE
 Encoding: UTF-8

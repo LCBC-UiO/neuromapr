@@ -14,3 +14,6 @@ Removes the session-level cache of the neuromaps annotation registry,
 forcing a fresh download on the next call to \code{\link[=neuromaps_available]{neuromaps_available()}} or
 \code{\link[=fetch_neuromaps_annotation]{fetch_neuromaps_annotation()}}.
 }
+\examples{
+clear_neuromaps_cache()
+}

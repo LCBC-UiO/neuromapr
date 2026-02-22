@@ -49,6 +49,11 @@ Character vector of transformed file paths.
 Resamples GIFTI surface files between \code{fsaverage} and \code{fsLR} coordinate
 spaces using Connectome Workbench via \code{ciftiTools}.
 }
+\examples{
+\dontrun{
+transform_to_space("map.func.gii", target_space = "fsLR")
+}
+}
 \references{
 Robinson EC et al. (2014) NeuroImage 100:414-426.
 doi:10.1016/j.neuroimage.2014.07.033

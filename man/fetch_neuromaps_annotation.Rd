@@ -47,7 +47,7 @@ Surface annotations return two files (left and right hemispheres),
 volume annotations return one.
 }
 \examples{
-\dontrun{
+\dontshow{if (interactive()) withAutoprint(\{ # examplesIf}
 fetch_neuromaps_annotation("abagen", "genepc1", "fsaverage", density = "10k")
-}
+\dontshow{\}) # examplesIf}
 }

@@ -23,11 +23,9 @@
 #' doi:10.1016/j.neuroimage.2020.117038
 #'
 #' @examples
-#' \dontrun{
 #' data <- rnorm(50)
 #' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
 #' nd <- null_burt2020(data, distmat, n_perm = 10L, seed = 1L)
-#' }
 #' @export
 null_burt2020 <- function(data,
                           distmat,

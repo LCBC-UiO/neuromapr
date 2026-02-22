@@ -76,6 +76,10 @@ parcels_to_vertices <- function(parcel_data, labels, fill = NA_real_) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' data <- c(1.0, 2.0, 3.0, 4.0)
+#' labels <- c(1L, 1L, 2L, 2L)
+#' parcellate(data, labels)
 #' @export
 parcellate <- function(data, parcellation, summary_func = mean) {
   if (is.character(data) && length(data) == 1) {
@@ -103,6 +107,10 @@ parcellate <- function(data, parcellation, summary_func = mean) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' parcel_data <- c("1" = 10, "2" = 20)
+#' labels <- c(1L, 1L, 2L, 2L, 0L)
+#' unparcellate(parcel_data, labels)
 #' @export
 unparcellate <- function(parcel_data, parcellation, fill = NA_real_) {
   if (is.character(parcellation) && length(parcellation) == 1) {
@@ -129,6 +137,10 @@ unparcellate <- function(parcel_data, parcellation, fill = NA_real_) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' vertices <- matrix(rnorm(30), ncol = 3)
+#' labels <- c(1L, 1L, 1L, 2L, 2L, 2L, 3L, 3L, 3L, 3L)
+#' get_parcel_centroids(vertices, labels, method = "average")
 #' @export
 get_parcel_centroids <- function(vertices,
                                  labels,

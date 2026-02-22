@@ -29,6 +29,10 @@
 #' Robinson EC et al. (2018) NeuroImage 167:150-165.
 #' doi:10.1016/j.neuroimage.2017.10.037
 #'
+#' @examples
+#' \dontrun{
+#' transform_to_space("map.func.gii", target_space = "fsLR")
+#' }
 #' @export
 transform_to_space <- function(paths,
                                target_space = c("fsLR", "fsaverage"),
@@ -107,6 +111,10 @@ transform_to_space <- function(paths,
 #'
 #' @return Path to `wb_command` executable.
 #'
+#' @examples
+#' \dontrun{
+#' check_wb_command()
+#' }
 #' @export
 check_wb_command <- function(wb_path = NULL) {
   rlang::check_installed("ciftiTools", reason = "to locate wb_command")

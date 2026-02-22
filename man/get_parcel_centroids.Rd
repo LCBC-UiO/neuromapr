@@ -29,6 +29,11 @@ Numeric matrix (n_parcels x 3) with rownames set to parcel labels.
 \description{
 Finds the centroid of each parcel using one of three methods.
 }
+\examples{
+vertices <- matrix(rnorm(30), ncol = 3)
+labels <- c(1L, 1L, 1L, 2L, 2L, 2L, 3L, 3L, 3L, 3L)
+get_parcel_centroids(vertices, labels, method = "average")
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

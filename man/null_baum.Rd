@@ -39,12 +39,10 @@ rotating vertex coordinates, each original parcel is assigned the value
 of the rotated parcel with the most vertex overlap.
 }
 \examples{
-\dontrun{
 coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
 parcellation <- c(rep(1L, 5), rep(2L, 5), rep(3L, 5), rep(4L, 5))
 data <- c(1.0, 2.0, 3.0, 4.0)
 nd <- null_baum(data, coords, parcellation, n_perm = 10L, seed = 1L)
-}
 }
 \references{
 Baum GL et al. (2020) PNAS 117:21854-21861.

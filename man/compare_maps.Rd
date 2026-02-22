@@ -2,6 +2,7 @@
 % Please edit documentation in R/compare.R
 \name{compare_maps}
 \alias{compare_maps}
+\alias{print.neuromaps_enhanced_comparison}
 \title{Compare brain maps with spatial null model significance testing}
 \usage{
 compare_maps(
@@ -18,6 +19,8 @@ compare_maps(
   verbose = TRUE,
   ...
 )
+
+\method{print}{neuromaps_enhanced_comparison}(x, ...)
 }
 \arguments{
 \item{x, y}{Numeric vectors of brain map values, or file paths to

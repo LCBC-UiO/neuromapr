@@ -17,3 +17,9 @@ Reads GIFTI (\code{.func.gii}) or NIfTI (\code{.nii.gz}) files and returns the
 values as a numeric vector. Used internally by \code{\link[=compare_maps]{compare_maps()}} when
 file paths are passed instead of numeric vectors.
 }
+\examples{
+\dontrun{
+read_brain_map_values("cortical_thickness.func.gii")
+read_brain_map_values("brain_volume.nii.gz")
+}
+}
