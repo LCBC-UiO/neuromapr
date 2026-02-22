@@ -19,6 +19,13 @@
 #' Cornblath EJ et al. (2020) Communications Biology 3:590.
 #' doi:10.1038/s42003-020-01296-5
 #'
+#' @examples
+#' \dontrun{
+#' coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
+#' parcellation <- c(rep(1L, 5), rep(2L, 5), rep(3L, 5), rep(4L, 5))
+#' data <- c(1.0, 2.0, 3.0, 4.0)
+#' nd <- null_cornblath(data, coords, parcellation, n_perm = 10L, seed = 1L)
+#' }
 #' @export
 null_cornblath <- function(
     data, coords, parcellation,
@@ -52,7 +59,8 @@ null_cornblath <- function(
   )
   nulls <- matrix(0, nrow = n_parcels, ncol = n_perm)
 
-  for (i in seq_len(n_perm)) {
+  msg <- "Generating cornblath nulls"
+  for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
     rot_lh <- rotated$lh[, , i]
     rot_rh <- rotated$rh[, , i]
 
@@ -87,14 +95,11 @@ null_cornblath <- function(
 nearest_valid_label <- function(
     rotated_coords, original_coords,
     labels, valid_idx) {
-  n <- nrow(rotated_coords)
-  new_labels <- integer(n)
   valid_coords <- original_coords[valid_idx, , drop = FALSE]
   valid_labels <- labels[valid_idx]
-
-  for (v in seq_len(n)) {
-    dists <- colSums((t(valid_coords) - rotated_coords[v, ])^2)
-    new_labels[v] <- valid_labels[which.min(dists)]
-  }
-  new_labels
+  a <- rowSums(rotated_coords^2)
+  b <- rowSums(valid_coords^2)
+  dist_sq <- outer(a, b, "+") - 2 * tcrossprod(rotated_coords, valid_coords)
+  nearest <- apply(dist_sq, 1, which.min)
+  valid_labels[nearest]
 }

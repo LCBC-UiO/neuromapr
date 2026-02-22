@@ -13,6 +13,10 @@
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' data <- c(1.0, 2.0, 3.0, 4.0)
+#' labels <- c(1L, 1L, 2L, 2L)
+#' vertices_to_parcels(data, labels)
 #' @export
 vertices_to_parcels <- function(data, labels, summary_func = mean) {
   if (length(data) != length(labels)) {
@@ -42,6 +46,10 @@ vertices_to_parcels <- function(data, labels, summary_func = mean) {
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' parcel_data <- c("1" = 10, "2" = 20)
+#' labels <- c(1L, 1L, 2L, 2L, 0L)
+#' parcels_to_vertices(parcel_data, labels)
 #' @export
 parcels_to_vertices <- function(parcel_data, labels, fill = NA_real_) {
   out <- rep(fill, length(labels))

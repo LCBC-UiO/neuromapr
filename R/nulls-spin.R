@@ -22,6 +22,12 @@
 #' Markello RD, Misic B (2021) NeuroImage 236:118052.
 #' doi:10.1016/j.neuroimage.2021.118052
 #'
+#' @examples
+#' \dontrun{
+#' coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
+#' data <- rnorm(20)
+#' nd <- null_spin_vasa(data, coords, n_perm = 10L, seed = 1L)
+#' }
 #' @export
 null_spin_vasa <- function(data, coords, n_perm = 1000L,
                            seed = NULL,
@@ -44,7 +50,8 @@ null_spin_vasa <- function(data, coords, n_perm = 1000L,
   )
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
-  for (i in seq_len(n_perm)) {
+  msg <- "Generating spin_vasa nulls"
+  for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
     cost_lh <- compute_cost_matrix(coords$lh, rotated$lh[, , i])
     cost_rh <- compute_cost_matrix(coords$rh, rotated$rh[, , i])
     assign_lh <- assign_parcels_vasa(cost_lh)
@@ -85,7 +92,8 @@ null_spin_hungarian <- function(
   )
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
-  for (i in seq_len(n_perm)) {
+  msg <- "Generating spin_hungarian nulls"
+  for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
     cost_lh <- compute_cost_matrix(coords$lh, rotated$lh[, , i])
     cost_rh <- compute_cost_matrix(coords$rh, rotated$rh[, , i])
     assign_lh <- assign_parcels_hungarian(cost_lh)
@@ -163,7 +171,7 @@ random_rotation_rodrigues <- function() {
 #' @keywords internal
 rotate_coords <- function(coords_lh, coords_rh, n_perm,
                           seed = NULL, rotation = "euler") {
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) withr::local_seed(seed)
   lh_rotated <- array(0, dim = c(nrow(coords_lh), 3, n_perm))
   rh_rotated <- array(0, dim = c(nrow(coords_rh), 3, n_perm))
 
@@ -179,13 +187,9 @@ rotate_coords <- function(coords_lh, coords_rh, n_perm,
 #' @noRd
 #' @keywords internal
 compute_cost_matrix <- function(original, rotated) {
-  n <- nrow(original)
-  cost <- matrix(0, nrow = n, ncol = n)
-  for (i in seq_len(n)) {
-    diff <- sweep(rotated, 2, original[i, ])
-    cost[i, ] <- rowSums(diff^2)
-  }
-  cost
+  a <- rowSums(original^2)
+  b <- rowSums(rotated^2)
+  outer(a, b, "+") - 2 * tcrossprod(original, rotated)
 }
 
 #' @noRd

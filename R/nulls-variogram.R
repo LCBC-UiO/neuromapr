@@ -22,6 +22,12 @@
 #' Burt JB et al. (2020) NeuroImage 220:117038.
 #' doi:10.1016/j.neuroimage.2020.117038
 #'
+#' @examples
+#' \dontrun{
+#' data <- rnorm(50)
+#' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+#' nd <- null_burt2020(data, distmat, n_perm = 10L, seed = 1L)
+#' }
 #' @export
 null_burt2020 <- function(data,
                           distmat,
@@ -40,7 +46,7 @@ null_burt2020 <- function(data,
   kernel <- match.arg(kernel)
   knn <- min(as.integer(knn), n - 1L)
 
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) withr::local_seed(seed)
 
   fixed_idx <- NULL
   if (!resample && ns < n) {
@@ -55,7 +61,8 @@ null_burt2020 <- function(data,
 
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
-  for (i in seq_len(n_perm)) {
+  msg <- "Generating burt2020 nulls"
+  for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
     permuted <- sample(data)
     best_sse <- Inf
     best_surrogate <- permuted

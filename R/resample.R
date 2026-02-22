@@ -145,5 +145,11 @@ get_gifti_density <- function(path) {
 #' @keywords internal
 density_to_n <- function(density) {
   n_map <- c("164k" = 163842L, "41k" = 40962L, "32k" = 32492L, "10k" = 10242L)
-  n_map[[density]]
+  result <- unname(n_map[density])
+  if (is.na(result)) {
+    cli::cli_abort(
+      "Unknown density {.val {density}}. Expected one of {.or {names(n_map)}}."
+    )
+  }
+  result
 }

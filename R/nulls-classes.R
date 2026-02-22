@@ -8,8 +8,28 @@
 #' @return A `null_distribution` object.
 #'
 #' @name null_distribution
+#' @examples
+#' nulls <- matrix(rnorm(30), nrow = 3, ncol = 10)
+#' nd <- new_null_distribution(nulls, "test", observed = c(1, 2, 3))
+#' print(nd)
+#' summary(nd)
 #' @export
 new_null_distribution <- function(nulls, method, observed, params = list()) {
+  if (!is.matrix(nulls) || !is.numeric(nulls)) {
+    cli::cli_abort("{.arg nulls} must be a numeric matrix.")
+  }
+  if (!is.character(method) || length(method) != 1L) {
+    cli::cli_abort("{.arg method} must be a single character string.")
+  }
+  if (!is.numeric(observed)) {
+    cli::cli_abort("{.arg observed} must be numeric.")
+  }
+  if (length(observed) != nrow(nulls)) {
+    cli::cli_abort(paste(
+      "{.arg observed} length ({length(observed)})",
+      "must match rows in {.arg nulls} ({nrow(nulls)})."
+    ))
+  }
   structure(
     list(
       nulls = nulls,

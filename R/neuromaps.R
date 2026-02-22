@@ -10,9 +10,20 @@
 #' @param format Filter by format (`"surface"` or `"volume"`).
 #'
 #' @details
-#' When used in `neuromaps_available()`, all parameters act as regex filters.
+#' All string filter parameters (`source`, `desc`, `space`, `density`,
+#' `resolution`, `hemisphere`, `format`) are treated as **R regular
+#' expressions** and matched with [grepl()]. For example,
+#' `source = "^beliveau$"` matches exactly, while `source = "bel"` matches
+#' any source containing `"bel"`. Set `fixed = TRUE` for literal string
+#' matching. The `tags` parameter always uses exact matching (AND logic).
+#'
 #' When used in [fetch_neuromaps_annotation()], `source`, `desc`, and `space`
 #' are exact matches.
+#'
+#' @param refresh Logical. If `TRUE`, forces a fresh download of the
+#'   registry data, ignoring any session cache.
+#' @param fixed Logical. If `TRUE`, filter strings are matched literally
+#'   rather than as regular expressions.
 #'
 #' @return A tibble of available annotations with columns: source, desc,
 #'   space, den, res, hemi, format, fname, full_desc, tags, N, age.
@@ -31,9 +42,11 @@ neuromaps_available <- function(
   resolution = NULL,
   hemisphere = NULL,
   tags = NULL,
-  format = NULL
+  format = NULL,
+  refresh = FALSE,
+  fixed = FALSE
 ) {
-  registry <- build_neuromaps_registry()
+  registry <- build_neuromaps_registry(refresh = refresh)
   filter_neuromaps_registry(
     registry,
     source = source,
@@ -43,7 +56,8 @@ neuromaps_available <- function(
     resolution = resolution,
     hemisphere = hemisphere,
     tags = tags,
-    format = format
+    format = format,
+    fixed = fixed
   )
 }
 

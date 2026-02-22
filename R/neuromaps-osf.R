@@ -39,7 +39,7 @@ download_neuromaps_file <- function(
   if (verbose) {
     cli::cli_alert("Downloading {.file {basename(destfile)}}")
   }
-  utils::download.file(url, destfile, mode = "wb", quiet = !verbose)
+  perform_download(url, destfile)
 
   if (!validate_checksum(destfile, checksum)) {
     unlink(destfile)
@@ -50,4 +50,14 @@ download_neuromaps_file <- function(
 
   if (verbose) cli::cli_alert_success("Saved {.file {basename(destfile)}}")
   invisible(destfile)
+}
+
+#' @noRd
+#' @keywords internal
+perform_download <- function(url, destfile) {
+  resp <- httr2::request(url) |>
+    httr2::req_timeout(seconds = 120) |>
+    httr2::req_retry(max_tries = 3) |>
+    httr2::req_perform()
+  writeBin(httr2::resp_body_raw(resp), destfile)
 }

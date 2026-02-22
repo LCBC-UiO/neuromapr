@@ -85,8 +85,13 @@ parse_meta_annotations <- function(meta_data) {
 
 #' @noRd
 #' @keywords internal
-build_neuromaps_registry <- function() {
-  if (!is.null(the$registry)) return(the$registry)
+build_neuromaps_registry <- function(refresh = FALSE) {
+  if (!is.null(the$registry) && !refresh) return(the$registry)
+
+  if (refresh) {
+    the$osf_json <- NULL
+    the$meta_json <- NULL
+  }
 
   osf_data <- fetch_neuromaps_osf_json()
   meta_data <- fetch_neuromaps_meta_json()
@@ -114,28 +119,29 @@ filter_neuromaps_registry <- function(
   resolution = NULL,
   hemisphere = NULL,
   tags = NULL,
-  format = NULL
+  format = NULL,
+  fixed = FALSE
 ) {
   if (!is.null(source)) {
-    registry <- registry[grepl(source, registry$source), ]
+    registry <- registry[grepl(source, registry$source, fixed = fixed), ]
   }
   if (!is.null(desc)) {
-    registry <- registry[grepl(desc, registry$desc), ]
+    registry <- registry[grepl(desc, registry$desc, fixed = fixed), ]
   }
   if (!is.null(space)) {
-    registry <- registry[grepl(space, registry$space), ]
+    registry <- registry[grepl(space, registry$space, fixed = fixed), ]
   }
   if (!is.null(density)) {
-    registry <- registry[grepl(density, registry$den), ]
+    registry <- registry[grepl(density, registry$den, fixed = fixed), ]
   }
   if (!is.null(resolution)) {
-    registry <- registry[grepl(resolution, registry$res), ]
+    registry <- registry[grepl(resolution, registry$res, fixed = fixed), ]
   }
   if (!is.null(hemisphere)) {
-    registry <- registry[grepl(hemisphere, registry$hemi), ]
+    registry <- registry[grepl(hemisphere, registry$hemi, fixed = fixed), ]
   }
   if (!is.null(format)) {
-    registry <- registry[grepl(format, registry$format), ]
+    registry <- registry[grepl(format, registry$format, fixed = fixed), ]
   }
 
   if (!is.null(tags)) {
@@ -146,6 +152,21 @@ filter_neuromaps_registry <- function(
   }
 
   registry
+}
+
+#' Clear cached neuromaps registry data
+#'
+#' Removes the session-level cache of the neuromaps annotation registry,
+#' forcing a fresh download on the next call to [neuromaps_available()] or
+#' [fetch_neuromaps_annotation()].
+#'
+#' @return `NULL`, invisibly.
+#' @export
+clear_neuromaps_cache <- function() {
+  the$osf_json <- NULL
+  the$meta_json <- NULL
+  the$registry <- NULL
+  invisible(NULL)
 }
 
 #' @noRd

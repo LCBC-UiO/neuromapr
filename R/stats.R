@@ -21,6 +21,12 @@
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' x <- rnorm(100)
+#' y <- x + rnorm(100)
+#' result <- permtest_metric(x, y, n_perm = 99L, seed = 1L)
+#' result$observed
+#' result$p_value
 #' @export
 permtest_metric <- function(x,
                             y,
@@ -59,10 +65,12 @@ permtest_metric <- function(x,
       metric_func(x_perm, y)
     })
   } else {
-    if (!is.null(seed)) set.seed(seed)
-    null_values <- vapply(seq_len(n_perm), function(i) {
-      metric_func(sample(x), y)
-    }, numeric(1))
+    if (!is.null(seed)) withr::local_seed(seed)
+    null_values <- vapply(
+      cli::cli_progress_along(seq_len(n_perm), "Permuting"),
+      function(i) metric_func(sample(x), y),
+      numeric(1)
+    )
   }
 
   p_value <- (sum(abs(null_values) >= abs(observed)) + 1) / (n_perm + 1)

@@ -8,6 +8,10 @@
 #'
 #' @return Numeric vector of length `nrow(vertices)`.
 #'
+#' @examples
+#' vertices <- matrix(c(0, 1, 0, 0, 0, 1, 0, 0, 0), nrow = 3, byrow = TRUE)
+#' faces <- matrix(c(1L, 2L, 3L), nrow = 1)
+#' vertex_areas(vertices, faces)
 #' @export
 vertex_areas <- function(vertices, faces) {
   if (!is.matrix(vertices) || ncol(vertices) != 3) {
@@ -33,12 +37,10 @@ vertex_areas <- function(vertices, faces) {
   tri_areas <- 0.5 * sqrt(rowSums(cross^2))
   third_area <- tri_areas / 3
 
-  for (col in 1:3) {
-    idx <- faces[, col]
-    for (j in seq_along(idx)) {
-      areas[idx[j]] <- areas[idx[j]] + third_area[j]
-    }
-  }
+  all_idx <- as.vector(faces)
+  all_areas <- rep(third_area, 3)
+  accumulated <- rowsum(all_areas, all_idx, reorder = TRUE)
+  areas[as.integer(rownames(accumulated))] <- as.vector(accumulated)
 
   areas
 }

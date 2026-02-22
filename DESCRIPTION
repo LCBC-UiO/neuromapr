@@ -35,7 +35,7 @@ Imports:
     stats,
     tibble,
     tools,
-    utils
+    withr
 Suggests:
     ciftiTools,
     clue,
@@ -46,8 +46,7 @@ Suggests:
     RNifti,
     RSpectra,
     testthat (>= 3.0.0),
-    vcr (>= 1.0.0),
-    withr
+    vcr (>= 1.0.0)
 VignetteBuilder: knitr
 URL: https://github.com/lcbc-uio/neuromapr, https://lcbc-uio.github.io/neuromapr/, https://doi.org/10.5281/zenodo.18648937
 BugReports: https://github.com/lcbc-uio/neuromapr/issues

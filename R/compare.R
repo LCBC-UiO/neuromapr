@@ -28,6 +28,10 @@
 #' Markello RD et al. (2022) Nature Methods 19:1472-1480.
 #' doi:10.1038/s41592-022-01625-w
 #'
+#' @examples
+#' x <- rnorm(50)
+#' y <- x + rnorm(50)
+#' compare_maps(x, y, verbose = FALSE)
 #' @export
 compare_maps <- function(x,
                          y,

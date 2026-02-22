@@ -40,10 +40,11 @@ compute_knn <- function(distmat, k) {
   indices <- matrix(0L, nrow = n, ncol = k)
   distances <- matrix(0, nrow = n, ncol = k)
   for (i in seq_len(n)) {
-    ord <- order(distmat[i, ])
-    nn <- ord[ord != i][seq_len(k)]
-    indices[i, ] <- nn
-    distances[i, ] <- distmat[i, nn]
+    d <- distmat[i, ]
+    d[i] <- Inf
+    top_k <- order(d)[seq_len(k)]
+    indices[i, ] <- top_k
+    distances[i, ] <- d[top_k]
   }
   list(indices = indices, distances = distances)
 }
@@ -85,17 +86,23 @@ validate_distmat <- function(distmat, n, arg = "distmat") {
 #' @return A numeric vector of map values.
 #' @export
 read_brain_map_values <- function(path) {
-  ext <- tolower(tools::file_ext(path))
-  if (ext == "gii" || grepl("\\.func\\.gii$", path)) {
+  if (grepl("\\.surf\\.gii$", path, ignore.case = TRUE)) {
+    cli::cli_abort(c(
+      "{.file {path}} is a surface geometry file, not a data file.",
+      "i" = "Expected a {.file .func.gii} or {.file .label.gii} file."
+    ))
+  }
+  if (grepl("\\.gii$", path, ignore.case = TRUE)) {
     gii <- gifti::read_gifti(path)
-    as.numeric(gii$data[[1]])
-  } else if (ext == "gz" || ext == "nii") {
+    return(as.numeric(gii$data[[1]]))
+  }
+  ext <- tolower(tools::file_ext(path))
+  if (ext == "gz" || ext == "nii") {
     rlang::check_installed("RNifti", reason = "to read NIfTI volume files")
     img <- RNifti::readNifti(path)
-    as.numeric(img)
-  } else {
-    cli::cli_abort("Unsupported file format: {.file {path}}")
+    return(as.numeric(img))
   }
+  cli::cli_abort("Unsupported file format: {.file {path}}")
 }
 
 #' @noRd

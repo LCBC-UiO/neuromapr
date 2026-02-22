@@ -18,6 +18,12 @@
 #' Wagner HH, Dray S (2015) Methods in Ecology and Evolution 6:1169-1178.
 #' doi:10.1111/2041-210X.12407
 #'
+#' @examples
+#' \dontrun{
+#' data <- rnorm(50)
+#' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+#' nd <- null_moran(data, distmat, n_perm = 10L, seed = 1L)
+#' }
 #' @export
 null_moran <- function(data,
                        distmat,
@@ -42,17 +48,19 @@ null_moran <- function(data,
 
   coeffs <- drop(crossprod(eigvecs, data - mean(data)))
 
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) withr::local_seed(seed)
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
   if (procedure == "singleton") {
-    for (i in seq_len(n_perm)) {
+    msg <- "Generating moran nulls"
+    for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
       signs <- sample(c(-1, 1), n_mem, replace = TRUE)
       nulls[, i] <- eigvecs %*% (coeffs * signs) + mean(data)
     }
   } else {
     pairs <- make_pairs(eigvals, tol)
-    for (i in seq_len(n_perm)) {
+    msg <- "Generating moran nulls"
+    for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
       new_coeffs <- coeffs
       for (pair in pairs) {
         if (length(pair) == 1) {
@@ -116,9 +124,10 @@ compute_weight_matrix <- function(
 #' @noRd
 #' @keywords internal
 compute_mem <- function(weight_mat, n) {
-  centering <- diag(n) - matrix(1 / n, n, n)
   sym_w <- (weight_mat + t(weight_mat)) / 2
-  dbl_centered <- centering %*% sym_w %*% centering
+  row_means <- rowMeans(sym_w)
+  grand_mean <- mean(row_means)
+  dbl_centered <- sym_w - outer(row_means, row_means, "+") + grand_mean
 
   if (n > 5000 && rlang::is_installed("RSpectra")) {
     k <- min(n - 1, 500)

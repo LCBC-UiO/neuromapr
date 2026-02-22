@@ -14,6 +14,12 @@
 #' Burt JB et al. (2018) Nature Neuroscience 21:1251-1259.
 #' doi:10.1038/s41593-018-0195-0
 #'
+#' @examples
+#' \dontrun{
+#' data <- rnorm(50)
+#' distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+#' nd <- null_burt2018(data, distmat, n_perm = 10L, seed = 1L)
+#' }
 #' @export
 null_burt2018 <- function(data, distmat, n_perm = 1000L, seed = NULL) {
   validate_data(data)
@@ -22,12 +28,14 @@ null_burt2018 <- function(data, distmat, n_perm = 1000L, seed = NULL) {
 
   params <- estimate_sar_params(data, distmat)
   weight_mat <- build_sar_weights(distmat, params$d0)
+  sar_inv <- solve(diag(n) - params$rho * weight_mat)
 
-  if (!is.null(seed)) set.seed(seed)
+  if (!is.null(seed)) withr::local_seed(seed)
   nulls <- matrix(0, nrow = n, ncol = n_perm)
 
-  for (i in seq_len(n_perm)) {
-    nulls[, i] <- sar_surrogate(weight_mat, params$rho, data)
+  msg <- "Generating burt2018 nulls"
+  for (i in cli::cli_progress_along(seq_len(n_perm), msg)) {
+    nulls[, i] <- sar_surrogate(sar_inv, data)
   }
 
   new_null_distribution(nulls, "burt2018", data, list(
@@ -77,10 +85,8 @@ build_sar_weights <- function(distmat, d0) {
 
 #' @noRd
 #' @keywords internal
-sar_surrogate <- function(weight_mat, rho, data) {
-  n <- length(data)
-  z <- stats::rnorm(n)
-  sar_mat <- diag(n) - rho * weight_mat
-  surrogate <- solve(sar_mat, z)
+sar_surrogate <- function(sar_inv, data) {
+  z <- stats::rnorm(nrow(sar_inv))
+  surrogate <- drop(sar_inv %*% z)
   rank_match(surrogate, data)
 }
