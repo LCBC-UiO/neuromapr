@@ -22,3 +22,9 @@ A \code{null_distribution} object.
 \description{
 Create a null distribution object
 }
+\examples{
+nulls <- matrix(rnorm(30), nrow = 3, ncol = 10)
+nd <- new_null_distribution(nulls, "test", observed = c(1, 2, 3))
+print(nd)
+summary(nd)
+}

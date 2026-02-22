@@ -12,7 +12,9 @@ neuromaps_available(
   resolution = NULL,
   hemisphere = NULL,
   tags = NULL,
-  format = NULL
+  format = NULL,
+  refresh = FALSE,
+  fixed = FALSE
 )
 }
 \arguments{
@@ -33,6 +35,12 @@ exclusive with \code{density}.}
 \item{tags}{Character vector of tags. All must match (AND logic).}
 
 \item{format}{Filter by format (\code{"surface"} or \code{"volume"}).}
+
+\item{refresh}{Logical. If \code{TRUE}, forces a fresh download of the
+registry data, ignoring any session cache.}
+
+\item{fixed}{Logical. If \code{TRUE}, filter strings are matched literally
+rather than as regular expressions.}
 }
 \value{
 A tibble of available annotations with columns: source, desc,
@@ -45,7 +53,13 @@ available for download. Data is fetched from the
 repository and cached for the session.
 }
 \details{
-When used in \code{neuromaps_available()}, all parameters act as regex filters.
+All string filter parameters (\code{source}, \code{desc}, \code{space}, \code{density},
+\code{resolution}, \code{hemisphere}, \code{format}) are treated as \strong{R regular
+expressions} and matched with \code{\link[=grepl]{grepl()}}. For example,
+\code{source = "^beliveau$"} matches exactly, while \code{source = "bel"} matches
+any source containing \code{"bel"}. Set \code{fixed = TRUE} for literal string
+matching. The \code{tags} parameter always uses exact matching (AND logic).
+
 When used in \code{\link[=fetch_neuromaps_annotation]{fetch_neuromaps_annotation()}}, \code{source}, \code{desc}, and \code{space}
 are exact matches.
 }

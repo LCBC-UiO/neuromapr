@@ -22,6 +22,14 @@ a \verb{length(source_vertices) x n} matrix; otherwise an \verb{n x n} matrix.
 Builds a graph from a triangular mesh and computes shortest-path (Dijkstra)
 distances between vertices.
 }
+\examples{
+vertices <- matrix(
+  c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+  nrow = 4, byrow = TRUE
+)
+faces <- matrix(c(1L, 2L, 3L, 2L, 3L, 4L), nrow = 2, byrow = TRUE)
+get_surface_distance(vertices, faces)
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

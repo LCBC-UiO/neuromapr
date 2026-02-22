@@ -15,6 +15,7 @@ Useful links:
 \itemize{
   \item \url{https://github.com/lcbc-uio/neuromapr}
   \item \url{https://lcbc-uio.github.io/neuromapr/}
+  \item \doi{10.5281/zenodo.18648937}
   \item Report bugs at \url{https://github.com/lcbc-uio/neuromapr/issues}
 }
 

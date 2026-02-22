@@ -45,6 +45,13 @@ Computes a user-specified metric between two vectors and tests significance
 using either spatially-constrained null surrogates or simple random
 permutation.
 }
+\examples{
+x <- rnorm(100)
+y <- x + rnorm(100)
+result <- permtest_metric(x, y, n_perm = 99L, seed = 1L)
+result$observed
+result$p_value
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

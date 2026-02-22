@@ -19,6 +19,14 @@ Extracts unique edges from triangular faces, computes Euclidean edge weights,
 and returns an igraph graph object suitable for geodesic distance
 computation.
 }
+\examples{
+vertices <- matrix(
+  c(0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0, 1),
+  nrow = 4, byrow = TRUE
+)
+faces <- matrix(c(1L, 2L, 3L, 2L, 3L, 4L), nrow = 2, byrow = TRUE)
+g <- make_surf_graph(vertices, faces)
+}
 \references{
 Markello RD et al. (2022) Nature Methods 19:1472-1480.
 doi:10.1038/s41592-022-01625-w

@@ -42,6 +42,13 @@ A \link{null_distribution} object.
 Generate spatially-constrained null distributions using spin-based
 permutation of spherical coordinates.
 }
+\examples{
+\dontrun{
+coords <- list(lh = matrix(rnorm(30), 10, 3), rh = matrix(rnorm(30), 10, 3))
+data <- rnorm(20)
+nd <- null_spin_vasa(data, coords, n_perm = 10L, seed = 1L)
+}
+}
 \references{
 Alexander-Bloch AF et al. (2018) NeuroImage 175:111-120.
 doi:10.1016/j.neuroimage.2018.04.023

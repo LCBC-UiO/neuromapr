@@ -24,6 +24,13 @@ Estimates spatial autocorrelation and distance decay parameters, then
 generates surrogates by solving the SAR equation and rank-matching to the
 original data.
 }
+\examples{
+\dontrun{
+data <- rnorm(50)
+distmat <- as.matrix(dist(matrix(rnorm(100), 50, 2)))
+nd <- null_burt2018(data, distmat, n_perm = 10L, seed = 1L)
+}
+}
 \references{
 Burt JB et al. (2018) Nature Neuroscience 21:1251-1259.
 doi:10.1038/s41593-018-0195-0
