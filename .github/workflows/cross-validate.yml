@@ -36,11 +36,12 @@ jobs:
 
       - uses: r-lib/actions/setup-r-dependencies@v2
         with:
-          extra-packages: any::jsonlite local::.
+          extra-packages: any::jsonlite any::pkgload local::.
 
       - name: Run cross-validation tests
         run: |
           Rscript -e '
+            pkgload::load_all(".")
             testthat::test_file(
               "tests/testthat/test-cross-validation.R",
               reporter = testthat::CheckReporter$new()

@@ -12,6 +12,7 @@ import os
 from pathlib import Path
 
 import numpy as np
+from scipy import stats as sstats
 from scipy.spatial.distance import pdist, squareform
 
 FIXTURE_DIR = Path(__file__).resolve().parent.parent / "tests" / "testthat" / "fixtures" / "python"
@@ -43,14 +44,16 @@ def generate_shared_inputs():
     coords = rng.standard_normal((n, 3))
     distmat = squareform(pdist(coords))
     data = rng.standard_normal(n)
+    data_y = data + rng.standard_normal(n) * 0.5
 
     save_fixture("shared_inputs", {
         "n": n,
         "coords": coords,
         "distmat": distmat,
         "data": data,
+        "data_y": data_y,
     })
-    return coords, distmat, data
+    return coords, distmat, data, data_y
 
 
 def generate_weight_matrix_inverse_distance(distmat):
@@ -212,6 +215,122 @@ def generate_rank_match():
     })
 
 
+def generate_sar_weight_matrix(distmat):
+    """SAR exponential weight matrix matching neuromaps _make_weight_matrix."""
+    n = len(distmat)
+    d0 = float(np.median(distmat[distmat > 0]))
+    with np.errstate(over="ignore"):
+        w = np.exp(-distmat / d0) * np.logical_not(np.eye(n, dtype=bool))
+    with np.errstate(invalid="ignore"):
+        w = w / np.sum(w, axis=1, keepdims=True)
+    save_fixture("sar_weight_matrix", {"w": w, "d0": d0})
+    return w, d0
+
+
+def generate_moran_double_centered(w):
+    """Double-centered weight matrix used for MEM."""
+    sym_w = (w + w.T) / 2.0
+    row_means = sym_w.mean(axis=1)
+    grand_mean = row_means.mean()
+    dbl = sym_w - np.add.outer(row_means, row_means) + grand_mean
+    save_fixture("moran_double_centered", {"dbl": dbl})
+    return dbl
+
+
+def generate_correlation_reference(data, data_y):
+    """Pearson and Spearman correlation reference values."""
+    r_p = float(sstats.pearsonr(data, data_y).statistic)
+    r_s = float(sstats.spearmanr(data, data_y).statistic)
+    save_fixture("correlation_reference", {
+        "pearson_r": r_p,
+        "spearman_r": r_s,
+        "n": len(data),
+    })
+
+
+def _sar_surrogates(distmat, data, d0, seed, n_surr):
+    """SAR surrogate generation matching neuromaps."""
+    rs = np.random.default_rng(seed)
+    n = len(data)
+    w = np.exp(-distmat / d0) * np.logical_not(np.eye(n, dtype=bool))
+    with np.errstate(invalid="ignore"):
+        w = w / np.sum(w, axis=1, keepdims=True)
+    rho = 0.5
+    iw = np.identity(n) - rho * w
+    surrogates = np.zeros((n, n_surr))
+    for i in range(n_surr):
+        u = rs.standard_normal(n)
+        surr = np.linalg.solve(iw, u)
+        matched = np.empty_like(surr)
+        matched[surr.argsort()] = np.sort(data)
+        surrogates[:, i] = matched
+    return surrogates
+
+
+def _moran_surrogates(distmat, data, seed, n_surr):
+    """Moran spectral randomization (singleton) matching neuromaps."""
+    rs = np.random.default_rng(seed)
+    n = len(data)
+    w = distmat.copy().astype("float64")
+    np.fill_diagonal(w, 1.0)
+    w = w ** -1
+    np.fill_diagonal(w, 0.0)
+    row_sums = w.sum(axis=1, keepdims=True)
+    row_sums[row_sums == 0] = 1
+    w = w / row_sums
+
+    sym_w = (w + w.T) / 2
+    centering = np.eye(n) - np.ones((n, n)) / n
+    dbl = centering @ sym_w @ centering
+
+    eigvals, eigvecs = np.linalg.eigh(dbl)
+    order = np.argsort(-np.abs(eigvals))
+    eigvals = eigvals[order]
+    eigvecs = eigvecs[:, order]
+    keep = np.abs(eigvals) > 1e-10
+    eigvals = eigvals[keep]
+    eigvecs = eigvecs[:, keep]
+
+    coeffs = eigvecs.T @ (data - data.mean())
+    surrogates = np.zeros((n, n_surr))
+    for i in range(n_surr):
+        signs = rs.choice([-1, 1], size=len(eigvals))
+        surrogates[:, i] = eigvecs @ (coeffs * signs) + data.mean()
+    return surrogates
+
+
+def generate_null_distribution_stats(data, data_y, distmat):
+    """Null distribution statistics for SAR and Moran methods."""
+    n_perm = 200
+    seed = 42
+    d0 = float(np.median(distmat[distmat > 0]))
+
+    sar_surr = _sar_surrogates(distmat, data, d0, seed, n_perm)
+    sar_null_r = np.array([
+        float(sstats.pearsonr(sar_surr[:, i], data_y).statistic)
+        for i in range(n_perm)
+    ])
+
+    moran_surr = _moran_surrogates(distmat, data, seed, n_perm)
+    moran_null_r = np.array([
+        float(sstats.pearsonr(moran_surr[:, i], data_y).statistic)
+        for i in range(n_perm)
+    ])
+
+    save_fixture("null_distribution_stats", {
+        "n_perm": n_perm,
+        "seed": seed,
+        "sar_null_r_mean": float(sar_null_r.mean()),
+        "sar_null_r_std": float(sar_null_r.std()),
+        "sar_rank_preserved": bool(all(
+            np.array_equal(np.sort(sar_surr[:, i]), np.sort(data))
+            for i in range(n_perm)
+        )),
+        "moran_null_r_mean": float(moran_null_r.mean()),
+        "moran_null_r_std": float(moran_null_r.std()),
+    })
+
+
 def generate_burt2020_stats():
     """Burt2020 surrogate statistical properties via brainsmash (optional)."""
     try:
@@ -255,18 +374,22 @@ def main():
     os.makedirs(FIXTURE_DIR, exist_ok=True)
     print("Generating Python reference fixtures...")
 
-    coords, distmat, data = generate_shared_inputs()
+    coords, distmat, data, data_y = generate_shared_inputs()
 
     print("Deterministic comparisons:")
     w_inv = generate_weight_matrix_inverse_distance(distmat)
     generate_weight_matrix_exponential(distmat)
     generate_mem(w_inv)
+    generate_moran_double_centered(w_inv)
     generate_variogram(data, distmat)
     generate_rotation_matrix()
     generate_cost_matrix()
     generate_rank_match()
+    generate_sar_weight_matrix(distmat)
+    generate_correlation_reference(data, data_y)
 
     print("Statistical comparisons:")
+    generate_null_distribution_stats(data, data_y, distmat)
     generate_burt2020_stats()
 
     print("Done.")
