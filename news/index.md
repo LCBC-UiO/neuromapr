@@ -1,5 +1,15 @@
 # Changelog
 
+## neuromapr 0.2.1
+
+CRAN release: 2026-02-27
+
+- CRAN acceptance release.
+- Improved efficiency and vectorisation across null model methods.
+- Added examples to all exported functions.
+- Bug fixes across null models and infrastructure from code review.
+- Added vignettes for rotation methods.
+
 ## neuromapr 0.2.0
 
 - Initial CRAN submission.
