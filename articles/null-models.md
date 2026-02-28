@@ -399,7 +399,7 @@ result_spatial <- permtest_metric(
   null_method = "burt2020",
   distmat = distmat
 )
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     92% | ETA:  0s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  0s
 result_spatial$p_value
 #> [1] 0.9701493
 ```

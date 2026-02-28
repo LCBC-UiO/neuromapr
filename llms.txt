@@ -74,11 +74,8 @@ compare_maps(
   seed = 1,
   verbose = FALSE
 )
-#> Generating burt2020 nulls ■■■■■■■                           20% | ETA: 19s
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■                   47% | ETA: 12s
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■               61% | ETA:  9s
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■          77% | ETA:  5s
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      91% | ETA:  2s
+#> Generating burt2020 nulls ■■■■■■■■■■                        29% | ETA:  6s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■             66% | ETA:  4s
 #> 
 #> ── Brain Map Comparison
 #> Method: pearson
@@ -187,7 +184,7 @@ citation("neuromapr")
 ```
 
 Mowinckel A (????). *neuromapr: Spatial Null Models and Transforms for
-Brain Map Comparison*. R package version 0.2.0,
+Brain Map Comparison*. R package version 0.2.1,
 <https://github.com/lcbc-uio/neuromapr>.
 
 <https://doi.org/10.5281/zenodo.18648937>
