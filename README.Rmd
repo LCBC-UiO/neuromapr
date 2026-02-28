@@ -23,6 +23,7 @@ knitr::opts_chunk$set(
 [![test-coverage](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/test-coverage.yaml)
 [![Cross-validate](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml/badge.svg)](https://github.com/lcbc-uio/neuromapr/actions/workflows/cross-validate.yml)
 [![DOI](https://zenodo.org/badge/1156352155.svg)](https://doi.org/10.5281/zenodo.18648936)
+[![CRAN status](https://www.r-pkg.org/badges/version/neuromapr)](https://CRAN.R-project.org/package=neuromapr)
 <!-- badges: end -->
 
 Brain maps are spatially autocorrelated --- nearby regions have similar values
