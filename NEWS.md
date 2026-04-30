@@ -1,3 +1,7 @@
+# neuromapr 0.2.2
+
+* relaxed tolerance levels on null calculations in tests
+
 # neuromapr 0.2.1
 
 * CRAN acceptance release.

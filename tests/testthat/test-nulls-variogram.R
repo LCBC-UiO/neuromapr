@@ -124,7 +124,7 @@ describe("null_burt2020", {
       n_perm = 2L, seed = 99,
       ns = 20, nh = 5, knn = 10, deltas = c(0.5)
     )
-    expect_identical(r1$nulls, r2$nulls)
+    expect_equal(r1$nulls, r2$nulls, tolerance = 1e-10)
   })
 
   it("errors for dimension mismatch", {

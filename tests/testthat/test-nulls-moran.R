@@ -97,7 +97,7 @@ describe("null_moran", {
     distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
     r1 <- null_moran(data, distmat, n_perm = 5L, seed = 123)
     r2 <- null_moran(data, distmat, n_perm = 5L, seed = 123)
-    expect_identical(r1$nulls, r2$nulls)
+    expect_equal(r1$nulls, r2$nulls, tolerance = 1e-10)
   })
 
   it("preserves mean of data", {

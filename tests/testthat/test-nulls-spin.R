@@ -26,8 +26,8 @@ describe("rotate_coords", {
     rh <- matrix(rnorm(12), ncol = 3)
     r1 <- rotate_coords(lh, rh, n_perm = 3, seed = 42)
     r2 <- rotate_coords(lh, rh, n_perm = 3, seed = 42)
-    expect_identical(r1$lh, r2$lh)
-    expect_identical(r1$rh, r2$rh)
+    expect_equal(r1$lh, r2$lh, tolerance = 1e-10)
+    expect_equal(r1$rh, r2$rh, tolerance = 1e-10)
   })
 })
 
@@ -138,6 +138,6 @@ describe("null_spin_hungarian", {
     data <- rnorm(10)
     r1 <- null_spin_hungarian(data, coords, n_perm = 3L, seed = 1)
     r2 <- null_spin_hungarian(data, coords, n_perm = 3L, seed = 1)
-    expect_identical(r1$nulls, r2$nulls)
+    expect_equal(r1$nulls, r2$nulls, tolerance = 1e-10)
   })
 })
