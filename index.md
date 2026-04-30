@@ -27,6 +27,7 @@ issues](https://github.com/lcbc-uio/neuromapr/issues).
 Install from CRAN:
 
 ``` r
+
 install.packages("neuromapr")
 ```
 
@@ -34,6 +35,7 @@ Or install from the lcbc-uio
 [r-universe](https://lcbc-uio.r-universe.dev/):
 
 ``` r
+
 options(repos = c(
   lcbcuio = "https://lcbc-uio.r-universe.dev",
   CRAN = "https://cloud.r-project.org"
@@ -45,6 +47,7 @@ install.packages("neuromapr")
 Or install the development version from GitHub:
 
 ``` r
+
 # install.packages("pak")
 pak::pak("lcbc-uio/neuromapr")
 ```
@@ -52,12 +55,14 @@ pak::pak("lcbc-uio/neuromapr")
 ## Quick start
 
 ``` r
+
 library(neuromapr)
 ```
 
 Compare two brain maps with a spatial null model in three lines:
 
 ``` r
+
 set.seed(42)
 n <- 100
 distmat <- as.matrix(dist(matrix(rnorm(n * 3), ncol = 3)))
@@ -117,6 +122,7 @@ parcel values back to vertices, and compute parcel centroids using
 average, surface, or geodesic methods.
 
 ``` r
+
 vertex_data <- rnorm(1000)
 labels <- rep(1:10, each = 100)
 
@@ -131,6 +137,7 @@ triangular mesh, for analyses where Euclidean distance through the brain
 does not reflect cortical proximity.
 
 ``` r
+
 vertices <- matrix(
   c(0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 1, 0),
   ncol = 3,
@@ -152,6 +159,7 @@ runs a permutation test with any metric function, optionally using
 spatial null surrogates:
 
 ``` r
+
 result <- permtest_metric(
   map_a,
   map_b,
@@ -175,6 +183,7 @@ If you use neuromapr, please cite the package and the neuromaps
 framework it implements. You can get the package citation from R with:
 
 ``` r
+
 citation("neuromapr")
 ```
 

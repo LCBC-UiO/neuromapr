@@ -14,6 +14,7 @@ the original data, then measures where the real correlation falls in
 that null distribution. The framework follows Markello et al. (2022).
 
 ``` r
+
 library(neuromapr)
 ```
 
@@ -24,6 +25,7 @@ maps here to keep things self-contained, but in practice you would read
 real data from GIFTI or NIfTI files.
 
 ``` r
+
 set.seed(42)
 n <- 100
 coords <- matrix(rnorm(n * 3), ncol = 3)
@@ -37,6 +39,7 @@ Two maps with a planted correlation around 0.4, plus a distance matrix
 describing the spatial layout. The simplest comparison:
 
 ``` r
+
 result <- compare_maps(map_a, map_b, verbose = FALSE)
 result
 #> 
@@ -60,6 +63,7 @@ neuromapr provides eight null model methods. For parcellated data with a
 distance matrix, variogram matching (`burt2020`) is a strong default:
 
 ``` r
+
 result_null <- compare_maps(
   map_a, map_b,
   null_method = "burt2020",
@@ -68,8 +72,8 @@ result_null <- compare_maps(
   seed = 1,
   verbose = FALSE
 )
-#> Generating burt2020 nulls ■■■■■■■■                          22% | ETA:  7s
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■       86% | ETA:  1s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■                 52% | ETA:  4s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■        84% | ETA:  2s
 result_null
 #> 
 #> ── Brain Map Comparison
@@ -91,6 +95,7 @@ The comparison object stores all null correlations, making it
 straightforward to see where the observed value falls:
 
 ``` r
+
 null_df <- data.frame(r = result_null$null_r)
 obs_r <- result_null$r
 
@@ -126,6 +131,7 @@ Generating nulls is the expensive part. If you want to compare the same
 map against several targets, generate once and reuse:
 
 ``` r
+
 nulls <- generate_nulls(
   map_a,
   method = "moran",
@@ -147,6 +153,7 @@ standard deviations. The `plot` method shows the null distribution for a
 chosen element:
 
 ``` r
+
 plot(nulls, parcel = 1L)
 ```
 
@@ -159,6 +166,7 @@ Pass the pre-computed object to
 [`compare_maps()`](https://lcbc-uio.github.io/neuromapr/reference/compare_maps.md):
 
 ``` r
+
 compare_maps(map_a, map_b, nulls = nulls, verbose = FALSE)
 #> 
 #> ── Brain Map Comparison
@@ -182,6 +190,7 @@ and
 accept file paths directly:
 
 ``` r
+
 values <- read_brain_map_values("cortical_thickness.func.gii")
 
 result <- compare_maps(
@@ -202,6 +211,7 @@ annotations—PET receptor maps, gene expression, cortical thickness, and
 more. neuromapr provides direct access to this collection:
 
 ``` r
+
 neuromaps_available()
 
 neuromaps_available(source = "beliveau", tags = "pet")
@@ -210,6 +220,7 @@ neuromaps_available(source = "beliveau", tags = "pet")
 Once you find the annotation you want, download it:
 
 ``` r
+
 paths <- fetch_neuromaps_annotation(
   "abagen", "genepc1", "fsaverage",
   density = "10k"
@@ -229,6 +240,7 @@ scalar—[`permtest_metric()`](https://lcbc-uio.github.io/neuromapr/reference/pe
 provides the same null model machinery:
 
 ``` r
+
 mae <- function(a, b) mean(abs(a - b))
 
 result_mae <- permtest_metric(
@@ -247,6 +259,7 @@ Add `null_method` for spatially-constrained surrogates instead of random
 permutation:
 
 ``` r
+
 result_spatial <- permtest_metric(
   map_a, rnorm(n),
   metric_func = mae,
@@ -255,7 +268,7 @@ result_spatial <- permtest_metric(
   null_method = "burt2020",
   distmat = distmat
 )
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■         80% | ETA:  1s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■           74% | ETA:  1s
 result_spatial$p_value
 #> [1] 0.8159204
 ```
@@ -264,12 +277,12 @@ result_spatial$p_value
 
 The right model depends on your data:
 
-| Situation                             | Recommended method                        |
-|---------------------------------------|-------------------------------------------|
-| Parcellated data with distance matrix | `"burt2020"` or `"moran"`                 |
-| Vertex-level with sphere coordinates  | `"spin_hungarian"` or `"alexander_bloch"` |
-| Parcellated with sphere coordinates   | `"baum"` or `"cornblath"`                 |
-| Spatial autoregressive structure      | `"burt2018"`                              |
+| Situation | Recommended method |
+|----|----|
+| Parcellated data with distance matrix | `"burt2020"` or `"moran"` |
+| Vertex-level with sphere coordinates | `"spin_hungarian"` or `"alexander_bloch"` |
+| Parcellated with sphere coordinates | `"baum"` or `"cornblath"` |
+| Spatial autoregressive structure | `"burt2018"` |
 
 [`vignette("null-models")`](https://lcbc-uio.github.io/neuromapr/articles/null-models.md)
 walks through each method in detail.

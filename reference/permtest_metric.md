@@ -84,7 +84,7 @@ x <- rnorm(100)
 y <- x + rnorm(100)
 result <- permtest_metric(x, y, n_perm = 99L, seed = 1L)
 result$observed
-#> [1] 0.6552005
+#> [1] 0.664613
 result$p_value
 #> [1] 0.01
 ```

@@ -12,6 +12,7 @@ parcels, mapping parcel values back to vertices, and computing parcel
 centroids on the cortical surface.
 
 ``` r
+
 library(neuromapr)
 ```
 
@@ -23,6 +24,7 @@ where each vertex gets a label, with `0` or `NA` marking the medial wall
 (vertices that belong to no region).
 
 ``` r
+
 set.seed(42)
 n_vertices <- 1000
 vertex_data <- rnorm(n_vertices)
@@ -46,6 +48,7 @@ vertices (label 0) are excluded automatically.
 The summary function is configurable:
 
 ``` r
+
 parcel_sd <- vertices_to_parcels(
   vertex_data, labels, summary_func = sd
 )
@@ -63,6 +66,7 @@ mesh. Every vertex gets its parcel’s value; medial wall vertices get a
 fill value.
 
 ``` r
+
 vertex_filled <- parcels_to_vertices(parcel_values, labels)
 head(vertex_filled, 20)
 #>  [1] -0.001235255  0.027356454 -0.047980452  0.018359997  0.018359997
@@ -74,6 +78,7 @@ head(vertex_filled, 20)
 Vertices with label 0 receive `NA` by default. You can change the fill:
 
 ``` r
+
 vertex_filled_zero <- parcels_to_vertices(
   parcel_values, labels, fill = 0
 )
@@ -90,6 +95,7 @@ add file-reading convenience on top of the low-level functions. If your
 data lives on disk as GIFTI files, pass paths directly:
 
 ``` r
+
 parcel_vals <- parcellate(
   "cortical_thickness.func.gii",
   "aparc.label.gii"
@@ -105,6 +111,7 @@ When working with vectors already in memory, the wrappers still
 work—they skip the file-reading step:
 
 ``` r
+
 parcellated <- parcellate(vertex_data, labels)
 unparcellated <- unparcellate(parcellated, labels)
 
@@ -128,6 +135,7 @@ offers three methods for finding the representative point of each
 parcel.
 
 ``` r
+
 vertices <- matrix(rnorm(n_vertices * 3), ncol = 3)
 ```
 
@@ -137,6 +145,7 @@ Take the mean x, y, z coordinates of all vertices in the parcel. Fast,
 but the resulting point may not lie on the actual cortical surface.
 
 ``` r
+
 centroids_avg <- get_parcel_centroids(
   vertices, labels, method = "average"
 )
@@ -157,6 +166,7 @@ actual vertex on the surface, which matters when centroids must respect
 the cortical geometry.
 
 ``` r
+
 centroids_surf <- get_parcel_centroids(
   vertices, labels, method = "surface"
 )
@@ -178,6 +188,7 @@ the parcel. This requires the face matrix of the surface mesh and the
 **igraph** package.
 
 ``` r
+
 centroids_geo <- get_parcel_centroids(
   vertices, labels,
   method = "geodesic",
@@ -196,6 +207,7 @@ A common use case: you have parcellated data and need a distance matrix
 for null model generation. Parcel centroids get you there.
 
 ``` r
+
 parcel_distmat <- as.matrix(dist(centroids_avg))
 dim(parcel_distmat)
 #> [1] 10 10
@@ -205,6 +217,7 @@ This distance matrix feeds directly into
 [`generate_nulls()`](https://lcbc-uio.github.io/neuromapr/reference/generate_nulls.md):
 
 ``` r
+
 parcel_map <- rnorm(nrow(centroids_avg))
 nulls <- generate_nulls(
   parcel_map,
@@ -228,6 +241,7 @@ with spin-based null generation. They need both spherical coordinates
 and the parcellation vector:
 
 ``` r
+
 n_lh <- 680
 n_rh <- 680
 sphere_coords <- list(

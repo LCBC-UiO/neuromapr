@@ -8,16 +8,16 @@
 ## Citation
 
 Source:
-[`DESCRIPTION`](https://github.com/lcbc-uio/neuromapr/blob/main/DESCRIPTION)
+[`DESCRIPTION`](https://github.com/lcbc-uio/neuromapr/blob/v0.2.2/DESCRIPTION)
 
 Mowinckel A (2026). *neuromapr: Spatial Null Models and Transforms for
-Brain Map Comparison*. R package version 0.2.1,
+Brain Map Comparison*. R package version 0.2.2,
 <https://github.com/lcbc-uio/neuromapr>.
 
     @Manual{,
       title = {neuromapr: Spatial Null Models and Transforms for Brain Map Comparison},
       author = {Athanasia Mo Mowinckel},
       year = {2026},
-      note = {R package version 0.2.1},
+      note = {R package version 0.2.2},
       url = {https://github.com/lcbc-uio/neuromapr},
     }

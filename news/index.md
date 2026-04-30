@@ -1,5 +1,9 @@
 # Changelog
 
+## neuromapr 0.2.2
+
+- relaxed tolerance levels on null calculations in tests
+
 ## neuromapr 0.2.1
 
 CRAN release: 2026-02-27

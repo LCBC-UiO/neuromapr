@@ -99,6 +99,6 @@ compare_maps(x, y, verbose = FALSE)
 #> 
 #> ── Brain Map Comparison 
 #> Method: pearson
-#> r = 0.8329, p = 6.33e-14
+#> r = 0.8463, p = 9.92e-15
 #> n = 50
 ```

@@ -17,6 +17,7 @@ vignette walks through each one, explains when to reach for it, and
 names the tradeoffs plainly.
 
 ``` r
+
 library(neuromapr)
 ```
 
@@ -48,6 +49,7 @@ scheme.
 - `cornblath` — majority-vote parcel assignment
 
 ``` r
+
 set.seed(42)
 n <- 80
 coords_3d <- matrix(rnorm(n * 3), ncol = 3)
@@ -67,6 +69,7 @@ result is a map with the same rank-order distribution and approximately
 the same distance-dependent spatial structure.
 
 ``` r
+
 nulls_vario <- generate_nulls(
   map_x,
   method = "burt2020",
@@ -101,6 +104,7 @@ matrix derived from distances and an estimated autocorrelation
 parameter.
 
 ``` r
+
 nulls_sar <- generate_nulls(
   map_x,
   method = "burt2018",
@@ -121,6 +125,7 @@ strength) and `d0` (distance decay scale). These are stored in the
 result:
 
 ``` r
+
 nulls_sar$params$rho
 #>        wx 
 #> -23.71389
@@ -142,6 +147,7 @@ sign of each coefficient at random; the `"pair"` procedure applies
 random 2D rotations to pairs of coefficients with similar eigenvalues.
 
 ``` r
+
 nulls_moran <- generate_nulls(
   map_x,
   method = "moran",
@@ -175,6 +181,7 @@ All spin methods require coordinates organized as a list with `$lh` and
 independently.
 
 ``` r
+
 n_lh <- 40
 n_rh <- 40
 sphere_coords <- list(
@@ -193,6 +200,7 @@ vertex. Multiple rotated vertices can map to the same original, so some
 values get duplicated while others are dropped.
 
 ``` r
+
 nulls_ab <- null_alexander_bloch(
   vertex_data, sphere_coords,
   n_perm = 100L, seed = 1
@@ -217,6 +225,7 @@ through vertices in order, assigning each to the nearest available
 assignment quality depends on vertex ordering.
 
 ``` r
+
 nulls_vasa <- null_spin_vasa(
   vertex_data, sphere_coords,
   n_perm = 100L, seed = 1
@@ -237,6 +246,7 @@ reassignment distance globally, producing the best possible one-to-one
 mapping between original and rotated positions.
 
 ``` r
+
 nulls_hung <- null_spin_hungarian(
   vertex_data, sphere_coords,
   n_perm = 100L, seed = 1
@@ -266,6 +276,7 @@ coordinates (for the rotation) and a parcellation vector (to know which
 vertices belong to which parcel).
 
 ``` r
+
 n_parcel_lh <- 340
 n_parcel_rh <- 340
 parcel_coords <- list(
@@ -285,6 +296,7 @@ vertices in parcel 3 now carry the label of parcel 7 after rotation,
 parcel 3 gets parcel 7’s value.
 
 ``` r
+
 nulls_baum <- null_baum(
   parcel_data, parcel_coords, parcellation,
   n_perm = 50L, seed = 1
@@ -307,6 +319,7 @@ method, since rotated vertices that land on the medial wall get
 interpolated to the nearest valid region instead of being lost.
 
 ``` r
+
 nulls_corn <- null_cornblath(
   parcel_data, parcel_coords, parcellation,
   n_perm = 50L, seed = 1
@@ -330,6 +343,7 @@ surrogate values it produces. Here we compare the first 50 surrogates
 from two methods on the same data:
 
 ``` r
+
 df <- data.frame(
   value = c(
     as.vector(nulls_vario$nulls[, 1:50]),
@@ -373,6 +387,7 @@ absolute error, cosine similarity, whatever—use
 with any function that takes two vectors and returns a scalar:
 
 ``` r
+
 mae <- function(a, b) mean(abs(a - b))
 
 result <- permtest_metric(
@@ -391,6 +406,7 @@ Pass `null_method` for spatially-constrained surrogates instead of
 random permutation:
 
 ``` r
+
 result_spatial <- permtest_metric(
   map_x, rnorm(n),
   metric_func = mae,
@@ -399,7 +415,7 @@ result_spatial <- permtest_metric(
   null_method = "burt2020",
   distmat = distmat
 )
-#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■      90% | ETA:  0s
+#> Generating burt2020 nulls ■■■■■■■■■■■■■■■■■■■■■■■■■■■■■     94% | ETA:  0s
 result_spatial$p_value
 #> [1] 0.9701493
 ```
@@ -411,6 +427,7 @@ or an external tool—you can wrap them in a `null_distribution` object to
 use with the rest of neuromapr:
 
 ``` r
+
 custom_nulls <- matrix(rnorm(n * 50), nrow = n, ncol = 50)
 nd <- new_null_distribution(
   custom_nulls,

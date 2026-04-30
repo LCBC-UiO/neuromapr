@@ -11,6 +11,7 @@ building graphs, computing geodesic distances, calculating per-vertex
 surface areas, and converting between neuroimaging file formats.
 
 ``` r
+
 library(neuromapr)
 ```
 
@@ -27,6 +28,7 @@ Together they describe the geometry. We build a small mesh by hand to
 make the examples concrete:
 
 ``` r
+
 vertices <- matrix(c(
   0, 0, 0,
   1, 0, 0,
@@ -56,11 +58,12 @@ vertices that share a triangle, and the weight is the Euclidean distance
 between them.
 
 ``` r
+
 g <- make_surf_graph(vertices, faces)
 g
-#> IGRAPH e2f6f24 U-W- 6 9 -- 
+#> IGRAPH 4428296 U-W- 6 9 -- 
 #> + attr: weight (e/n)
-#> + edges from e2f6f24:
+#> + edges from 4428296:
 #> [1] 1--2 2--3 3--4 3--5 4--6 5--6 1--3 2--4 3--6
 ```
 
@@ -73,6 +76,7 @@ coordinates. Edge labels show the Euclidean distance between connected
 vertices:
 
 ``` r
+
 layout_xy <- vertices[, 1:2]
 edge_weights <- round(
   igraph::E(g)$weight, 2
@@ -115,6 +119,7 @@ computes geodesic distances via Dijkstra’s algorithm on the surface
 graph:
 
 ``` r
+
 dmat <- get_surface_distance(vertices, faces)
 dmat
 #>          [,1]     [,2]     [,3]     [,4]     [,5]     [,6]
@@ -135,6 +140,7 @@ only need distances from a subset of source vertices, pass them
 explicitly:
 
 ``` r
+
 dmat_partial <- get_surface_distance(
   vertices, faces, source_vertices = c(1, 6)
 )
@@ -155,6 +161,7 @@ geodesic distances are always greater than or equal to Euclidean, often
 substantially so for regions separated by a sulcus.
 
 ``` r
+
 euclid <- as.matrix(dist(vertices))
 geodesic <- get_surface_distance(vertices, faces)
 
@@ -175,12 +182,14 @@ cortical surface a parcel covers.
 distributes each triangle’s area equally among its three vertices:
 
 ``` r
+
 areas <- vertex_areas(vertices, faces)
 areas
 #> [1] 0.1666667 0.3333333 0.6666667 0.3333333 0.1666667 0.3333333
 ```
 
 ``` r
+
 sum(areas)
 #> [1] 2
 ```
@@ -195,6 +204,7 @@ A sanity check: compute triangle areas directly and verify they sum to
 the same total.
 
 ``` r
+
 tri_area <- function(v, f) {
   a <- v[f[1], ]
   b <- v[f[2], ]
@@ -233,6 +243,7 @@ converts a FreeSurfer `.annot` file (parcellation labels) to a GIFTI
 label file:
 
 ``` r
+
 annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
 ```
 
@@ -242,6 +253,7 @@ annot_to_gifti("lh.aparc.annot", "lh.aparc.label.gii")
 converts FreeSurfer morphometry files to GIFTI func files:
 
 ``` r
+
 fsmorph_to_gifti("lh.thickness", "lh.thickness.func.gii")
 ```
 
@@ -262,6 +274,7 @@ handles this resampling using Connectome Workbench via the
 **ciftiTools** package:
 
 ``` r
+
 transformed <- transform_to_space(
   "map.func.gii",
   target_space = "fsLR",
@@ -274,6 +287,7 @@ For pairwise comparisons,
 aligns two maps into a common space with a single call:
 
 ``` r
+
 aligned <- resample_images(
   src = "map_a.func.gii",
   trg = "map_b.func.gii",
@@ -297,6 +311,7 @@ Use
 to verify it is installed and locatable:
 
 ``` r
+
 check_wb_command()
 ```
 
@@ -311,6 +326,7 @@ neuromapr:
     generation.
 
 ``` r
+
 centroids <- get_parcel_centroids(
   vertices, labels, method = "surface"
 )
